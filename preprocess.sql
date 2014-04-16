@@ -1,4 +1,4 @@
-CREATE TABLE PreprocessDataSet
+CREATE TABLE DataSet
    (session_id STRING,
 	referrer_site STRING,
 	publisher_id STRING,  
@@ -70,6 +70,11 @@ CREATE TABLE PreprocessDataSet
 	behaviour_cookie STRING,
 	remarketing_cookie STRING,
 	json_data STRING) 
- 	ROW FORMAT DELIMITED FIELDS TERMINATED BY '\;'
- 	STORED AS TEXTFILE
- 	LOCATION 's3://BUCKET_NAME/HIVE_INPUT_DIR/';
+ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\;'
+ STORED AS TEXTFILE
+ LOCATION 's3://BUCKET_NAME/HIVE_INPUT_DIR/';
+ LOAD DATA INPATH 's3://' INTO TABLE DataSet;
+create temporary function extractIdentifier as 'com.example.hive.udf.ExtractIdentifier';
+	
+
+
