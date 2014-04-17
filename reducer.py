@@ -1,11 +1,16 @@
 from __future__ import division
-import csv, os
-from collections import Counter
- 
-from itertools import groupby
-from operator import itemgetter
 import sys
- 
+
+def cal_jaccard (record1, record2):
+    num = 0
+    denom = 0    
+    for i in range(len(record1)):
+        if record1[i] != "null" or record2[i] != "null":
+            denom = denom +1
+            if record1[i] == record2[i]:
+                num = num + 1   
+    return num / denom
+
 def read_mapper_output(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 1)
@@ -25,18 +30,18 @@ def main(separator='\t'):
         #for input_line in f:
    for input_line in sys.stdin:
        input_line = input_line.strip()
+       if not input_line:
+           continue
        this_key, value = input_line.split("\t", 1)
        if last_key == this_key:
           running_features.append(value)
        else:
            if last_key:
                scores = []
-               #print(running_features)
                for x in range(len(running_features)):
                    for y in range(x+1, len(running_features)):
                        record1 = running_features[x].split(',')
                        record2 = running_features[y].split(',')
-                       #print (record1)
                        if len(record1) == len(record2):
                         scores.append(cal_jaccard(record1, record2))
                print ("%s%s%s" % (last_key, separator, ",".join(str(v) for v in scores)))
@@ -59,14 +64,5 @@ def main(separator='\t'):
 if __name__ == "__main__":
     main()
         
-def cal_jaccard (record1, record2):
-    num = 0
-    denom = 0    
-    for i in range(len(record1)):
-        if record1[i] != "null" or record2[i] != "null":
-            denom = denom +1
-            if record1[i] == record2[i]:
-                num = num + 1
-    
-    return num / denom
+
     

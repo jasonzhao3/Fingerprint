@@ -17,7 +17,7 @@ for line in sys.stdin:
     if (len(fields) == 5):
         identifier = fields[4]
         attr_list[22] = fields[0] + "." + fields[1] + "." + fields[2] + "." + fields[3]
-    else if (len(fields) == 1):
+    elif (len(fields) == 1):
         identifier = "null"
 #    attr_num = len(attr_list)
 #    toPrint = '%s%s'
