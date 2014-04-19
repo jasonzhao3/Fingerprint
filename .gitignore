@@ -1,0 +1,4 @@
+#include everything except:
+./local_test/
+*.pyc
+*.un~

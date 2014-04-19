@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys
 
- 
 def main(separator='\t'):
     #filename = 'test.txt'
     #data = read_mapper_output(filename, '\t')
@@ -14,17 +13,17 @@ def main(separator='\t'):
    running_features = []
     
    for input_line in sys.stdin:
-       input_line = input_line.strip()
+       input_line = input_line.rstrip()
        if not input_line:
            continue
-       this_key, value = input_line.split("\t", 1)
+       this_key, value = input_line.split(separator, 1)
        if last_key == this_key:
           running_features.append(value)
        else:
            if last_key:
                print ("%s%s%s" % (last_key, separator, "|".join(v for v in running_features)))
-               running_features = []
-           
+        
+           running_features = []   
            running_features.append(value)                
            last_key = this_key
  
