@@ -74,7 +74,8 @@
         map.draw(data, {
                           showTip: true, 
                           enableScrollWheel: true,
-                          useMapTypeControl: true
+                          useMapTypeControl: true,
+                          colors: [0xFF8747, 0xFFB581, 0xc06000]
                 });
         console.log (data);
       }
