@@ -1,41 +1,34 @@
-from freegeoip import get_geodata
+from common.freegeoip import get_geodata
 import csv, os
+from common.helper import write_csv, csv_reader, get_identifier_and_ip
+from config.data_config import DATA_PATH as path
 
-def write_csv (csv_file, list_of_list):
-    with open(csv_file, "wb") as f:
-        writer = csv.writer(f)
-        writer.writerows(list_of_list)
+'''
+ 
+ 	Based on ip-to-geo translation, this script parses each record into form:
+ 	['lat', 'long', 'timestamp'], and group records from same location together
+ 
+ '''
 
-def csv_reader (csv_file):
-	data = []
-	with open(csv_file, "rb") as f:
-		reader = csv.reader(f)
-		for row in reader:
-			data.append (row)
-	return data
-
+# record[16] is time field
 def get_ip_map (data):
 	ip_map = {}
 	for record in data:
-		cookie = record[22];
-		attr_list = cookie.split('_')
-		
-		if (len(attr_list) == 5):
-			ip_addr = attr_list[0] + '.' + attr_list[1] + '.' + attr_list[2] + '.' + attr_list[3]
-			time = record[16]
+		identifier, ip_addr = get_identifier_and_ip (record[22])
+
+		if (ip_addr != "null"):
 			if (ip_addr in ip_map):
-				ip_map[ip_addr].append (time)
+				ip_map[ip_addr].append (record[16])
 			else:
 				ip_list = []
-				ip_list.append (time)
+				ip_list.append (record[16])
 				ip_map[ip_addr] = ip_list
 		else:
-			print attr_list
+			print "invalid ip address"
 			data.remove (record)
 	return ip_map
 
 
-path = '../data'
 data_file_name = 'us_ca_sf_data.csv'
 data_file = os.path.join (path, data_file_name)
 data = csv_reader (data_file)
