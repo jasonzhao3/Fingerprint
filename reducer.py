@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import division
 import sys
 
@@ -11,9 +12,9 @@ def cal_jaccard (record1, record2):
                 num = num + 1   
     return num / denom
 
-def read_mapper_output(file, separator='\t'):
-    for line in file:
-        yield line.rstrip().split(separator, 1)
+#def read_mapper_output(file, separator='\t'):
+#    for line in file:
+#        yield line.rstrip().split(separator, 1)
  
 def main(separator='\t'):
     #filename = 'test.txt'
