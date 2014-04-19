@@ -5,6 +5,7 @@ Documentation for CS341 Project
    - track remote branch: git checkout -b (branch) (remote/branch)
    - merge branches: git checkout (mergeto branch); git merge (mergefrom branch)
    - delete branch: git branch -d (branch)
+   - gitignore file: first "git rm -r --cached .", then "git add .", then "git commit -am ...."
 
 2. Project Management:
    - We usually collaraboratively work on the develop branch. You are encouraged to create your own local branch to play around.
