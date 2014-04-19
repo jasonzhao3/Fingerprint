@@ -1,5 +1,5 @@
 #include everything except:
-./local_test/*
+local_test/
 *.pyc
 *.un~
 *.DS_Store
