@@ -27,5 +27,5 @@ for line in sys.stdin:
         elif (len(fields) == 1):
             identifier = "null"
             filter_list.extend(fields)
-        print '%s%s%s' % (state, "\t", ','.join(attr_list))
+        print '%s%s%s' % (identifier, "\t", ','.join(filter_list))
 
