@@ -184,3 +184,27 @@ PROFILE_IDX = [
         53, # hid - majority
         55, # is_on_premises - 1's ratio
 ]
+
+MAJORITY_IDX = [1, 2, 3, 21, 31, 47, 49, 53]
+JACCARD_IDX = [20, 32, 36, 43, 45]
+
+PROFILE_SCHEMA = [
+        'identifier',
+        'publisher_id',
+        'network_id',
+        'domain_id',
+        'census_DMA',
+        'service_provider_name',
+        'page_fold',
+        'play_type',
+        'hid',
+        'city_name',
+        'key_value',
+        'ip_addr',
+        'service_provider',
+        'player_size',
+        'is_yume_not_white_list',
+        'is_on_premises',
+        'request_interval_mean',
+        'request_interval_std'
+]

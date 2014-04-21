@@ -6,7 +6,7 @@ def cal_jaccard (record1, record2):
     num = 0
     denom = 0    
     for i in range(len(record1)):
-        if record1[i] != "null" or record2[i] != "null":
+        if record1[i].lower() != "null" or record2[i].lower() != "null":
             denom = denom +1
             if record1[i] == record2[i]:
                 num = num + 1   

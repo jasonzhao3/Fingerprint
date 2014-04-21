@@ -1,5 +1,6 @@
 import csv
-
+from time import strptime, mktime
+import numpy as np
 
 '''
  	CSV read/write helpers
@@ -60,3 +61,69 @@ def get_jaccard_dist_list (records):
 		for j in xrange (i+1, len(records)):
 			dist_list.append (cal_jaccard (records[i], records[j]))
 	return dist_list
+
+'''
+	Profile helpers
+'''
+def most_common(lst):
+    return max(set(lst), key=lst.count)
+
+# record_list is a list of list
+def get_record_list (record_str):
+	record_str = record_str.strip ()
+	identifier = record_str.split('\t')[0]
+	record_list = record_str.split ('\t')[1].split('|')
+	list_of_list = []
+	for record in record_list:
+		list_of_list.append (record.split(','))
+	return identifier, list_of_list
+
+def get_majority (list_of_list, attr_idx):
+	attr_list = [curr_list[attr_idx] for curr_list in list_of_list]
+	return most_common (attr_list)
+
+def get_jaccard_set (list_of_list, attr_idx):
+	attr_list = [curr_list[attr_idx] for curr_list in list_of_list]
+	return set (attr_list)
+
+def get_ratio (list_of_list, attr_idx, flag):
+	attr_list = [curr_list[attr_idx] for curr_list in list_of_list]
+	flag_count = 0	
+	for attr in attr_list:
+		if (attr == flag):
+			flag_count += 1
+	return float(flag_count) / len (attr_list)
+
+TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+def cal_interval (str1, str2):
+	str1 = str1.split('.')[0]
+	str2 = str2.split('.')[0]
+	# print str1, str2
+	t1 = mktime (strptime (str1, TIME_FORMAT))
+	t2 = mktime (strptime (str2, TIME_FORMAT))
+	return t2 - t1
+
+# return list of avg frequency, variability
+def get_freq_stat_list (list_of_list, attr_idx):
+	attr_list = [curr_list[attr_idx] for curr_list in list_of_list]
+	attr_list.sort ()
+	interval_list = []
+	for i in xrange (0, len (attr_list)-1):
+		interval_list.append (cal_interval (attr_list[i], attr_list[i+1]))
+	mean = np.mean (interval_list)
+	std = np.std (interval_list)
+	return [mean, std]
+
+def is_valid_device (list_of_list, num_features, num_threshold):
+	if (len (list_of_list) > num_threshold):
+		for ls in list_of_list:
+			# print len(ls)
+			if (len (ls) != num_features):
+				return False
+		return True
+	else:
+		return False
+
+
+
+
