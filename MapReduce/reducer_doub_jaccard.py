@@ -2,15 +2,22 @@
 from __future__ import division
 import sys
 
-def cal_jaccard (record1, record2):
-    num = 0
-    denom = 0    
+def double_jaccard (record1, record2):
+    scores = []
     for i in range(len(record1)):
-        if (record1[i].lower() != "null" or record2[i].lower() != "null") and (record1[i].lower() != "n/a" or record2[i].lower() != "n/a"): 
-            denom = denom +1
-            if record1[i] == record2[i]:
-                num = num + 1   
-    return num / denom
+        num = 0
+        denom = 0  
+        set1 = set(record1[i].split(','))
+        set2 = set(record2[i].split(','))
+        intersect = set1.intersection(set2)
+        for elem in set1.union(set2):
+            if elem.lower() != "null" and elem.lower() != "n/a":
+                denom = denom + 1            
+                if elem in intersect:
+                    num = num + 1
+        if (denom > 0):
+            scores.append(num / denom)
+    return sum(scores)/len(scores)
  
 def main(separator='\t'):
     #filename = 'test.txt'
@@ -34,12 +41,12 @@ def main(separator='\t'):
        if last_key:
            for prev in records:
                if (prev != this_key):
-                   profile1 = records[prev].split(',')
-                   profile2 = records[this_key].split(',')
+                   profile1 = records[prev].split('|')
+                   profile2 = records[this_key].split('|')
                    if len(profile1) == len(profile2):
                        emitted_key = prev + "," + this_key
-                       score = cal_jaccard(profile1, profile2)
-                       if score >= 0.4:
+                       score = double_jaccard(profile1, profile2)
+                       if (score >= 0.4):
                            print ("%s%s%s" % (emitted_key, separator, str(score)))
        last_key = this_key
  
