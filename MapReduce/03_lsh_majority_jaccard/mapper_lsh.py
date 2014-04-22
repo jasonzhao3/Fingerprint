@@ -5,7 +5,7 @@ import sys
 
 '''
 	LSH hash function
-    '''
+'''
 NUM_BUCKET = 1000
 # strong hash to 1000 buckets
 def hash_bucket_1 (publisher_id, network_id, domain_id):
@@ -27,17 +27,37 @@ def hash_string (input_str):
 
 # profile is an attribute list
 def get_hash_buckets (profile):
-	publisher_id = int (profile[0])
-	network_id = int (profile[1])
-	domain_id = int (profile[2])
-	
-	dma = int (profile[5])
-	hid = int (profile[13])
-	service_provider = hash_string (profile[6])
+  if (profile[0].isdigit ()):
+    publisher_id = int (profile[0])
+  else:
+    publisher_id = 3333 #heuristic value for NA
+  
+  if (profile[1].isdigit ()):
+    network_id = int (profile[1])
+  else:
+    network_id = 3333 
+
+  if (profile[2].isdigit ()):
+    domain_id = int (profile[2])
+  else:
+    domain_id = 3333
+  
+  if (profile[5].isdigit ()):
+    dma = int (profile[5])
+  else:
+    dma = 3333
+
+  if (profile[13].isdigit ()):
+    hid = int (profile[13])
+  else:
+    hid = 3333
     
-	bucket1 = hash_bucket_1 (publisher_id, network_id, domain_id)
-	bucket2 = hash_bucket_2 (dma, hid, service_provider)
-	return bucket1, bucket2
+  service_provider = hash_string (profile[6])
+
+  bucket1 = hash_bucket_1 (publisher_id, network_id, domain_id)
+  bucket2 = hash_bucket_2 (dma, hid, service_provider)
+  return bucket1, bucket2
+
 
 PROFILE_IDX = [
                1, # publisher_id - majority
@@ -57,6 +77,7 @@ PROFILE_IDX = [
                53, # hid - majority
                55, # is_on_premises - 1's ratio
                ];
+
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:

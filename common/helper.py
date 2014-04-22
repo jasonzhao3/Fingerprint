@@ -141,7 +141,7 @@ def hash_bucket_1 (publisher_id, network_id, domain_id):
 def hash_bucket_2 (dma, hid, service_provider):
 	return ((17 * dma) + (3 * hid) + service_provider) % NUM_BUCKET
 
-# hash service_provide_name -- based on dan bernstein in comp.lang.
+# hash service_provide_name -- based on dan bernstein in comp.lang.c
 def hash_string (input_str):
     djb2_code = 5381
     for i in xrange (0, len (input_str)):
@@ -151,12 +151,31 @@ def hash_string (input_str):
 
 # profile is an attribute list
 def get_hash_buckets (profile):
-	publisher_id = int (profile[0])
-	network_id = int (profile[1])
-	domain_id = int (profile[2])
+	if (profile[0].isdigit ()):
+		publisher_id = int (profile[0])
+	else:
+		publisher_id = 3333 #heuristic value for NA
 	
-	dma = int (profile[3])
-	hid = int (profile[7])
+	if (profile[1].isdigit ()):
+		network_id = int (profile[1])
+	else:
+		network_id = 3333 
+
+	if (profile[2].isdigit ()):
+		domain_id = int (profile[2])
+	else:
+		domain_id = 3333
+	
+	if (profile[3].isdigit ()):
+		dma = int (profile[3])
+	else:
+		dma = 3333
+
+	if (profile[7].isdigit ()):
+		hid = int (profile[7])
+	else:
+		hid = 3333
+		
 	service_provider = hash_string (profile[4])
 
 	bucket1 = hash_bucket_1 (publisher_id, network_id, domain_id)
