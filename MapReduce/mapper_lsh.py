@@ -2,6 +2,43 @@
 
 import sys
 
+
+'''
+	LSH hash function
+    '''
+NUM_BUCKET = 1000
+# strong hash to 1000 buckets
+def hash_bucket_1 (publisher_id, network_id, domain_id):
+	# publisher_id = int (publisher_id)
+	# network_id = int (network_id)
+	# domain_id = int (domain_id)
+	return ((17 * publisher_id) + (13 * network_id) + (3 * domain_id)) % NUM_BUCKET
+
+def hash_bucket_2 (dma, hid, service_provider):
+	return ((17 * dma) + (3 * hid) + service_provider) % NUM_BUCKET
+
+# hash service_provide_name -- based on dan bernstein in comp.lang.
+def hash_string (input_str):
+    djb2_code = 5381
+    for i in xrange (0, len (input_str)):
+        char = input_str[i];
+        djb2_code = (djb2_code << 5) + djb2_code + ord (char)
+    return djb2_code % 1000
+
+# profile is an attribute list
+def get_hash_buckets (profile):
+	publisher_id = int (profile[0])
+	network_id = int (profile[1])
+	domain_id = int (profile[2])
+	
+	dma = int (profile[5])
+	hid = int (profile[13])
+	service_provider = hash_string (profile[6])
+    
+	bucket1 = hash_bucket_1 (publisher_id, network_id, domain_id)
+	bucket2 = hash_bucket_2 (dma, hid, service_provider)
+	return bucket1, bucket2
+
 PROFILE_IDX = [
                1, # publisher_id - majority
                2, # network_id - majority
@@ -51,5 +88,8 @@ for line in sys.stdin:
                 maxNum = value;
                 maxItem = key
         attr_res.append(maxItem)
-      print '%s%s%s' % (l[0], "\t", ','.join(attr_res))
+      basket1, basket2 = hash(attr_res)
+      attr_res.append(l[0])
+      print '%s%s%s' % (str(basket1)+"_1", "\t", ','.join(attr_res))
+      print '%s%s%s' % (str(basket2)+"_2", "\t", ','.join(attr_res))
 
