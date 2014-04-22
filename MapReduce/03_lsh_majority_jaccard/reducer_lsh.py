@@ -6,14 +6,13 @@ def cal_jaccard (record1, record2):
     num = 0
     denom = 0    
     for i in range(len(record1)):
-        if (record1[i].lower() != "null" or record2[i].lower() != "null") and (record1[i].lower() != "n/a" or record2[i].lower() != "n/a"): 
+        if (record1[i].lower() != "null" or record2[i].lower() != "null") and (record1[i].lower() != "n/a" or record2[i].lower() != "n/a") and (record1[i].lower() != "na" or record2[i].lower() != "na"): 
             denom = denom +1
             if record1[i] == record2[i]:
                 num = num + 1   
     return num / denom
  
 def main(separator='\t'):
-    #filename = 'test.txt'
     #data = read_mapper_output(filename, '\t')
     #data = read_mapper_output(sys.stdin, separator=separator)
     # groupby groups multiple word-count pairs by word,
@@ -21,6 +20,7 @@ def main(separator='\t'):
     #   current_word - string containing a word (the key)
     #   group - iterator yielding all ["<current_word>", "<count>"] items
    last_key = None
+   this_key = None
    running_features = []
     #with open (filename) as f:
         #for input_line in f:
@@ -28,10 +28,8 @@ def main(separator='\t'):
        input_line = input_line.strip()
        if not input_line:
            continue
-       input_line = input_line.strip()
-
        this_key, value = input_line.split("\t", 1)
-       if last_key == this_key:
+       if last_key == this_key and this_key:
           running_features.append(value)
        else:
            if last_key:
@@ -53,7 +51,7 @@ def main(separator='\t'):
            running_features.append(value)                
            last_key = this_key       
        
-   if last_key == this_key:
+   if last_key == this_key and this_key:
            for x in range(len(running_features)):
                    for y in range(x+1, len(running_features)):
                        x_list = running_features[x].split(',')
