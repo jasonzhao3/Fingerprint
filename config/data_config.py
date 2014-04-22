@@ -80,9 +80,75 @@ REQUEST_SCHEMA = [
 
 
 '''
+    beacon schema
+'''
+BEACON_SCHEMA = [
+    'session_id',
+    'domain_id',
+    'placement_id',
+    'advertisement_id',
+    'conversion_pixel_id',
+    'zero',
+    'twentyfive',
+    'fifty',
+    'seventyfive',
+    'hundred',
+    'click',
+    'customization_id',
+    'customization_type_id',
+    'custom_report_id',
+    'custom_event_id',
+    'is_media_buy',
+    'event_time_stamp',
+    'element_id',
+    'slate_id',
+    'advertisement_type',
+    'price',
+    'forwarded_url',
+    'viewer_id',
+    'ifoffline',
+    'companionbannerregionid',
+    'random',
+    'campaignid',
+    'volume_percent',
+    'census_data_dma_id', 
+    'country_code',
+    'state_code',
+    'city',
+    'publisher_channel_id',
+    'publisher_page_id',
+    'content_video_id',
+    'yume_channel_id',
+    'publisher_player_identifier',
+    'content_playlist_identifier',
+    'delivery_point_id',
+    'device_make_id',
+    'device_model_id',
+    'os_id',
+    'os_version_id',
+    'browser_id',
+    'browser_version_id',
+    'service_provider_id',
+    'key_values',
+    'sdk_version',
+    'player_location',
+    'player_size',
+    'page_fold',
+    'ad_visibility',
+    'plugin_version', 
+    'ovp_version',
+    'ovp_type',
+    'household_id',
+    'num_of_devices',
+    'is_on_premise', 
+    'audience_segments',
+    'variable_coas'
+]
+
+'''
 Idx preserved for useful attributes, 44 is cookie => need parse it in mapper
 '''
-FILTER_IDX = [
+REQUEST_FILTER_IDX = [
 1, 2, 3, 4,
 6,
 9, 10, 11, 12, 13, 14, 15, 16,
@@ -93,6 +159,35 @@ FILTER_IDX = [
 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 
 60, 61, 62, 63, 64, 65, 66, 67, 68, 69
 ]
+
+
+
+BEACON_FILTER_IDX = [
+    0, # session_id
+    1, # domain_id
+    2, # placement_id
+    3, # advertisement_id
+    4, # conversionPixelld
+    5, # zero_tracker
+    6, # twentry_five
+    7, # fifty
+    8, # seventry_five
+    9, # one_hundred
+    10, # click_tracker
+    11, # customization_id
+    12, # custom_type_id
+    13, # custom_report_id
+    14, # custom_event_id
+    15, # is_media_buy
+    16, # request_time
+    22, # viewer_id
+    27, # volume_percent
+    30, # state
+    31, # city
+    48, # player_location
+    49  # player_size
+]
+
 
 ''' 
    New schema of the useful attributes
@@ -166,7 +261,7 @@ NEW_SCHEMA = [
 profile Idx
 '''
 
-PROFILE_IDX = [
+REQUEST_PROFILE_IDX = [
         1, # publisher_id - majority
         2, # network_id - majority
         3, # domain_id - majority
@@ -182,7 +277,7 @@ PROFILE_IDX = [
         47, # page_fold - majority
         49, # play_type - majority
         53, # hid - majority
-        55, # is_on_premises - 1's ratio
+        55  # is_on_premises - 1's ratio
 ]
 
 MAJORITY_IDX = [1, 2, 3, 21, 31, 47, 49, 53]

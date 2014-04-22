@@ -20,6 +20,7 @@ PROFILE_IDX = [
                53, # hid - majority
                55, # is_on_premises - 1's ratio
                ];
+               
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:
