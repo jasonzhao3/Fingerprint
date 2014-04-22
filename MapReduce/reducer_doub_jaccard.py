@@ -15,7 +15,8 @@ def double_jaccard (record1, record2):
                 denom = denom + 1            
                 if elem in intersect:
                     num = num + 1
-        scores.append(num / denom)
+        if (denom > 0):
+            scores.append(num / denom)
     return sum(scores)/len(scores)
  
 def main(separator='\t'):
@@ -45,7 +46,8 @@ def main(separator='\t'):
                    if len(profile1) == len(profile2):
                        emitted_key = prev + "," + this_key
                        score = double_jaccard(profile1, profile2)
-                       print ("%s%s%s" % (emitted_key, separator, str(score)))
+                       if (score >= 0.5):
+                           print ("%s%s%s" % (emitted_key, separator, str(score)))
        last_key = this_key
  
 if __name__ == "__main__":
