@@ -109,7 +109,10 @@ def get_freq_stat_list (list_of_list, attr_idx):
 	attr_list.sort ()
 	interval_list = []
 	for i in xrange (0, len (attr_list)-1):
-		interval_list.append (cal_interval (attr_list[i], attr_list[i+1]))
+		interval = cal_interval (attr_list[i], attr_list[i+1])
+		# 90 min
+		if (interval < 60 * 90):
+			interval_list.append (interval)
 	mean = np.mean (interval_list)
 	std = np.std (interval_list)
 	return [mean, std]
@@ -123,6 +126,42 @@ def is_valid_device (list_of_list, num_features, num_threshold):
 		return True
 	else:
 		return False
+
+'''
+	LSH hash function
+'''
+NUM_BUCKET = 1000
+# strong hash to 1000 buckets
+def hash_bucket_1 (publisher_id, network_id, domain_id):
+	# publisher_id = int (publisher_id)
+	# network_id = int (network_id)
+	# domain_id = int (domain_id)
+	return ((17 * publisher_id) + (13 * network_id) + (3 * domain_id)) % NUM_BUCKET
+
+def hash_bucket_2 (dma, hid, service_provider):
+	return ((17 * dma) + (3 * hid) + service_provider) % NUM_BUCKET
+
+# hash service_provide_name -- based on dan bernstein in comp.lang.
+def hash_string (input_str):
+    djb2_code = 5381
+    for i in xrange (0, len (input_str)):
+        char = input_str[i];
+        djb2_code = (djb2_code << 5) + djb2_code + ord (char)
+    return djb2_code % 1000
+
+# profile is an attribute list
+def get_hash_buckets (profile):
+	publisher_id = int (profile[0])
+	network_id = int (profile[1])
+	domain_id = int (profile[2])
+	
+	dma = int (profile[3])
+	hid = int (profile[7])
+	service_provider = hash_string (profile[4])
+
+	bucket1 = hash_bucket_1 (publisher_id, network_id, domain_id)
+	bucket2 = hash_bucket_2 (dma, hid, service_provider)
+	return bucket1, bucket2
 
 
 
