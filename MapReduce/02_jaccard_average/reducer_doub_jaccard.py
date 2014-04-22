@@ -6,15 +6,14 @@ def double_jaccard (record1, record2):
     scores = []
     for i in range(len(record1)):
         num = 0
-        denom = 0  
         set1 = set(record1[i].split(','))
         set2 = set(record2[i].split(','))
-        intersect = set1.intersection(set2)
-        for elem in set1.union(set2):
-            if elem.lower() != "null" and elem.lower() != "n/a":
-                denom = denom + 1            
-                if elem in intersect:
-                    num = num + 1
+        set_u = set1.union(set2)
+        denom = len(set_u)
+        #intersect = set1.intersection(set2)
+        for elem in set1:
+            if elem in set2 and elem.lower() != "null" and elem.lower() != "n/a":
+                num = num + 1
         if (denom > 0):
             scores.append(num / denom)
     return sum(scores)/len(scores)
