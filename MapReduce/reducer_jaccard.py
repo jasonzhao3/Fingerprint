@@ -39,7 +39,8 @@ def main(separator='\t'):
                    if len(profile1) == len(profile2):
                        emitted_key = prev + "," + this_key
                        score = cal_jaccard(profile1, profile2)
-                       print ("%s%s%s" % (emitted_key, separator, str(score)))
+                       if score >= 0.4:
+                           print ("%s%s%s" % (emitted_key, separator, str(score)))
        last_key = this_key
  
 if __name__ == "__main__":
