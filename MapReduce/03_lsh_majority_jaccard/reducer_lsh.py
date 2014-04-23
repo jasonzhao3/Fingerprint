@@ -48,7 +48,7 @@ def main(separator='\t'):
                            score = cal_jaccard(record1, record2)
                            emit_key = x_id + ',' + y_id
                            if (score >= 0.4):
-                              print ("%s%s%s" % (emit_key, separator, str(score) + last_key))
+                              print ("%s%s%s" % (emit_key, separator, str(score) + ' ' + last_key))
                running_features = []
            
            running_features.append(value)                
