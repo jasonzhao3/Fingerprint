@@ -14,8 +14,9 @@ def hash_bucket_1 (publisher_id, network_id, domain_id):
 	# domain_id = int (domain_id)
 	return ((17 * publisher_id) + (13 * network_id) + (3 * domain_id)) % NUM_BUCKET
 
+# tune the parameter from 17,13 to 13,7
 def hash_bucket_2 (dma, hid, service_provider):
-	return ((17 * dma) + (3 * hid) + service_provider) % NUM_BUCKET
+	return ((13 * dma) + (7 * hid) + service_provider) % NUM_BUCKET
 
 # hash service_provide_name -- based on dan bernstein in comp.lang.
 def hash_string (input_str):

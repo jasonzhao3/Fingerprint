@@ -2,6 +2,9 @@
 from __future__ import division
 import sys
 
+# where is the grouping process?????
+# can we make sure that the subsequent a few records are with the same key ???
+
 def cal_jaccard (record1, record2):
     num = 0
     denom = 0    
@@ -45,7 +48,7 @@ def main(separator='\t'):
                            score = cal_jaccard(record1, record2)
                            emit_key = x_id + ',' + y_id
                            if (score >= 0.4):
-                              print ("%s%s%s" % (emit_key, separator, str(score)))
+                              print ("%s%s%s" % (emit_key, separator, str(score) + last_key))
                running_features = []
            
            running_features.append(value)                
@@ -64,7 +67,7 @@ def main(separator='\t'):
                            score = cal_jaccard(record1, record2)
                            emit_key = x_id + ',' + y_id
                            if (score >= 0.4):
-                              print ("%s%s%s" % (emit_key, separator, str(score)))
+                              print ("%s%s%s" % (emit_key, separator, str(score) + ' ' + last_key))
         
  
 if __name__ == "__main__":
