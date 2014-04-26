@@ -37,7 +37,10 @@ for line in sys.stdin:
     # split the line into words
     attr_list = line.split(',')
     if len(attr_list) == 60:
-        identifier = attr_list[VIEWER_IND]
+        cookie = attr_list[VIEWER_IND]
+        fields = cookie.split('_')
+        if (len(fields) == 5):
+            identifier = fields[4]
         state = attr_list[STATE_IND]
         if state == "US_CA":
             filter_list = [attr_list[i] for i in BEACON_FILTER_IDX]

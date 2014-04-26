@@ -42,8 +42,7 @@ for line in sys.stdin:
       for i in range(0, attr_num):
           attr_count.append([])
       for record in record_list:
-          attr_l = record.split(',')
-          attr_list = [attr_l[i] for i in BEACON_FILTER_IDX]
+          attr_list = record.split(',')
           for i in range(0, len(attr_list)):
             attr_count[i].append(attr_list[i])
       attr_res = []
