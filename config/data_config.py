@@ -188,7 +188,7 @@ BEACON_FILTER_IDX = [
     49  # player_size
 ]
 
-
+0,1,0,0,0,0,0,0,0,0,0,0,2014-04-11 03:19:35.82,100_32_71_236_SnjMULLOwUWpAd,0,US_CA,Winchester,0,0
 ''' 
    New schema of the useful attributes
 '''
@@ -283,6 +283,9 @@ REQUEST_PROFILE_IDX = [
 MAJORITY_IDX = [1, 2, 3, 21, 31, 47, 49, 53]
 JACCARD_IDX = [20, 32, 36, 43, 45]
 
+'''
+    Schema for my local test
+'''
 PROFILE_SCHEMA = [
         'identifier',
         'publisher_id',
@@ -302,4 +305,38 @@ PROFILE_SCHEMA = [
         'is_on_premises',
         'request_interval_mean',
         'request_interval_std'
+]
+
+
+'''
+    Schema for joint_request_beacon
+'''
+
+JOINT_SCHEMA = [
+        'identifier', # unique identifier -- grouping basis
+        # tab sepeartor
+        'publisher_id', # majority  0
+        'network_id', # majority 1
+        'domain_id', # majoity 2
+        'is_yume_not_white_list', # majority 3
+        'city_name', # majority 4
+        'census_DMA', # majority 5
+        'service_provider_name', # majority 6
+        'key_value', # majority 7
+        'ip_addr', #majority 8
+
+        'service_provider_id', #majority 9
+        'player_size', # 10
+        'page_fold', # 11
+        'play_type', #NA or none  12
+
+        'hid', # 13
+        'is_on_premise', # 14
+
+        '0_ptg', # 15
+        '25_ptg', # 16
+        '50_ptg', # 17
+        '75_ptg', # 18
+        '100_ptg', # 19
+        'NA_ptg' # 20
 ]

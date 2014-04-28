@@ -1,7 +1,7 @@
 import csv
 from time import strptime, mktime
 import numpy as np
-
+import math
 '''
  	CSV read/write helpers
 '''
@@ -130,7 +130,7 @@ def is_valid_device (list_of_list, num_features, num_threshold):
 '''
 	LSH hash function
 '''
-NUM_BUCKET = 1000
+NUM_BUCKET = 500
 # strong hash to 1000 buckets
 def hash_bucket_1 (publisher_id, network_id, domain_id):
 	# publisher_id = int (publisher_id)
@@ -182,6 +182,61 @@ def get_hash_buckets (profile):
 	bucket2 = hash_bucket_2 (dma, hid, service_provider)
 	return bucket1, bucket2
 
+def clear_nan (profile):
+	if (profile[0].isdigit ()):
+		publisher_id = int (profile[0])
+	else:
+		publisher_id = 3333 #heuristic value for NA
+	
+	if (profile[1].isdigit ()):
+		network_id = int (profile[1])
+	else:
+		network_id = 3333 
+
+	if (profile[2].isdigit ()):
+		domain_id = int (profile[2])
+	else:
+		domain_id = 3333
+	
+	if (profile[3].isdigit ()):
+		dma = int (profile[3])
+	else:
+		dma = 3333
+
+	if (profile[7].isdigit ()):
+		hid = int (profile[7])
+	else:
+		hid = 3333
+
+	return publisher_id, network_id, domain_id, dma, hid
 
 
+def hash_beacon_ptg (profile):
+	ptg_0 = float (profile[-6])
+	ptg_25 = float (profile[-5])
+	ptg_50 = float (profile[-4])
+	ptg_75 = float (profile[-3])
+	ptg_100 = float (profile[-2])
+	ptg_NA = float (profile[-1])
+
+	return int (1024 * ptg_100 + 512 * ptg_75 + \
+		    256 * ptg_50 + 128 * ptg_25 + 64 * ptg_0 + 32 * ptg_NA) % NUM_BUCKET
+
+
+# get request_beacon hash buckets
+def get_rb_hash_buckets (profile):
+	publisher_id, network_id, domain_id, dma, hid = clear_nan (profile)
+	bucket1 = (publisher_id + network_id + domain_id) % NUM_BUCKET
+	# profile[6]: service_provider_name
+	bucket2 = (dma + hid + hash_string(profile[6])) % NUM_BUCKET
+	bucket3 = hash_beacon_ptg (profile)
+
+	return [bucket1, bucket2, bucket3]
+
+
+def create_empty_buckets ():
+	buckets = {}
+	for i in xrange(NUM_BUCKET):
+		buckets[i] = []
+	return buckets
 
