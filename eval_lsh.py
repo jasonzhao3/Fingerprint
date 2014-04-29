@@ -23,6 +23,12 @@ import numpy as np
 	false positive: a lot
 	false negative: 0
 
+	~~~~~~~~~~~~~~~~~
+	threshold = 0.8 with approximate match ratio
+	ground_truth   correct 
+	315817 		    315816    
+	
+
 	==================
 	threshold = 0.7
 	ground_truth   correct  total  
@@ -51,8 +57,8 @@ import numpy as np
 
 
 
-path = '../../local_data/join_request_beacon/'
-data_file_names = ["part012_sim_lsh_result_0.5", "part012_sim_result_0.5"]
+path = '../local_data/join_request_beacon/'
+data_file_names = ["part012_sim_approx_lsh_result_0.8", "part012_sim_approx_result_0.8"]
 output_file_name = "lsh_eval_result"
 
 file_lsh = os.path.join (path, data_file_names[0])

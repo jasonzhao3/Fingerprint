@@ -12,9 +12,9 @@ import numpy as np
 '''
 
 # local test
-path = '../../local_data/join_request_beacon/'
+path = '../local_data/join_request_beacon/'
 data_file_names = ["part-00000", "part-00001", "part-00002"]
-output_file_name = "part012_sim_result_0.5"
+output_file_name = "part012_sim_approx_result_0.8"
 output_file = os.path.join (path, output_file_name)
 
 
@@ -38,11 +38,12 @@ sim_counter = Counter()
 for i in xrange (len(profile_list)):
 	for j in xrange(i+1, len(profile_list)):
 		key = tuple_to_key (device_list[i], device_list[j])
-		sim_counter[key] = cal_exact_match_ratio (profile_list[i], profile_list[j])
+		# sim_counter[key] = cal_exact_match_ratio (profile_list[i], profile_list[j])
+		sim_counter[key] = cal_approx_match_ratio (profile_list[i], profile_list[j])
 
 with open (output_file, "wb") as f:
 	for key, val in sim_counter.iteritems():
-		if (val > 0.5):
+		if (val > 0.8):
 			print key, val
 			f.write(key[0] + ',' + key[1] + '\t' + str(val))
 			f.write('\n')
