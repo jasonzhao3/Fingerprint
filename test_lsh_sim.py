@@ -13,11 +13,12 @@ def add_pp_sim (sim_counter, identifier_list, device_map):
 			profile1 = device_map[identifier_list[i]]
 			profile2 = device_map[identifier_list[j]]
 			key = tuple_to_key (identifier_list[i], identifier_list[j])
-			sim_counter[key] = cal_exact_match_ratio (profile1, profile2)
+			# sim_counter[key] = cal_exact_match_ratio (profile1, profile2)
+			sim_counter[key] = cal_approx_match_ratio (profile1, profile2)
 
-path = '../../local_data/join_request_beacon/'
+path = '../local_data/join_request_beacon/'
 data_file_names = ["part-00000", "part-00001", "part-00002"]
-output_file_name = "part012_sim_lsh_result_0.5"
+output_file_name = "part012_sim_approx_lsh_result_0.8"
 output_file = os.path.join (path, output_file_name)
 
 
@@ -71,7 +72,7 @@ for i in xrange (len(bucket_group3)):
 
 with open (output_file, "wb") as f:
 	for key, val in sim_counter.iteritems():
-		if (val > 0.5):
+		if (val > 0.8):
 			print key, val
 			f.write(key[0] + ',' + key[1] + '\t' + str(val))
 			f.write('\n')
