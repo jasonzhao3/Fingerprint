@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import sys, csv, math
+import sys, csv, math, os
+# sys.path.append('./')
+# sys.path.append(os.path.dirname(__file__))
+# sys.path.append("./")
 
 '''
   Helper functions
@@ -34,8 +37,8 @@ def cal_geo_dist_sqr (city1, city2, geo_map):
 '''
   build geo map
 '''
-# geo_map = build_geo_map ('s3://cs341-yang/fingerprint/US-City-Location.csv')
-geo_map = build_geo_map ('../../../local_data/rb_lsh_week/US-City-Location.csv')
+geo_map = build_geo_map ('US-City-Location.csv')
+# geo_map = build_geo_map ('../../../local_data/rb_lsh_week/US-City-Location.csv')
 geo_threshold = 0.02
 
 total_cnt = 0
@@ -86,3 +89,6 @@ for idx, num_error in enumerate(errors):
   print '%s%s%s' % (str(threshold_list[idx]), "\t", str(num_error))
 
 print '%s%s%s' % ('0', '\t', str(total_cnt))
+
+
+
