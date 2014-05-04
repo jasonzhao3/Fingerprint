@@ -147,7 +147,7 @@ def hash_string (input_str):
     for i in xrange (0, len (input_str)):
         char = input_str[i];
         djb2_code = (djb2_code << 5) + djb2_code + ord (char)
-    return djb2_code % 1000
+    return djb2_code % NUM_BUCKET
 
 # profile is an attribute list
 def get_hash_buckets (profile):
