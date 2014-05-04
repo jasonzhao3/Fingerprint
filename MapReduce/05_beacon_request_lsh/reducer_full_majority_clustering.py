@@ -3,6 +3,17 @@ from __future__ import division
 import sys
 import math
 
+'''
+  reducer input:  
+      bucket_idx \t profile1
+      bucket_idx \t profile2
+      ...
+  reducer output: each line is a cluster 
+      threshold  \t identifier1, identifier2, ..._city1, city2, ...
+
+'''
+
+
 # where is the grouping process?????
 # can we make sure that the subsequent a few records are with the same key ???
 CITY_IND = 4
