@@ -5,6 +5,7 @@ import math
 
 # where is the grouping process?????
 # can we make sure that the subsequent a few records are with the same key ???
+CITY_IND = 4
 
 def cal_jaccard (record1, record2):
     num = 0
@@ -34,7 +35,30 @@ def cal_cosine(record1, record2):
         return cross / denom
     else:
         return 0.0
-    
+
+def getSimilarity(profile1, profile2):
+	x_list = profile1.split(',')
+	y_list = profile2.split(',')
+	request1 = [x_list[i] for i in range(15) if i != CITY_IND]
+	request2 = [y_list[i] for i in range(15) if i != CITY_IND]
+	beacon1 = x_list[15:-1]
+	beacon2 = y_list[15:-1]
+	score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
+	return score
+
+def getClustroid(cluster):
+	maxSim = 0
+	centroid = cluster[0]
+	for i in range(0,len(cluster)):
+		simTot = 0
+		for j in range(0,len(cluster)):
+			if j != i:
+				simTot += getSimilarity(cluster[i],cluster[j])
+		if simTot > maxSim:
+			maxSim = simTot
+			centroid = cluster[i]
+	return centroid   
+ 
 def main(separator='\t'):
     #data = read_mapper_output(filename, '\t')
     #data = read_mapper_output(sys.stdin, separator=separator)
@@ -42,7 +66,7 @@ def main(separator='\t'):
     # and creates an iterator that returns consecutive keys and their group:
     #   current_word - string containing a word (the key)
     #   group - iterator yielding all ["<current_word>", "<count>"] items
-   CITY_IND = 4
+   
    last_key = None
    this_key = None
    running_features = []
@@ -78,10 +102,13 @@ def main(separator='\t'):
                        maxVal = 0.0
                        maxInd = -1
                        for i in range(len(scores)):
-                           if(scores(i) > maxVal):
-                               maxVal = scores(i)
+                           if(scores[i] > maxVal):
+                               maxVal = scores[i]
                                maxInd = i
+                       #print maxVal
                        if maxVal >= 0.8:
+                          # print maxInd
+                           
                            clusters[maxInd].append(x)
                            clustroids[maxInd] = getClustroid(clusters[maxInd]) #update clustroids
                        else:
@@ -130,10 +157,12 @@ def main(separator='\t'):
                maxVal = 0.0
                maxInd = -1
                for i in range(len(scores)):
-                   if(scores(i) > maxVal):
-                       maxVal = scores(i)
+                   if(scores[i] > maxVal):
+                       maxVal = scores[i]
                        maxInd = i
+               #print maxVal
                if maxVal >= 0.8:
+                   #print maxInd
                    clusters[maxInd].append(x)
                    clustroids[maxInd] = getClustroid(clusters[maxInd]) #update clustroids
                else:

@@ -70,7 +70,7 @@ def main(separator='\t'):
                        if len(request1) == len(request2) and len(beacon1) == len(beacon2):
                            score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
                            emit_key = x_id + ',' + y_id
-                           if (score >= 0.8):
+                           if (score >= 0.2):
                               print ("%s%s%s" % (emit_key, separator, str(score) + '_' + x_city + '_'+ y_city))
                running_features = []
            
@@ -93,7 +93,7 @@ def main(separator='\t'):
                        if len(request1) == len(request2) and len(beacon1) == len(beacon2):
                            score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
                            emit_key = x_id + ',' + y_id
-                           if (score >= 0.8):
+                           if (score >= 0.2):
                               print ("%s%s%s" % (emit_key, separator, str(score) + '_' + x_city + '_'+ y_city))
         
  
