@@ -37,14 +37,16 @@ def cal_cosine(record1, record2):
         return 0.0
 
 def getSimilarity(profile1, profile2):
-	x_list = profile1.split(',')
-	y_list = profile2.split(',')
-	request1 = [x_list[i] for i in range(15) if i != CITY_IND]
-	request2 = [y_list[i] for i in range(15) if i != CITY_IND]
-	beacon1 = x_list[15:-1]
-	beacon2 = y_list[15:-1]
-	score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
-	return score
+     x_list = profile1.split(',')
+     y_list = profile2.split(',')
+     request1 = [x_list[i] for i in range(15) if i != CITY_IND]
+     request2 = [y_list[i] for i in range(15) if i != CITY_IND]
+     beacon1 = x_list[15:-1]
+     beacon2 = y_list[15:-1]
+     score = 0.0
+     if len(request1) == len(request2) and len(beacon1) == len(beacon2):
+         score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
+     return score
 
 def getClustroid(cluster):
 	maxSim = 0
@@ -130,9 +132,6 @@ def main(separator='\t'):
    if last_key == this_key and this_key:
                count = 0
                for x in running_features:
-                   #x_list = x.split(',')
-                   #request1 = [x_list[i] for i in range(15) if i != CITY_IND]
-                   #beacon1 = x_list[15:-1]
                    if count == 0:
                        new_cluster = []
                        new_cluster.append(x)
