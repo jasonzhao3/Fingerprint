@@ -62,13 +62,7 @@ def getClustroid(cluster):
 	return centroid   
  
 def main(separator='\t'):
-    #data = read_mapper_output(filename, '\t')
-    #data = read_mapper_output(sys.stdin, separator=separator)
-    # groupby groups multiple word-count pairs by word,
-    # and creates an iterator that returns consecutive keys and their group:
-    #   current_word - string containing a word (the key)
-    #   group - iterator yielding all ["<current_word>", "<count>"] items
-   
+
    last_key = None
    this_key = None
    running_features = []
@@ -85,9 +79,6 @@ def main(separator='\t'):
            if last_key:
                count = 0
                for x in running_features:
-                   #x_list = x.split(',')
-                   #request1 = [x_list[i] for i in range(15) if i != CITY_IND]
-                   #beacon1 = x_list[15:-1]
                    if count == 0:
                        new_cluster = []
                        new_cluster.append(x)
@@ -95,6 +86,7 @@ def main(separator='\t'):
                    else:
                        scores = []
                        for cluster in clusters:
+                           print len(cluster)
                            y = getClustroid(cluster) 
                            scores.append(getSimilarity(x, y))
                        maxVal = 0.0
@@ -104,13 +96,13 @@ def main(separator='\t'):
                                maxVal = scores[i]
                                maxInd = i
                        #print maxVal
-                       if maxVal >= 0.8:
-                          # print maxInd                           
+                       if maxVal >= 0.8:                          
                            clusters[maxInd].append(x)
                        else:
                            new_cluster = []
                            new_cluster.append(x)
                            clusters.append(new_cluster)
+                   #print (len(clusters))
                    count += 1
                
                #printing output
