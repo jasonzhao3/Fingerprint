@@ -3,7 +3,7 @@
 import sys, csv, math, os
 # sys.path.append('./')
 # sys.path.append(os.path.dirname(__file__))
-# sys.path.append("./")
+sys.path.append("./")
 
 '''
   Helper functions
@@ -47,6 +47,8 @@ threshold_list = [0.5, 0.6, 0.7, 0.75, 0.8, 0.83, 0.86, 0.9, 0.93, 0.95]
 for line in sys.stdin:
       total_cnt += 1
       line = line.strip ()
+      if (not line):
+        continue
       city1 = line.split('_')[1]
       city2 = line.split('_')[2]
       record = line.replace('\t', '_').replace(',', '_').split('_')
