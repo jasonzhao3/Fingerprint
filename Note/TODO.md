@@ -25,4 +25,14 @@ TODO list:
    -- mimic MMDS
 
 
- 5. We focus on many-many problem, but it can be easily extended to many-one problem 
+ 5. We focus on many-many problem, but it can be easily extended to many-one problem
+
+
+
+
+
+
+
+ Output Files:
+ 1. fingerprint/output_final: all CA request record data with wanted attributes (~50G)
+ 2. fingerprint/filter-beacon-output2: all CA beacon record with wanted attributes (~500M)
