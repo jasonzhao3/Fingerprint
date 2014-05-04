@@ -46,8 +46,6 @@ def main(separator='\t'):
    last_key = None
    this_key = None
    running_features = []
-    #with open (filename) as f:
-        #for input_line in f:
    for input_line in sys.stdin:
        input_line = input_line.strip()
        if not input_line:
@@ -70,9 +68,9 @@ def main(separator='\t'):
                        beacon1 = x_list[15:-1]
                        beacon2 = y_list[15:-1]
                        if len(request1) == len(request2) and len(beacon1) == len(beacon2):
-                           score = 0.75 * cal_jaccard(request1, request2) + 0.25 * cal_cosine(beacon1, beacon2)
+                           score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
                            emit_key = x_id + ',' + y_id
-                           if (score >= 0.5):
+                           if (score >= 0.2):
                               print ("%s%s%s" % (emit_key, separator, str(score) + '_' + x_city + '_'+ y_city))
                running_features = []
            
@@ -93,9 +91,9 @@ def main(separator='\t'):
                        beacon1 = x_list[15:-1]
                        beacon2 = y_list[15:-1]
                        if len(request1) == len(request2) and len(beacon1) == len(beacon2):
-                           score = 0.75 * cal_jaccard(request1, request2) + 0.25 * cal_cosine(beacon1, beacon2)
+                           score = 0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2)
                            emit_key = x_id + ',' + y_id
-                           if (score >= 0.5):
+                           if (score >= 0.2):
                               print ("%s%s%s" % (emit_key, separator, str(score) + '_' + x_city + '_'+ y_city))
         
  
