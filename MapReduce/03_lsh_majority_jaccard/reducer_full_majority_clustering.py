@@ -70,7 +70,7 @@ def main(separator='\t'):
    last_key = None
    this_key = None
    running_features = []
-   clustroids = []
+   #clustroids = []
    clusters = []
    for input_line in sys.stdin:
        input_line = input_line.strip()
@@ -83,22 +83,18 @@ def main(separator='\t'):
            if last_key:
                count = 0
                for x in running_features:
-                   x_list = x.split(',')
-                   request1 = [x_list[i] for i in range(15) if i != CITY_IND]
-                   beacon1 = x_list[15:-1]
+                   #x_list = x.split(',')
+                   #request1 = [x_list[i] for i in range(15) if i != CITY_IND]
+                   #beacon1 = x_list[15:-1]
                    if count == 0:
                        new_cluster = []
                        new_cluster.append(x)
                        clusters.append(new_cluster)
-                       clustroids.append(x)
                    else:
                        scores = []
-                       for y in clustroids:
-                           y_list = y.split(',')
-                           request2 = [y_list[i] for i in range(15) if i != CITY_IND]
-                           beacon2 = y_list[15:-1]
-                           if len(request1) == len(request2) and len(beacon1) == len(beacon2):
-                               scores.append(0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2))
+                       for cluster in clusters:
+                           y = getClustroid(cluster) 
+                           scores.append(getSimilarity(x, y))
                        maxVal = 0.0
                        maxInd = -1
                        for i in range(len(scores)):
@@ -107,15 +103,12 @@ def main(separator='\t'):
                                maxInd = i
                        #print maxVal
                        if maxVal >= 0.8:
-                          # print maxInd
-                           
+                          # print maxInd                           
                            clusters[maxInd].append(x)
-                           clustroids[maxInd] = getClustroid(clusters[maxInd]) #update clustroids
                        else:
                            new_cluster = []
                            new_cluster.append(x)
                            clusters.append(new_cluster)
-                           clustroids.append(x)
                    count += 1
                
                #printing output
@@ -130,57 +123,53 @@ def main(separator='\t'):
                        
                running_features = []
                clusters = []
-               clustroids = []
            
            running_features.append(value)                
            last_key = this_key       
        
    if last_key == this_key and this_key:
-       count = 0
-       for x in running_features:
-           x_list = x.split(',')
-           request1 = [x_list[i] for i in range(15) if i != CITY_IND]
-           beacon1 = x_list[15:-1]
-           if count == 0:
-               new_cluster = []
-               new_cluster.append(x)
-               clusters.append(new_cluster)
-               clustroids.append(x)
-           else:
-               scores = []
-               for y in clustroids:
-                   y_list = y.split(',')
-                   request2 = [y_list[i] for i in range(15) if i != CITY_IND]
-                   beacon2 = y_list[15:-1]
-                   if len(request1) == len(request2) and len(beacon1) == len(beacon2):
-                       scores.append(0.7 * cal_jaccard(request1, request2) + 0.3 * cal_cosine(beacon1, beacon2))
-               maxVal = 0.0
-               maxInd = -1
-               for i in range(len(scores)):
-                   if(scores[i] > maxVal):
-                       maxVal = scores[i]
-                       maxInd = i
-               #print maxVal
-               if maxVal >= 0.8:
-                   #print maxInd
-                   clusters[maxInd].append(x)
-                   clustroids[maxInd] = getClustroid(clusters[maxInd]) #update clustroids
-               else:
-                   new_cluster = []
-                   new_cluster.append(x)
-                   clusters.append(new_cluster)
-                   clustroids.append(x)
-           count += 1
-       
-       #printing output
-       for cluster in clusters:
-           value_list = []
-           city_list = []
-           for x in cluster:
-               x_list = x.split(',')
-               value_list.append(x_list[-1])
-               city_list.append(x_list[CITY_IND])
-           print ("%s%s%s" % (str(0.8), separator, ','.join(value_list) + '_' + ','.join(city_list)))   
+               count = 0
+               for x in running_features:
+                   #x_list = x.split(',')
+                   #request1 = [x_list[i] for i in range(15) if i != CITY_IND]
+                   #beacon1 = x_list[15:-1]
+                   if count == 0:
+                       new_cluster = []
+                       new_cluster.append(x)
+                       clusters.append(new_cluster)
+                   else:
+                       scores = []
+                       for cluster in clusters:
+                           y = getClustroid(cluster) 
+                           scores.append(getSimilarity(x, y))
+                       maxVal = 0.0
+                       maxInd = -1
+                       for i in range(len(scores)):
+                           if(scores[i] > maxVal):
+                               maxVal = scores[i]
+                               maxInd = i
+                       #print maxVal
+                       if maxVal >= 0.8:
+                          # print maxInd                           
+                           clusters[maxInd].append(x)
+                       else:
+                           new_cluster = []
+                           new_cluster.append(x)
+                           clusters.append(new_cluster)
+                   count += 1
+               
+               #printing output
+               for cluster in clusters:
+                   value_list = []
+                   city_list = []
+                   for x in cluster:
+                       x_list = x.split(',')
+                       value_list.append(x_list[-1])
+                       city_list.append(x_list[CITY_IND])
+                   print ("%s%s%s" % (str(0.8), separator, ','.join(value_list) + '_' + ','.join(city_list)))    
+                       
+               running_features = []
+               clusters = [] 
         
  
 if __name__ == "__main__":
