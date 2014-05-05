@@ -104,7 +104,7 @@ def main(separator='\t'):
    	# one group corresponds to one bucket
    	# TODO: different group of buckets share same devices
     for key, group in groupby(data, itemgetter(0)):
-        # try:
+        try:
             clusters = []; clustroids = []
             for key, device in group:
                 # print key, device
@@ -121,13 +121,12 @@ def main(separator='\t'):
             			clusters.append ([device])
             			clustroids.append (device)
             # print for each group (i.e. bucket)
-            # print clustroids
             print_clusters (key, clusters)
 
-        # except (RuntimeError, TypeError, NameError, ValueError):
-        #     # count was not a number, so silently discard this item
-        #     print "ERROR!!"
-        #     pass
+        except (RuntimeError, TypeError, NameError, ValueError):
+            # count was not a number, so silently discard this item
+            print "ERROR!!"
+            pass
 
  
 if __name__ == "__main__":
