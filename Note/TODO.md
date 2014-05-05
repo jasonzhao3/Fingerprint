@@ -9,15 +9,10 @@ TODO list:
    -- more complexed method?
    -- do cross evaluation of the two
 
-3. Grouping Devices into each user:
-   -- after we get pair-pair
-   -- mapper: 
-      emit (key: pair[0], val: pair[1])  where sim(pair) > 0.8
-      emit (key: pair[1], val: pair[0])
-   -- reducer:
-      calculate pair-pair similarity within value list,
-      and emit (key: triple, val: min(similarity))
-   -- similarly, we can do it for at most four devices
+3. Attributes in next step:
+   - timestamp
+   
+
 
 
  5. We focus on many-many problem, but it can be easily extended to many-one problem
