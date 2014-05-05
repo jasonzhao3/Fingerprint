@@ -3,6 +3,12 @@ from itertools import groupby
 from operator import itemgetter
 import sys
  
+'''
+  This is a script for pair-pair result evaluation
+  For different similarity threshold, we evaluate the error rate
+  based on geographical distance.
+'''
+
 def read_mapper_output(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 1)

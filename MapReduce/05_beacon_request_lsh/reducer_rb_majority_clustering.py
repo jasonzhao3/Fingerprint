@@ -18,7 +18,7 @@ from operator import itemgetter
 '''
 
 CITY_IND = 4
-THRESHOLD = 0.85
+THRESHOLD = 0.8
 
 
 def cal_jaccard (record1, record2):
