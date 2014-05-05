@@ -6,6 +6,13 @@ import sys, csv, math, os
 sys.path.append("./")
 
 '''
+  This is a script for pair-pair result evaluation
+  For different similarity threshold, we evaluate the error rate
+  based on geographical distance.
+'''
+
+
+'''
   Helper functions
 '''
 def read_csv (csv_file):

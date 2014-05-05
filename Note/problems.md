@@ -8,6 +8,39 @@ MapReduce Problem Collection:
    => Cause1: Missing a top line starts with #, indicating to Hadoop it's a python file.
    => Cause2: Uncalled functions, avoid them. (possible reason)
  
+3. stderr: 
+java.lang.RuntimeException: PipeMapRed.waitOutputThreads(): subprocess failed with code 143
+  at org.apache.hadoop.streaming.PipeMapRed.waitOutputThreads(PipeMapRed.java:372)
+  at org.apache.hadoop.streaming.PipeMapRed.mapRedFinished(PipeMapRed.java:586)
+  at org.apache.hadoop.streaming.PipeReducer.reduce(PipeReducer.java:130)
+  at org.apache.hadoop.mapred.ReduceTask.runOldReducer(ReduceTask.java:528)
+  at org.apache.hadoop.mapred.ReduceTask.run(ReduceTask.java:429)
+  at org.apache.hadoop.mapred.Child$4.run(Child.java:255)
+  at java.security.AccessController.doPrivileged(Native Method)
+  at javax.security.auth.Subject.doAs(Subject.java:415)
+  at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1132)
+  at org.apache.hadoop.mapred.Child.main(Child.java:249)
+
+  syslog:
+  2014-05-05 05:15:15,481 WARN org.apache.hadoop.streaming.PipeMapRed (main): java.io.IOException: Broken pipe
+  at java.io.FileOutputStream.writeBytes(Native Method)
+  at java.io.FileOutputStream.write(FileOutputStream.java:345)
+  at java.io.BufferedOutputStream.write(BufferedOutputStream.java:122)
+  at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)
+  at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)
+  at java.io.DataOutputStream.flush(DataOutputStream.java:123)
+  at org.apache.hadoop.streaming.PipeMapRed.mapRedFinished(PipeMapRed.java:579)
+  at org.apache.hadoop.streaming.PipeReducer.reduce(PipeReducer.java:130)
+  at org.apache.hadoop.mapred.ReduceTask.runOldReducer(ReduceTask.java:528)
+  at org.apache.hadoop.mapred.ReduceTask.run(ReduceTask.java:429)
+  at org.apache.hadoop.mapred.Child$4.run(Child.java:255)
+  at java.security.AccessController.doPrivileged(Native Method)
+  at javax.security.auth.Subject.doAs(Subject.java:415)
+  at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1132)
+  at org.apache.hadoop.mapred.Child.main(Child.java:249)
+  
+  >> possible timeout / out of memory issue
+
 
  AWS User Document:
  ===================

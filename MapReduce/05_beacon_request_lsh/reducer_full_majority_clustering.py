@@ -78,24 +78,35 @@ def main(separator='\t'):
    this_key = None
    running_features = []
    #clustroids = []
+   # one reducer has ONE "clusters",
+   # each reducer may have multiple bucket idx
    clusters = []
    for input_line in sys.stdin:
        input_line = input_line.strip()
        if not input_line:
            continue
        this_key, value = input_line.split("\t", 1)
+       # running_features: devices in current bucket
        if last_key == this_key and this_key:
           running_features.append(value)
        else:
            if last_key:
                count = 0
+               # agglomerative clustering 
                for x in running_features:
+
+                   #x_list = x.split(',')
+                   #request1 = [x_list[i] for i in range(15) if i != CITY_IND]
+                   #beacon1 = x_list[15:-1]
+                   # one bucket contains several clusters, so here we initialize a new_cluster
+
                    if count == 0:
                        new_cluster = []
                        new_cluster.append(x)
                        clusters.append(new_cluster)
                    else:
                        scores = []
+                       # TODO: store cluster list
                        for cluster in clusters:
                            print len(cluster)
                            y = getClustroid(cluster) 
@@ -131,48 +142,49 @@ def main(separator='\t'):
            
            running_features.append(value)                
            last_key = this_key       
-       
+    
+   # last key    
    if last_key == this_key and this_key:
-               count = 0
-               for x in running_features:
-                   if count == 0:
-                       new_cluster = []
-                       new_cluster.append(x)
-                       clusters.append(new_cluster)
-                   else:
-                       scores = []
-                       for cluster in clusters:
-                           y = getClustroid(cluster) 
-                           scores.append(getSimilarity(x, y))
-                       maxVal = 0.0
-                       maxInd = -1
-                       for i in range(len(scores)):
-                           if(scores[i] > maxVal):
-                               maxVal = scores[i]
-                               maxInd = i
-                       #print maxVal
-                       if maxVal >= 0.8:
-                          # print maxInd                           
-                           clusters[maxInd].append(x)
-                       else:
-                           new_cluster = []
-                           new_cluster.append(x)
-                           clusters.append(new_cluster)
-                   count += 1
-               
-               #printing output
-               for cluster in clusters:
-                   value_list = []
-                   city_list = []
-                   for x in cluster:
-                       x_list = x.split(',')
-                       value_list.append(x_list[-1])
-                       city_list.append(x_list[CITY_IND])
-                   print ("%s%s%s" % (str(0.8), separator, ','.join(value_list) + '_' + ','.join(city_list)))    
-                       
-               running_features = []
-               clusters = [] 
-        
+     count = 0
+     for x in running_features:
+         if count == 0:
+             new_cluster = []
+             new_cluster.append(x)
+             clusters.append(new_cluster)
+         else:
+             scores = []
+             for cluster in clusters:
+                 y = getClustroid(cluster) 
+                 scores.append(getSimilarity(x, y))
+             maxVal = 0.0
+             maxInd = -1
+             for i in range(len(scores)):
+                 if(scores[i] > maxVal):
+                     maxVal = scores[i]
+                     maxInd = i
+             #print maxVal
+             if maxVal >= 0.8:
+                # print maxInd                           
+                 clusters[maxInd].append(x)
+             else:
+                 new_cluster = []
+                 new_cluster.append(x)
+                 clusters.append(new_cluster)
+         count += 1
+     
+     #printing output
+     for cluster in clusters:
+         value_list = []
+         city_list = []
+         for x in cluster:
+             x_list = x.split(',')
+             value_list.append(x_list[-1])
+             city_list.append(x_list[CITY_IND])
+         print ("%s%s%s" % (str(0.8), separator, ','.join(value_list) + '_' + ','.join(city_list)))    
+             
+     running_features = []
+     clusters = [] 
+
  
 if __name__ == "__main__":
     main()
