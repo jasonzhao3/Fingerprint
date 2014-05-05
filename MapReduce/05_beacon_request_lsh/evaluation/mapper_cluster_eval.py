@@ -4,6 +4,7 @@ import sys, math, os
 
 '''
     input: key is bucket idx, value is identifiers_cities
+    
     output: key is bucket group (i.e. 1, 2, 3), value is cities string, e.g.
     1 \t san jose, san francisco, palo alto
 '''
