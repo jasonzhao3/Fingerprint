@@ -35,3 +35,23 @@ plt.xlabel('threshold')
 plt.ylabel('error ratios')
 plt.title('error-ratio-vs-threshold')
 plt.savefig(os.path.join(path, 'error_ratio_threshold.png'))
+
+
+
+
+'''
+	Result:
+	Threshold = 0.9
+	================
+	bucket 1: 
+	error_cnt  total_cnt  user_cnt   error_rate  total_device
+	700995     1185455    45896		 0.5914
+
+	bucket 2:
+	error_cnt  total_cnt  user_cnt   error_rate  total_device
+	696147	   1198165    43691		 0.5810
+
+	bucket 3:
+	error_cnt  total_cnt  user_cnt   error_rate  total_device
+	21437		109637	  78825		 0.1955
+'''

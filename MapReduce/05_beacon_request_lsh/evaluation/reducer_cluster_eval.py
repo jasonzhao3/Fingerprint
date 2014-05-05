@@ -50,8 +50,8 @@ def get_error_cnt (city_list, geo_threshold):
 '''
   build geo map
 '''
-# geo_map = build_geo_map ('US-City-Location.csv')
-geo_map = build_geo_map ('../../../../local_data/GeoLiteCity_20140401/US-City-Location.csv')
+geo_map = build_geo_map ('US-City-Location.csv')
+# geo_map = build_geo_map ('../../../../local_data/GeoLiteCity_20140401/US-City-Location.csv')
 geo_threshold = 0.02
 
 
@@ -66,14 +66,15 @@ def main(separator='\t'):
     # key is the bucket group
     for key, group in groupby(data, itemgetter(0)):
         try:
-            total_cnt = 0; error_cnt = 0; user_cnt = 0
+            total_cnt = 0; error_cnt = 0; user_cnt = 0; device_cnt = 0
             for cluster_idx, cities in group:
                 user_cnt += 1
                 city_list = cities.split(',')
+                device_cnt += len(city_list)
                 tmp_error_cnt, tmp_tot_cnt = get_error_cnt (city_list, geo_threshold)
                 error_cnt += tmp_error_cnt
                 total_cnt += tmp_tot_cnt
-            print "%s%s%s" % (key, separator, str(error_cnt)+','+str(total_cnt)+','+str(user_cnt))
+            print "%s%s%s" % (key, separator, str(error_cnt)+','+str(total_cnt)+','+str(user_cnt)+','+str(device_cnt))
         except ValueError:
             # count was not a number, so silently discard this item
             pass
