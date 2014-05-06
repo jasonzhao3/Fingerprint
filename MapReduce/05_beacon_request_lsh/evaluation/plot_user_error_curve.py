@@ -41,7 +41,21 @@ plt.savefig(os.path.join(path, 'error_ratio_threshold.png'))
 
 '''
 	Result:
-	Threshold = 0.92
+     Threshold = 0.95
+     ================
+     bucket 1: 
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate 	average_#devices_per_user
+	17         147588      70481       90443           0.000116        1.28
+
+	bucket 2:
+	error_cnt 	total_cnt 	user_cnt  	total_device	error_rate  average_#devices_per_user
+     17          147600     70483       90443           0.000115        	1.28
+
+	bucket 3:
+	error_cnt  	total_cnt  	user_cnt  	total_device	error_rate  average_#devices_per_user
+	6          89219       87820       90443           0.00006         1.03
+     
+     Threshold = 0.92
 	================
 	
 
