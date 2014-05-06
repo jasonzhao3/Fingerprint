@@ -41,9 +41,24 @@ plt.savefig(os.path.join(path, 'error_ratio_threshold.png'))
 
 '''
 	Result:
+
+
+
 	Threshold = 0.92
 	================
-	
+	bucket 1: 
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate 	average_#devices_per_user
+	667195		1139003		46166		90443			0.5858		1.9590
+
+	bucket 2: 
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate 	average_#devices_per_user
+	665043		1151113		44063		90443			0.5777		2.0526
+
+	bucket 3: 
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate 	average_#devices_per_user
+	21432		109682		78831		90443			0.1954		1.1473
+
+
 
 	Threshold = 0.9
 	================
@@ -88,6 +103,20 @@ plt.savefig(os.path.join(path, 'error_ratio_threshold.png'))
 	error_cnt  	total_cnt  	user_cnt  	total_device	error_rate  average_#devices_per_user
 	72201		3028218		49418		90443			0.0238		1.8302
 
+
+	Threshold = 0.83
+	=================
+	bucket 1: 
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate  average_#devices_per_user
+	3158165		85691910	7031		90443			0.0369		12.8635
+
+	bucket 2:
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate  average_#devices_per_user
+	3218804		90401001	6596		90443			0.0356		13.7118
+
+	bucket 3:
+	error_cnt  	total_cnt  	user_cnt  	total_device   	error_rate  average_#devices_per_user
+	191954		4383160		35194		90443			0.0438		2.5698
 
 	Threshold = 0.8
 	==================
