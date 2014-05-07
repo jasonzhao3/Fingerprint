@@ -10,7 +10,6 @@ def double_jaccard (record1, record2):
         set2 = set(record2[i].split(','))
         set_u = set1.union(set2)
         denom = len(set_u)
-        #intersect = set1.intersection(set2)
         for elem in set1:
             if elem in set2 and elem.lower() != "null" and elem.lower() != "n/a":
                 num = num + 1
