@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+'''
+    This map-reduce job takes in request and beacon device profile
+    and output joined profile of each device
+
+    Its corresponding mapper is an identical mapper
+
+    Reducer output format:
+    identifier \t joined feture list
+'''
+
 import sys
 
 def main(separator='\t'):

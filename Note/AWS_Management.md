@@ -25,19 +25,35 @@ AWS S3 and EMR Management
  2. Profile Extraction: only extract device with more than 30 records
 
  	1) Beacon profile extraction:
- 	   >> script: 01_profile_extraction/beacon
+ 	   >> script: 
+ 	   			01_profile_extraction/beacon
+ 	   >> input:
+ 	   			CA_beacon_record (old: filter-beacon-output-2)
  	   >> size: ~15M
  	   >> time: ~5min
 
  	2) Request profile extraction:
- 	   >> script: 01_profile_extraction/request/*
- 	      majority-based and set-based
+ 	   >> script: 
+ 	   			01_profile_extraction/request/*
+ 	      		majority-based and set-based
+ 	   >> input:
+ 	   		CA_request_record (old: output-file)
  	   >> size: ~250M
  	   >> time: ~25min
 
-3. 
+
+3. Beacon-Request Profile Join:  either majority-based or set-based
+	
+  >> script:
+			02_profile_join
+	>> input: 
+		>>> majority-based profile: 
+		>>> set-based profile: beacon_request_set_final/output_full/ 
 
 
+4. Profile Clustering:
+  
+  1) Majority-based profile clustering
 
 
 
