@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+'''
+    This map-reduce job takes in 3 Terabytes Yume Request Data,
+    Output only CA request data with selected features
 
+    Mapper Output Format:
+    identifier  \t  feature_list
+'''
 import sys
 
 STATE_IND = 24

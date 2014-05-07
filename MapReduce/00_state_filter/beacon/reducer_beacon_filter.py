@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+'''
+    Reducer Output Format: 
+    device_identifier \t record1 | record2 | record3 ... 
+'''
+
 import sys
 
 def main(separator='\t'):

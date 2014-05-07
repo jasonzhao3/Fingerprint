@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+'''
+    This map-reduce job takes in 30G Yume Beacon Data,
+    Output only CA beacon data with selected features
+
+    Mapper Output Format:
+    identifier  \t  feature_list
+'''
 import sys
 
 STATE_IND = 30

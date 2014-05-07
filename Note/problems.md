@@ -58,16 +58,16 @@ java.lang.RuntimeException: PipeMapRed.waitOutputThreads(): subprocess failed wi
 
 
 
-Some waste of time:
-===============
-1. for a single device, multiple city spread out over different places
-2. 
+  Some waste of time:
+  ===============
+  1. for a single device, multiple city spread out over different places
+  2. 
 
 
   Meet-up Questions:
   ===================
   1. Evaluation: our errror rate is the correct pair # / all pairs within a cluster -- is it a reasonable choice?
-  2. Maybe loose our geolocation constraint??
+  2. Maybe loose our geolocation constraint??  -- we have tested it, no big difference
   3. content-based clustering?  => advertisement id 
   4. Clustering users in different bands? How to merge bands? 
   5. how to deal with online fingerprint??
