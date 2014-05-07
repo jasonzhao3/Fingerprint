@@ -76,9 +76,10 @@ for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
     attr_list = l[1].split(',')
-    basket1, basket2, basket3 = get_rb_hash_buckets(attr_list)
+    # basket1, basket2, basket3 = get_rb_hash_buckets(attr_list)
+    basket3 = hash_beacon_ptg (attr_list)
     attr_list.append(l[0])
-    print '%s%s%s' % (str(basket1)+"_1", "\t", ','.join(attr_list))
-    print '%s%s%s' % (str(basket2)+"_2", "\t", ','.join(attr_list))
+    # print '%s%s%s' % (str(basket1)+"_1", "\t", ','.join(attr_list))
+    # print '%s%s%s' % (str(basket2)+"_2", "\t", ','.join(attr_list))
     print '%s%s%s' % (str(basket3)+"_3", "\t", ','.join(attr_list))
 
