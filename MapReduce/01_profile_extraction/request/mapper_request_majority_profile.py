@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+'''
+    This map-reduce job takes in request record data,
+    and output majority-based profile of each device
+
+    Mapper Output Format:
+    identifier  \t  majority-based feature list 
+
+    Its corresponding reducer is an identical reducer.
+'''
 
 import sys
 
@@ -20,6 +29,7 @@ PROFILE_IDX = [
                53, # hid - majority
                55, # is_on_premises - 1's ratio
                ];
+               
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:
@@ -31,20 +41,25 @@ for line in sys.stdin:
     if len(record_list) >= 30:
       attr_count = []
       for i in range(0, attr_num):
-        attr_count.append([])
+          attr_count.append([])
       for record in record_list:
-        attr_l = record.split(',')
-        attr_list = [attr_l[i] for i in PROFILE_IDX]
-        for i in range(0, len(attr_list)):
+          attr_l = record.split(',')
+          attr_list = [attr_l[i] for i in PROFILE_IDX]
+          for i in range(0, len(attr_list)):
             attr_count[i].append(attr_list[i])
-      string_res = '';
-      for i in range(0, len(attr_count)):
-        attrs = attr_count[i];
-        m = set()
+      attr_res = []
+      for attrs in attr_count:
+        m = dict()
         for attr in attrs:
-            m.add(attr)
-        string_res += ','.join(m)
-        if i != len(attr_count)-1:
-            string_res += '|';
-      print '%s%s%s' % (l[0], "\t", string_res)
+            if attr not in m:
+                m[attr]  = 0
+            m[attr] += 1
+        maxNum = 0
+        maxItem = ''
+        for key,value in m.items():
+            if (value > maxNum):
+                maxNum = value;
+                maxItem = key
+        attr_res.append(maxItem)
+      print '%s%s%s' % (l[0], "\t", ','.join(attr_res))
 
