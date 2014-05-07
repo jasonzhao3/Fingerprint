@@ -18,18 +18,23 @@ from operator import itemgetter
 '''
 
 CITY_IND = 4
-THRESHOLD = 0.893
+THRESHOLD = 0.77
 
 
 def cal_jaccard (record1, record2):
-    num = 0
-    denom = 0    
+    scores = []
     for i in range(len(record1)):
-        if (record1[i].lower() != "null" or record2[i].lower() != "null") and (record1[i].lower() != "n/a" or record2[i].lower() != "n/a") and (record1[i].lower() != "na" or record2[i].lower() != "na"): 
-            denom = denom +1
-            if record1[i] == record2[i]:
-                num = num + 1   
-    return num / denom
+        num = 0
+        set1 = set(record1[i].split('|'))
+        set2 = set(record2[i].split('|'))
+        set_u = set1.union(set2)
+        denom = len(set_u)
+        for elem in set1:
+            if elem in set2 and elem.lower() != "null" and elem.lower() != "n/a":
+                num = num + 1
+        if (denom > 0):
+            scores.append(num / denom)
+    return sum(scores)/len(scores)
  
 def cal_cosine(record1, record2):
     cross = 0.0
@@ -86,13 +91,17 @@ def get_max_idx_value (my_list):
 	return index, value
 
 
-def print_clusters (key, clusters):
-	for cluster in clusters:
+def print_clusters (clustroids, clusters):
+	for i in range(len(clusters)):
 		identifier_list = []; city_list = []
-		for device in cluster:
-			attr_list = device.split (',')
-			identifier_list.append (attr_list[-1])
-			city_list.append (attr_list[CITY_IND])
+		for device in clusters[i]:
+                 attr_list = device.split (',')
+                 identifier_list.append (attr_list[-1])
+                 city_list.append (attr_list[CITY_IND])
+                 clustroid = clustroids[i].split(',')
+                 city = clustroid[CITY_IND]
+                 identifier = clustroid[-1]
+                 key = identifier + '_' + city
         # print key, city_list
                 print ("%s%s%s" % (key, '\t', ','.join(identifier_list) + '_' + ','.join(city_list)))    
 
@@ -143,7 +152,7 @@ def main(separator='\t'):
             			clustroids.append (device)
                                 cluster_sims.append ([0])
             # print for each group (i.e. bucket)
-            print_clusters (key, clusters)
+            print_clusters (clustroids, clusters)
 
         except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
@@ -154,3 +163,4 @@ if __name__ == "__main__":
     main()
         
         
+
