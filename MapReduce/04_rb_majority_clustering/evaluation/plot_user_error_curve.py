@@ -4,8 +4,13 @@ import pylab as plt
 path = '../../../../local_data/'
 
 
-
-
+'''
+ 	cluster naming convention:
+ 	==========================
+ 	1. output_cluster_eval_0.8: original cluster with 3 bands
+ 	2. output_cluster_eval_0.8_3: Mimic President Election Method with 90% certainty
+ 	3. output_cluster_eval_0.9_4: Mimic President Election Method with 100% certainty
+'''
 
 
 '''
@@ -28,13 +33,16 @@ total_device = 90443
 # xs = [str(users[i] for i in xrange(len(users)))]
 # print xs
 
+# 90% certainty
+# errors = [9076, 6378, 6353, 6119, 2296, 2293, 2290, 6]
+# users = [35194, 49418, 49447, 50471, 78825, 78817, 78831, 87820]
 
-errors = [9076, 6378, 6353, 6119, 2296, 2293, 2290, 6]
-users = [35194, 49418, 49447, 50471, 78825, 78817, 78831, 87820]
-
-# errors = [9128, 9102, 6379, 6354, 6120, 2299, 2296, 2293, 6]
-# users = [34812, 35194, 49418, 49447, 50471, 78825, 78817, 78831, 87820 ]
+# 100% certainty
+thresholds = [0.8, 0.83, 0.85, 0.87, 0.88, 0.885, 0.89, 0.893, 0.895, 0.897, 0.9, 0.91, 0.92, 0.95]
+errors = [9128, 9102, 6379, 6354, 6340, 6315, 6120, 3859, 3817, 3765, 2299, 2296, 2293, 6]
+users = [34812, 35194, 49418, 49447, 49587, 49748, 50471, 56901, 57116, 57626, 78825, 78817, 78831, 87820 ]
 ratios = [float(errors[i]) / users[i] for i in xrange(len(users))]
+
 
 '''
 	Plot 
@@ -42,15 +50,29 @@ ratios = [float(errors[i]) / users[i] for i in xrange(len(users))]
 f = plt.figure()
 ax = f.add_subplot(111)
 
+ax.tick_params(axis='both', labelsize=8)
+
 xs = range(0, len(users))
 plt.xticks(xs, users)
-plt.plot(xs, ratios, 'yo-', color='red')
 plt.xlabel('#user')
 plt.ylabel('error user ratio')
-plt.title('error-vs-user number')
+plt.grid()
+# plt.title('majority_user_error')
+# ax2.xticks(xs, thresholds)
+ax.plot(xs, ratios, 'yo-', color = 'red')
+
+ax2 = ax.twiny()
+plt.xticks(xs, thresholds)
+plt.xlabel('#threshold')
+plt.grid()
+# ax.plot(xs, ratios, 'yo-', color='red')
+
+
+
+
 plt.text (0.6,0.9, "total_device # = 90443",  transform = ax.transAxes, style='italic')
 # plt.legend('total_device: 90443')
-plt.savefig(os.path.join(path, 'error_ratio_user.png'))
+plt.savefig(os.path.join(path, 'majority_user_error_ratio.png'))
 #  #[3991288, 3340251, 1688106, 903537, 282299, 126379, 84136, 24543, 23021, 0]
 
 # plt.figure()
@@ -279,9 +301,29 @@ plt.savefig(os.path.join(path, 'error_ratio_user.png'))
 	================
 	2299,78825,90443
 
+	Threshold = 0.897
+	=================
+	3765,57626,90443
+
+	Threshold = 0.895
+	===============
+	3817,57116,90443
+
+	Threshold = 0.893
+	================
+	3859,56901,90443
+
 	Threshold = 0.89
 	================
 	6120,50471,90443
+
+	Threshold = 0.885
+	=================
+	6315,49748,90443
+
+	Threshold = 0.88
+	===============
+	6340,49587,90443
 
 	Threshold = 0.87
 	==============
