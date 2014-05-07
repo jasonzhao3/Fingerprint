@@ -51,9 +51,16 @@ AWS S3 and EMR Management
 		>>> set-based profile: beacon_request_set_final/output_full/ 
 
 
-4. Profile Clustering:
+4. Profile Pair-pair comparison:
+
+
+5. Profile Clustering:
   
   1) Majority-based profile clustering
+    >>script:
+
+
+  2) Set-based profile clustering
 
 
 
