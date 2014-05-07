@@ -7,6 +7,8 @@ import sys
   This is a script for pair-pair result evaluation
   For different similarity threshold, we evaluate the error rate
   based on geographical distance.
+
+  Reducer is used to summary error count for a particular threshold
 '''
 
 def read_mapper_output(file, separator='\t'):

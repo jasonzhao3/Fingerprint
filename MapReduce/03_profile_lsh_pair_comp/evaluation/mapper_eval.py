@@ -9,6 +9,9 @@ sys.path.append("./")
   This is a script for pair-pair result evaluation
   For different similarity threshold, we evaluate the error rate
   based on geographical distance.
+
+  Input format: identifier1, identifier2 \t city1_city2,similarity
+  Output format: threshold \t error_cnt
 '''
 
 

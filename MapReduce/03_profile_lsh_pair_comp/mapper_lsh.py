@@ -2,6 +2,13 @@
 
 import sys
 
+'''
+   This map-reduce job is used to LSH profiles into 3 groups of buckets
+
+   Mapper output format:
+        bucket_idx \t attribute_list
+'''
+
 
 '''
 	LSH hash function
