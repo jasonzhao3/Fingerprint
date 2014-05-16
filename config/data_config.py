@@ -126,7 +126,7 @@ BEACON_SCHEMA = [
     'device_model_id',
     'os_id',
     'os_version_id',
-    'browser_id',
+    'browser_id', #
     'browser_version_id',
     'service_provider_id',
     'key_values',
@@ -182,8 +182,6 @@ BEACON_FILTER_IDX = [
     16, # request_time
     22, # viewer_id
     27, # volume_percent
-    30, # state
-    31, # city
     48, # player_location
     49  # player_size
 ]
@@ -277,7 +275,7 @@ REQUEST_PROFILE_IDX = [
         47, # page_fold - majority
         49, # play_type - majority
         53, # hid - majority
-        55  # is_on_premises - 1's ratio
+        55  # is_on_premises - majority
 ]
 
 MAJORITY_IDX = [1, 2, 3, 21, 31, 47, 49, 53]
