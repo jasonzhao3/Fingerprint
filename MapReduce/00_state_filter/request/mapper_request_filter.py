@@ -4,7 +4,7 @@
     Output only CA request data with selected features
 
     Mapper Output Format:
-    identifier  \t  feature_list
+    identifier  \t  feature_list (remove the parsed ip )
 '''
 import sys
 
@@ -19,7 +19,7 @@ FILTER_IDX = [
         43, # requested_date - frequency within 4 hours
         26, # census_DMA - majority
         25, # city_name - jaccard set
-        2, # publisher_id - set
+        2,  # publisher_id - set
         20, # content_video_id (skip 0)
         31, # delivery_point_id
         52, # service_provider_id - jaccard set
@@ -32,7 +32,7 @@ FILTER_IDX = [
         59, # ovp_type
         62, # hid
         64, # is_on_premise
-        65, # audience_segment
+        65, # audience_segment (skip NULL)
 
 
         1, # referrer_site (skip NULL)
@@ -45,9 +45,9 @@ FILTER_IDX = [
         22, # content_profile_id (skip null)
         28, # is_pre_fetch_request
         38, # service_provider_name  - majority
-        44, # cookie_identifier
-        45 # ip_addr - jaccard set
-        68, # behavior_cookie (skip NULL)
+#        44, # cookie_identifier
+        45,  # ip_addr - jaccard set
+        68 # behavior_cookie (skip NULL)
 
 ]
 
@@ -67,9 +67,9 @@ for line in sys.stdin:
             fields = cookie.split('_')
             if (len(fields) == 5):
                 identifier = fields[4]
-                filter_list.append(fields[0] + "." + fields[1] + "." + fields[2] + "." + fields[3])
+                # filter_list.append(fields[0] + "." + fields[1] + "." + fields[2] + "." + fields[3])
             elif (len(fields) == 1):
                 identifier = "null"
-                filter_list.extend(fields)
+                # filter_list.extend(fields)
             print '%s%s%s' % (identifier, "\t", ','.join(filter_list))
 
