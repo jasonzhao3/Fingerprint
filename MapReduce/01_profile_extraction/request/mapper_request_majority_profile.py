@@ -12,53 +12,88 @@
 import sys
 
 PROFILE_IDX = [
-               1, # publisher_id - majority
-               2, # network_id - majority
-               3, # domain_id - majority
-               8, # is_not_yume_white_list  - ratio of true
-               20, # city_name - jaccard set
-               21, # census_DMA - majority
-               31, # service_provider_name  - majority
-               32, # key_value - jaccard set
-               35, # requested_date - frequency within 4 hours
-               36, # ip_addr - jaccard set
-               43, # service_provider - jaccard set
-               45, # player_size - jaccard set
-               47, # page_fold - majority
-               49, # play_type - majority
-               53, # hid - majority
-               55, # is_on_premises - 1's ratio
-               ];
+               #0, # session_id - majority
+               1, # domain_id - majority
+               2, # placement_id
+               3, # advertisement_id
                
+               4, # requested_date - frequency within 4 hours
+               
+               5, # census_DMA - majority
+
+               6, # city_name - jaccard set  
+
+               7,  # publisher_id - set
+               8, # content_video_id (skip 0)
+               9, # delivery_point_id
+               10, # service_provider_id - jaccard set
+               11, # key_value - jaccard set
+               12, # player_location_id 
+               13, # player_size_id - jaccard set
+               14, # page_fold_id - majority
+               15, # ad_visibility
+               16, # ovp_version  
+               17, # ovp_type
+               
+               18, # hid
+
+               19, # is_on_premise
+               20, # audience_segment (skip NULL)
+
+
+               21, # referrer_site (skip NULL)
+               22, # network_id - set
+               23, # slot_type_id - majority (low weight because too many 1)
+               24, # ad_request_id
+               25, # is_not_yume_white_list  - ratio of true
+               26, # publisher_channel_id - (skip 0)
+               27, # content_video_identifier (skip null)
+               28, # content_profile_id (skip null)
+               29, # is_pre_fetch_request
+               30, # service_provider_name  - majority
+               
+               #31,  # ip_addr - jaccard set
+               
+               32 # behavior_cookie (skip NULL)
+             ];
+
+def get_majority(lst):
+    return max(set(lst), key=lst.count)
+               
+def get_empty_list_of_list(num_elem):
+  list_of_list = []
+  for i in range(0, num_elem):
+    list_of_list.append([])
+  return list_of_list
+
+def set_to_string (attr_list):
+  return '|'.join(attr_list)
+
+
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:
     # remove leading and trailing whitespace
     line = line.strip()
     l = line.split('\t')
-    # split the line into words
+    # split the line into multiple records 
     record_list = l[1].split('|')
-    attr_count = []
-    for i in range(0, attr_num):
-        attr_count.append([])
+    
+    list_of_list = get_empty_list_of_list(attr_num)
     for record in record_list:
-        attr_l = record.split(',')
-        attr_list = [attr_l[i] for i in PROFILE_IDX]
-        for i in range(0, len(attr_list)):
-          attr_count[i].append(attr_list[i])
+      attr_l = record.split(',')
+      attr_list = [attr_l[i] for i in PROFILE_IDX]
+      for i in xrange(0, len(attr_list)):
+        list_of_list[i].append(attr_list[i])
+
+    # print result
     attr_res = []
-    for attrs in attr_count:
-      m = dict()
-      for attr in attrs:
-          if attr not in m:
-              m[attr]  = 0
-          m[attr] += 1
-      maxNum = 0
-      maxItem = ''
-      for key,value in m.items():
-          if (value > maxNum):
-              maxNum = value;
-              maxItem = key
-      attr_res.append(maxItem)
+    for idx in xrange(attr_num):
+      # time; city; hid => as evaluation
+      if (idx == 3 or idx == 5 or idx == 17):
+        attr_res.append (set_to_string(list_of_list[idx]))
+      else:
+        attr_res.append (get_majority(list_of_list[idx]))
+
     print '%s%s%s' % (l[0], "\t", ','.join(attr_res))
 
