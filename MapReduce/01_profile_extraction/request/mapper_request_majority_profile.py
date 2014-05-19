@@ -66,8 +66,8 @@ def get_empty_list_of_list(num_elem):
     list_of_list.append([])
   return list_of_list
 
-def set_to_string (attr_list):
-  return '|'.join(attr_list)
+def set_to_string (attr_set):
+  return '|'.join(attr_set)
 
 
 attr_num = len(PROFILE_IDX);
@@ -91,7 +91,7 @@ for line in sys.stdin:
     for idx in xrange(attr_num):
       # time; city; hid => as evaluation
       if (idx == 3 or idx == 5 or idx == 17):
-        attr_res.append (set_to_string(list_of_list[idx]))
+        attr_res.append (set_to_string(set(list_of_list[idx])))
       else:
         attr_res.append (get_majority(list_of_list[idx]))
 
