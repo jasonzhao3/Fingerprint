@@ -38,7 +38,7 @@ FILTER_IDX = [
         1, # referrer_site (skip NULL)
         3, # network_id - set
         6, # slot_type_id - majority (low weight because too many 1)
-        7, # ad_request_id
+        7, # ad_request_count
         12, # is_not_yume_white_list  - ratio of true
         18, # publisher_channel_id - (skip 0)
         21, # content_video_identifier (skip null)
