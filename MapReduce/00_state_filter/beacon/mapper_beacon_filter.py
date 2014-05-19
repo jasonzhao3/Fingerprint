@@ -12,11 +12,36 @@ import sys
 STATE_IND = 30
 VIEWER_IND = 22
 BEACON_FILTER_IDX = [
+    0, # session id    
+    1, # domain id      
+    3, # placement_id
+    4, # advertisement_id
+    16, # event time
+    28, # census_dma_id
+    31, # city
+    32, # publisher_channel_id
+    34, # content_video_id
+    38, # delivery point
+    45, # service provider id
+    46, # key values 
+    48, # player location 
+    49, # player size
+    50, # page fold
+    51, # ad visibility
+    53, # ovp version
+    54, # ovp type
+    55, # hid
+    57, # is on-premise
+    58, # audience segments
+    ############################
+    18, # slate id
+    ############################     
     5, # zero_tracker
     6, # twentry_five
     7, # fifty
     8, # seventry_five
     9, # one_hundred
+    27, # volume percent
     #10, # click_tracker
     #11, # customization_id
     #12, # custom_type_id
@@ -24,9 +49,9 @@ BEACON_FILTER_IDX = [
     #14, # custom_event_id
     #15, # is_media_buy
     #16, # request_time
-    22, # viewer_id
+    
     #27, # volume_percent
-    30, # state
+    #30, # state
     #31, # city
     #48, # player_location
     #49  # player_size
