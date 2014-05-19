@@ -68,7 +68,7 @@ majority_idx = [
                11, # player_location_id 
                12, # player_size_id - jaccard set
                13, # page_fold_id - majority
-               1, # ad_visibility
+               14, # ad_visibility
                21, # network_id - set
                22, # slot_type_id - majority (low weight because too many 1)
                23, # ad_request_count
