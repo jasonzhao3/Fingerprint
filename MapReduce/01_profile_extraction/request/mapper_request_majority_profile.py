@@ -31,12 +31,10 @@ PROFILE_IDX = [
                ];
                
 attr_num = len(PROFILE_IDX);
-# input comes from STDIN (standard input)
 for line in sys.stdin:
     # remove leading and trailing whitespace
     line = line.strip()
     l = line.split('\t')
-    # split the line into words
     record_list = l[1].split('|')
     if len(record_list) >= 30:
       attr_count = []
