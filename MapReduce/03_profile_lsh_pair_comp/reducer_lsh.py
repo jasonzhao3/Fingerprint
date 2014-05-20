@@ -16,12 +16,6 @@ def cal_jaccard (record1, record2):
     return num / denom
  
 def main(separator='\t'):
-    #data = read_mapper_output(filename, '\t')
-    #data = read_mapper_output(sys.stdin, separator=separator)
-    # groupby groups multiple word-count pairs by word,
-    # and creates an iterator that returns consecutive keys and their group:
-    #   current_word - string containing a word (the key)
-    #   group - iterator yielding all ["<current_word>", "<count>"] items
    last_key = None
    this_key = None
    running_features = []
