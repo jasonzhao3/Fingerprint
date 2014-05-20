@@ -9,6 +9,8 @@ def read_mapper_output(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 1)
  
+
+ 
 def main(separator='\t'):
     print "start to output\n"
   # input comes from STDIN (standard input)
@@ -16,21 +18,17 @@ def main(separator='\t'):
    
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
-      print key    
       num_device = 0
-      device_list = []
       # if numDevice: key="numDevice", val = num of device
       # else: key = bucket_idx, val = device profile
       try:
         for key, val in group:
           if (key == 'numDevice'):
-           num_device += int(val)
+            num_device += int(val)
           else:
-            device_list.append(val)
+            print ("%s%s%s" % (key, separator, val))
         
-        if (key != 'numDevice'):
-          print ("%s%s%s" % (key, separator, '||'.join(device_list)))
-        else:
+        if (key == 'numDevice'):
           print ("%s%s%d" % (key, separator, num_device))
 
       except (RuntimeError, TypeError, NameError, ValueError, IOError):
@@ -38,33 +36,40 @@ def main(separator='\t'):
         print "ERROR!!"
         pass
  
-
-
 if __name__ == "__main__":
     main()
         
-        
-        
+# concat version
 # def main(separator='\t'):
+#     print "start to output\n"
 #   # input comes from STDIN (standard input)
 #     data = read_mapper_output(sys.stdin, separator=separator)
    
 #     # one group corresponds to one bucket
-#     for key, group in groupby(data, itemgetter(0)):
-#       print list(group)
-#       print key
-#         try:
+#     for key, group in groupby(data, itemgetter(0)):   
+#       print key    
+#       num_device = 0
+#       device_list = []
+#       # if numDevice: key="numDevice", val = num of device
+#       # else: key = bucket_idx, val = device profile
+#       try:
+#         for key, val in group:
 #           if (key == 'numDevice'):
-#             print ("%s%s%d" % (key, separator, sum(list(group)))  
+#            num_device += int(val)
 #           else:
-#             print ("%s%s%s" % (key, separator, '||'.join(list(group)))
+#             device_list.append(val)
+        
+#         if (key != 'numDevice'):
+#           print ("%s%s%s" % (key, separator, '||'.join(device_list)))
+#         else:
+#           print ("%s%s%d" % (key, separator, num_device))
 
-#         except (RuntimeError, TypeError, NameError, ValueError, IOError):
+#       except (RuntimeError, TypeError, NameError, ValueError, IOError):
 #             # count was not a number, so silently discard this item
-#             print "ERROR!!"
-#             pass
+#         print "ERROR!!"
+#         pass
  
-
 # if __name__ == "__main__":
 #     main()
-#         
+        
+     
