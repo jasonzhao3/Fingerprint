@@ -1,20 +1,10 @@
 #!/usr/bin/env python
+from itertools import groupby
+from operator import itemgetter
+import sys, csv, math, os
+ # sys.path.append(os.path.dirname(__file__))
+sys.path.append("./")
 
-import sys
-
-'''
-   This map-reduce job is used to LSH profiles into 3 groups of buckets
-
-   Mapper output format:
-        bucket_idx \t attribute_list
-'''
-
-
-import csv
-from time import strptime, mktime
-import numpy as np
-import math
-import random
 
 
 NUM_BUCKET = 100000
@@ -368,15 +358,15 @@ for line in sys.stdin:
             feature_set = attr_list[i]
             if i == 20:
                 ind = i + 11
-            attr_list[i] = getSignature(feature_set, value_map, ind)
+            attr_list[i] = getSignature(feature_set, value_map, perm_map, ind)
     elif len(attr_list) == REQ_ONLY:
         for i in REQ_SET_IDX:
             feature_set = attr_list[i]
-            attr_list[i] = getSignature(feature_set, value_map, i)
+            attr_list[i] = getSignature(feature_set, value_map, perm_map, i)
     elif len(attr_list) == RB_UNION:
         for i in FULL_SET_IDX:
             feature_set = attr_list[i]
-            attr_list[i] = getSignature(feature_set, value_map, i)
+            attr_list[i] = getSignature(feature_set, value_map, perm_map, i)
     
     bucket = hash_majority (attr_list)
     attr_list.append(l[0])
