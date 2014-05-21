@@ -12,7 +12,6 @@ def read_mapper_output(file, separator='\t'):
 
  
 def main(separator='\t'):
-    print "start to output\n"
   # input comes from STDIN (standard input)
     data = read_mapper_output(sys.stdin, separator=separator)
    
