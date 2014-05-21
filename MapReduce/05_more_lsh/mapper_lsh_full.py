@@ -17,7 +17,7 @@ import math
 
 
 
-NUM_BUCKET = 1500000
+NUM_BUCKET = 8000000
 
 '''
   device_profile: a list of attributes
@@ -161,8 +161,8 @@ beacon_int_idx = [
 ]
 
 beacon_float_idx = [
-         21, # zero_tracker
-         22, # twentry_five
+           21, # zero_tracker
+           22, # twentry_five
            23, # fifty
            24, # seventry_five
            25, # one_hundred
