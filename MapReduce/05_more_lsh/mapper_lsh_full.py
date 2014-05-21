@@ -17,7 +17,7 @@ import math
 
 
 
-NUM_BUCKET = 100000
+NUM_BUCKET = 8000000
 
 '''
   device_profile: a list of attributes
@@ -40,7 +40,7 @@ def hash_majority (device_profile):
 '''
 
 full_int_idx = [
-         0, # domain_id - majority
+               0, # domain_id - majority
                1, # placement_id
                2, # advertisement_id
                4, # census_DMA - majority
@@ -161,8 +161,8 @@ beacon_int_idx = [
 ]
 
 beacon_float_idx = [
-         21, # zero_tracker
-         22, # twentry_five
+           21, # zero_tracker
+           22, # twentry_five
            23, # fifty
            24, # seventry_five
            25, # one_hundred
@@ -260,7 +260,7 @@ def hash_full_profile (device_profile):
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  return int(hash_val) % NUM_BUCKET
 
 
 
@@ -283,7 +283,7 @@ def hash_request_profile (device_profile):
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  return int(hash_val) % NUM_BUCKET
 
 
 '''
@@ -291,14 +291,14 @@ def hash_request_profile (device_profile):
 '''
 def hash_beacon_profile (device_profile):
   hash_val = sum_int (device_profile, beacon_int_idx)
-  hash_val += sum_string (device_profile, beacon_float_idx)
+  hash_val += sum_float (device_profile, beacon_float_idx)
 
   hash_val += hash_key_val (device_profile[10])
   hash_val += hash_ovp (device_profile[15])
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  return int(hash_val) % NUM_BUCKET
 
 
 # input comes from STDIN (standard input)
