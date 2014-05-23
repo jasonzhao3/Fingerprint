@@ -44,7 +44,7 @@ PROFILE_IDX = [
                21, # referrer_site (skip NULL)
                22, # network_id - set
                23, # slot_type_id - majority (low weight because too many 1)
-               24, # ad_request_id
+               24, # ad_request_count
                25, # is_not_yume_white_list  - ratio of true
                26, # publisher_channel_id - (skip 0)
                27, # content_video_identifier (skip null)

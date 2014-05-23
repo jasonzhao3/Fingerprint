@@ -6,8 +6,8 @@ import sys, csv, math, os
 sys.path.append("./")
 
 
-
-NUM_BUCKET = 100000
+HASH_STRING_CONST_MOD = 20000000
+NUM_BUCKET = 8000000
 BEC_ONLY = 27
 REQ_ONLY = 31
 RB_UNION = 38
@@ -219,7 +219,7 @@ def hash_string (input_str):
     for i in xrange (0, len (input_str)):
         char = input_str[i];
         djb2_code = (djb2_code << 5) + djb2_code + ord (char)
-    return djb2_code % NUM_BUCKET
+    return djb2_code % HASH_STRING_CONST_MOD
 
 def sum_int (device_profile, index_list):
   int_list = [int(device_profile[idx]) for idx in index_list if device_profile[idx].isdigit()]
@@ -328,8 +328,8 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap ('values.txt')
-perm_map = buildPermMap('permutations.txt')
+value_map = buildValueMap ('attr_count_output')
+perm_map = buildPermMap('permutation_output')
 
 
 '''
@@ -345,6 +345,7 @@ def getSignature (feature_set, value_map, perm_map, index):
             return signature
         else:
             signature += 1
+    return signature
 
 
 # input comes from STDIN (standard input)
@@ -371,5 +372,4 @@ for line in sys.stdin:
     bucket = hash_majority (attr_list)
     attr_list.append(l[0])
     print '%s%s%s' % (str(bucket), "\t", ','.join(attr_list))
-    print '%s%s%d' % ('numDevice', "\t", 1)
 
