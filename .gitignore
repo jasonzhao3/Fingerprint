@@ -3,3 +3,5 @@ local_test/
 *.pyc
 *.un~
 *.DS_Store
+*.json
+*.csv

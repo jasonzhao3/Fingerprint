@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+<META HTTP-EQUIV="REFRESH" content="6000">
+<title> Yume Fingerprint </title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<script type="text/javascript">
+//python -m SimpleHTTPServer
+
+
+
+
+
+$(document).ready(function() {
+
+    var options = {
+        chart: {
+            renderTo: 'container',
+            zoomType: 'xy'
+        },
+        title: {
+                text: 'Yume Fingerprint LSH Similarity Evaluation',
+                x: -20 //center
+        },
+
+        xAxis: {
+        },
+        yAxis: [{ // Primary yAxis
+                labels: {
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Total user number',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Error rate',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    // format: '{value} mm',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+
+        tooltip: {
+                shared: true
+            },
+        // legend: {
+        //         layout: 'vertical',
+        //         align: 'left',
+        //         x: 120,
+        //         verticalAlign: 'top',
+        //         y: 100,
+        //         floating: true,
+        //         backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        //     },
+
+        series: []
+    };
+
+    $.getJSON('sim_distribution_v3.0.json', function(data) {
+        categories = ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
+              '14m', '15m', '16m', '17m', '18m', '19m', '20m']
+
+        // correct data point
+        for (var i = 0; i < 16; i++) {
+            var obj = {};
+            obj.name = 'correct_' + categories[i],
+            obj.type = 'scatter',
+            obj.yAxis =  0,
+            obj.data = data[0][categories[i]],
+            obj.visible = false,
+            options.series.push(obj);
+        }
+        // error data point
+        for (var i = 0; i < 16; i++) {
+            var obj = {};
+            obj.name = 'error_' + categories[i],
+            obj.type = 'scatter',
+            obj.yAxis =  0,
+            obj.data = data[1][categories[i]],
+            obj.visible = false,
+            options.series.push(obj);
+        }
+
+        var chart = new Highcharts.Chart(options);
+    });
+
+});
+
+
+
+
+
+</script>
+</head>
+
+<body>
+     <h1 style="text-align: center;"> LSH Similarity Result Evaluation Version 1.0  </h1> 
+
+<div id='container' style="width:100%; height:400px;"></div>
+
+</body>
+</html>
