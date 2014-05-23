@@ -61,7 +61,7 @@ java.lang.RuntimeException: PipeMapRed.waitOutputThreads(): subprocess failed wi
   Some waste of time:
   ===============
   1. for a single device, multiple city spread out over different places
-  2. 
+  2. print numDevice as a key => will be bueried in the ocean of keys 
 
 
   Meet-up Questions:

@@ -3,10 +3,13 @@
 import sys
 
 '''
-   This map-reduce job is used to LSH profiles into 3 groups of buckets
+   This map-reduce job is used to LSH profiles into multiple buckets
 
    Mapper output format:
-        bucket_idx \t attribute_list
+        bucket_idx_group \t attribute_list
+
+  Corresponding reducer: identical reducer
+
 '''
 
 
@@ -16,8 +19,12 @@ import numpy as np
 import math
 
 
+# total number of devices: 2800m
+HASH_STRING_CONST_MOD = 20000000
+NUM_BUCKET = [item * 1000000 for item in xrange(5,21)]
+bucket_suffix =  ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
+              '14m', '15m', '16m', '17m', '18m', '19m', '20m']
 
-NUM_BUCKET = 8000000
 
 '''
   device_profile: a list of attributes
@@ -143,7 +150,7 @@ request_boolean_idx = [
   beacon profile index
 '''
 beacon_int_idx = [
-         0, # domain_id - majority
+               0, # domain_id - majority
                1, # placement_id
                2, # advertisement_id
                4, # census_DMA - majority
@@ -186,7 +193,7 @@ def hash_string (input_str):
     for i in xrange (0, len (input_str)):
         char = input_str[i];
         djb2_code = (djb2_code << 5) + djb2_code + ord (char)
-    return djb2_code % NUM_BUCKET
+    return djb2_code % HASH_STRING_CONST_MOD
 
 def sum_int (device_profile, index_list):
   int_list = [int(device_profile[idx]) for idx in index_list if device_profile[idx].isdigit()]
@@ -260,7 +267,9 @@ def hash_full_profile (device_profile):
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return int(hash_val) % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
 
 
 
@@ -283,7 +292,9 @@ def hash_request_profile (device_profile):
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return int(hash_val) % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
 
 
 '''
@@ -298,7 +309,16 @@ def hash_beacon_profile (device_profile):
   hash_val += hash_ovp (device_profile[16])
   hash_val += hash_audience_segment (device_profile[19])
 
-  return int(hash_val) % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
+
+
+
+
+
+
+
 
 
 # input comes from STDIN (standard input)
@@ -306,8 +326,9 @@ for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
     attr_list = l[1].split(',')
-    bucket = hash_majority (attr_list)
+    bucket_list = hash_majority (attr_list)
     attr_list.append(l[0])
-    print '%s%s%s' % (str(bucket), "\t", ','.join(attr_list))
-    print '%s%s%d' % ('numDevice', "\t", 1)
+    for bucket in bucket_list:
+      print '%s%s%s' % (bucket, "\t", ','.join(attr_list))
+    
 

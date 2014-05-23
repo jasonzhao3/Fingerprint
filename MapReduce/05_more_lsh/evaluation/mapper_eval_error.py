@@ -53,9 +53,12 @@ def fail_location(dev1, dev2):
 
   for city1 in city_list1:
     for city2 in city_list2:
-      dist = cal_geo_dist_sqr(city1, city2, geo_map)
-      if (dist > geo_threshold):
-        return True
+      try:
+        dist = cal_geo_dist_sqr(city1, city2, geo_map)
+        if (dist > geo_threshold):
+          return True
+      except (RuntimeError, TypeError, NameError, KeyError, IOError):
+          pass
   return False
 
 # as long as they share one timestamp, fail
@@ -74,7 +77,7 @@ def fail_hid(dev1, dev2):
   hid1 = set(dev1[HID_IDX].split('|'))
   hid2 = set(dev2[HID_IDX].split('|'))
   inter_set = hid1 & hid2
-  if (len(inter_set) != 0):
+  if (len(inter_set) == 0):
     return True
   else:
     return False
@@ -99,8 +102,8 @@ def read_mapper_output(file, separator='\t'):
 '''
   build geo map
 '''
-# geo_map = build_geo_map ('US-City-Location.csv')
-geo_map = build_geo_map ('../../US-City-Location.csv')
+geo_map = build_geo_map ('US-City-Location.csv')
+# geo_map = build_geo_map ('../../US-City-Location.csv')
 
 TS_IDX = 3
 CITY_IDX = 5

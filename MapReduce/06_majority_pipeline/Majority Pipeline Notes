@@ -1,0 +1,25 @@
+Majority Pipeline Notes:
+======================
+
+Pipeline:
+===========
+LSH -> Distribution Evaluation (both device and error)  (done)
+    -> Error rate evaluation (done)
+    -> within bucket similarity evaluation (done)
+
+
+LSH -> cluster -> Evaluation
+
+
+LSH -> hash evaluation
+    
+
+
+
+
+
+Problems
+=========
+1. Now we're only using one set of buckets. Although we can tune the hash function to make error rate very low. That only means the false positive is low, how about false negative?  We still need do ground-truth validation right? Random draw devices from different buckets, and do ground-truth evaluation?
+
+2. 
