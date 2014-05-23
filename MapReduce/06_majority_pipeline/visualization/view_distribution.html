@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+<META HTTP-EQUIV="REFRESH" content="6000">
+<title> Yume Fingerprint </title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<script type="text/javascript">
+//python -m SimpleHTTPServer
+
+
+
+
+
+$(document).ready(function() {
+
+    var options = {
+        chart: {
+            renderTo: 'container',
+            zoomType: 'xy'
+        },
+        title: {
+                text: 'Yume Fingerprint LSH Evaluation',
+                x: -20 //center
+        },
+
+        xAxis: {
+            categories: ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
+              '14m', '15m', '16m', '17m', '18m', '19m', '20m']
+        },
+        yAxis: [{ // Primary yAxis
+                labels: {
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Total user number',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Error rate',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    // format: '{value} mm',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+
+        tooltip: {
+                shared: true
+            },
+        // legend: {
+        //         layout: 'vertical',
+        //         align: 'left',
+        //         x: 120,
+        //         verticalAlign: 'top',
+        //         y: 100,
+        //         floating: true,
+        //         backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        //     },
+
+        series: []
+    };
+
+    $.getJSON('distribution_v3.0.json', function(data) {
+        // total_user_cnt for each num_device bucket
+        for (var i = 1; i <= 8; i++) {
+            var obj = {};
+            obj.name = 'num_device:' + i.toString();
+            obj.type = 'column',
+            obj.yAxis =  0,
+            obj.data = data[0][i]
+            options.series.push(obj);
+        }
+        // error_rate
+        for (var i = 1; i <= 8; i++) {
+            var obj = {};
+            obj.name = 'error_ratio: ' + i.toString();
+            obj.type = 'spline',
+            obj.yAxis =  1,
+            obj.data = data[1][i]
+            options.series.push(obj);
+        }
+        // total_user_cnt 
+        var obj = {}
+        obj.name = 'total_user_number',
+        obj.type = 'column',
+        obj.yAxis =  0,
+        obj.data = data[2]['total_user_num']
+        options.series.push(obj);
+
+        var obj2 = {}
+        obj2.name = 'total_error_ratio',
+        obj2.type = 'spline',
+        obj2.yAxis = 1,
+        obj2.data = data[2]['total_error_ratio']
+        options.series.push(obj2);
+
+        var chart = new Highcharts.Chart(options);
+    });
+
+});
+
+
+
+
+
+</script>
+</head>
+
+<body>
+     <h1 style="text-align: center;"> LSH Result Evaluation Version 1.0  </h1> 
+
+<div id='container' style="width:100%; height:400px;"></div>
+
+</body>
+</html>

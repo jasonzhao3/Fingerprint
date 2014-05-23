@@ -23,3 +23,21 @@ Problems
 1. Now we're only using one set of buckets. Although we can tune the hash function to make error rate very low. That only means the false positive is low, how about false negative?  We still need do ground-truth validation right? Random draw devices from different buckets, and do ground-truth evaluation?
 
 2. 
+
+
+
+
+
+Results Log
+============
+1. evaluation_distribution local version3.0:
+   input: LSH version 3.0
+   output: evaluation_distribution version 3.0
+
+
+2. evaluation_distribution version 3.1
+   input: LSH version 3.0
+   output: evaluation_distribution 3.1
+   parameter: only 12m bucket
+   evaluation: remove time constraint
+   

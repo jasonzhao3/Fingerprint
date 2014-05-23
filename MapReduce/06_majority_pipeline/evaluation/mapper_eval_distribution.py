@@ -4,6 +4,7 @@ import sys
 from itertools import groupby
 from operator import itemgetter
 import sys, csv, math, os
+import random
 sys.path.append("./")
 
 
@@ -212,19 +213,45 @@ def eval_cluster(cluster):
   for idx1, dev1 in enumerate(cluster):
     for idx2 in xrange(idx1+1, len(cluster)):
       dev2 = cluster[idx2]
+      # if (fail_location(dev1, dev2) or 
+      #     fail_timestamp(dev1, dev2) or
+      #     fail_hid(dev1, dev2)):
+      #   return False
       if (fail_location(dev1, dev2) or 
-          fail_timestamp(dev1, dev2) or
           fail_hid(dev1, dev2)):
         return False
   return True
 
+def swap (cluster, from_pos, to_pos):
+  tmp = cluster[to_pos]
+  cluster[to_pos] = cluster[from_pos]
+  cluster[from_pos] = tmp
+
+
+def random_sample_30 (cluster):
+  tot_len = len(cluster)
+  curr = 0
+  while (curr < 30):
+    seed = random.randint(curr, tot_len-1)
+    swap(cluster, seed, curr)
+    curr += 1
+  return cluster[:30]
+    
+
 def get_average_similarity(cluster):
   sim = 0.0
   total_cnt = len(cluster) * (len(cluster)-1) / 2
+  
+  # avoid big cluster
+  if (total_cnt > 1000):
+    cluster = random_sample_30(cluster)
+    total_cnt = len(cluster) * (len(cluster)-1) / 2
+
   for idx1, dev1 in enumerate(cluster):
     for idx2 in xrange(idx1+1, len(cluster)):
       dev2 = cluster[idx2]
       sim += cal_similarity(dev1, dev2)
+  
   if (total_cnt == 0):
     return 1.0
   return sim / total_cnt
@@ -234,7 +261,6 @@ def read_mapper_output(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 1)
  
-
 
 
 
@@ -254,6 +280,9 @@ def main(separator='\t'):
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
       
+      if (key.split('_')[1] != '12m'):
+        pass
+        
       try:
         num_device_within_bucket = 0
         cluster = []
