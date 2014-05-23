@@ -56,9 +56,9 @@ full_int_idx = [
                23, # ad_request_id
                
                25, # publisher_channel_id - (skip 0)
-               26, # content_video_identifier (skip null)
+               #26, # content_video_identifier (skip null)
                27, # content_profile_id (skip null)
-               30,  # behavior cookie
+               #30,  # behavior cookie
                ##############
                31 # slate_id
 ]
@@ -111,9 +111,9 @@ request_int_idx = [
                23, # ad_request_id
                
                25, # publisher_channel_id - (skip 0)
-               26, # content_video_identifier (skip null)
-               27, # content_profile_id (skip null)
-               30  # behavior cookie
+               #26, # content_video_identifier (skip null)
+               27 # content_profile_id (skip null)
+               #30  # behavior cookie
 ]
 
 request_boolean_idx = [
@@ -166,9 +166,9 @@ REQ_SET_IDX = [
                20, # referrer_site (skip NULL)
                22, # slot_type_id - majority (low weight because too many 1)
                25, # publisher_channel_id - (skip 0)
-               26, # content_video_identifier (skip null)
-               27, # content_profile_id (skip null)
-               30 # behavior_cookie (skip NULL)
+               #26, # content_video_identifier (skip null)
+               27 # content_profile_id (skip null)
+               #30 # behavior_cookie (skip NULL)
           ]
           
 BEC_SET_IDX = [
@@ -197,9 +197,9 @@ FULL_SET_IDX = [
                20, # referrer_site (skip NULL)
                22, # slot_type_id - majority (low weight because too many 1)
                25, # publisher_channel_id - (skip 0)
-               26, # content_video_identifier (skip null)
+               #26, # content_video_identifier (skip null)
                27, # content_profile_id (skip null)
-               30, # behavior_cookie (skip NULL)
+               #30, # behavior_cookie (skip NULL)
                31 # slate_id
 
 ]
