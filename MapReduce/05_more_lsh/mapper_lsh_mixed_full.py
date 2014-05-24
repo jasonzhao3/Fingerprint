@@ -314,7 +314,8 @@ def buildValueMap(data_file):
   for line in ins:
       line = line.rstrip()
       key, value = line.split('\t')
-      value_map[int(key)] = value
+      value_list = value.split(',')
+      value_map[int(key)] = value_list
   return value_map
 
 def buildPermMap(data_file):
@@ -336,16 +337,16 @@ perm_map = buildPermMap('permutation_output')
   hash set - min hash
 '''
 def getSignature (feature_set, value_map, perm_map, index):
-    full_set = value_map[index].split(',')
+    full_set = value_map[index]
     perm = perm_map[index]
     signature = 0
-    while True:
+    while signature < len(perm):
         val = full_set[perm.index(signature)]
         if val in feature_set:
-            return signature
+            return str(signature)
         else:
             signature += 1
-    return signature
+    return str(signature)
 
 
 # input comes from STDIN (standard input)
