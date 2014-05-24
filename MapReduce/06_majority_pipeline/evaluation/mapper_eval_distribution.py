@@ -217,8 +217,7 @@ def eval_cluster(cluster):
       #     fail_timestamp(dev1, dev2) or
       #     fail_hid(dev1, dev2)):
       #   return False
-      if (fail_location(dev1, dev2) or 
-          fail_hid(dev1, dev2)):
+      if (fail_hid(dev1, dev2)):
         return False
   return True
 
@@ -279,10 +278,6 @@ def main(separator='\t'):
    
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
-      
-      if (key.split('_')[1] != '12m'):
-        pass
-        
       try:
         num_device_within_bucket = 0
         cluster = []

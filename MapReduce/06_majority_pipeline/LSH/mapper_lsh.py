@@ -21,10 +21,11 @@ import math
 
 # total number of devices: 2800m
 HASH_STRING_CONST_MOD = 20000000
-NUM_BUCKET = [item * 1000000 for item in xrange(5,21)]
-bucket_suffix =  ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
-              '14m', '15m', '16m', '17m', '18m', '19m', '20m']
-
+# NUM_BUCKET = [item * 1000000 for item in xrange(5,21)]
+# bucket_suffix =  ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
+#               '14m', '15m', '16m', '17m', '18m', '19m', '20m']
+NUM_BUCKET = [12000000]
+bucket_suffix = ['12m']
 
 '''
   device_profile: a list of attributes
@@ -201,7 +202,7 @@ def sum_int (device_profile, index_list):
 
 def sum_float (device_profile, index_list):
   float_list = [float(device_profile[idx]) for idx in index_list]
-  return 100 * sum(float_list)
+  return 1000 * sum(float_list)
 
 def sum_string (device_profile, index_list):
   string_list = [device_profile[idx] for idx in index_list]

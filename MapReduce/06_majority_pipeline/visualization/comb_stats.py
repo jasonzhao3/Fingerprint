@@ -68,7 +68,7 @@ def scatter_histogram(stat_map):
 		stat_map[key] = points
 
 
-def get_similarity_histogram (result_list):
+def get_similarity_scatter_point (result_list):
 	correct_map = {}
 	error_map = {}
 	for result in result_list:
@@ -89,6 +89,42 @@ def get_similarity_histogram (result_list):
 	
 	return [correct_map, error_map]
 
+def make_bubble (stat_map, y_axis):
+	for key, val_list in stat_map.iteritems():
+		sim_counter = Counter()
+		for val in val_list:
+			sim_counter[cal_bin(val)] += 1
+		
+		sims = sim_counter.keys()
+		counts = sim_counter.values()
+		sum_count = sum(counts)
+		areas = [count/sum_count * 100 for count in counts]
+		bubbles = [[sims[i], y_axis, areas[i]] for i in xrange(len(sims))]
+		stat_map[key] = bubbles
+
+
+
+def get_similarity_bubble (result_list):
+	correct_map = {}
+	error_map = {}
+	for result in result_list:
+		key, val = result.split('\t')
+		flag, group = key.split('_')
+		if (flag != 'correct' and flag != 'wrong'):
+			continue
+		else:
+			if (flag == 'correct'):
+				val_list = val.split(',')
+				correct_map[group] = [float(item) for item in val_list]
+			else:
+				val_list = val.split(',')
+				error_map[group] = [float(item) for item in val_list]
+	
+	# make correct bubble at top, while error bubble at bottom
+	make_bubble (correct_map, 1)
+	make_bubble (error_map, 0)
+	
+	return [correct_map, error_map]
 
 
 def get_overal_stat (json_list):
@@ -118,9 +154,10 @@ def get_overal_stat (json_list):
 '''
 	Combine result
 '''
-origin_path = '../../../../local_data/evaluation_distribution/version3.1'
+origin_path = '../../../../local_data/majority_pipeline/'
 
-
+# results is a list of lsh evaluation result:
+# e.g. 7_12m	28595_0.222731246721_0.8,0.9,0.93_0.3,0.4,0.3
 results = combine_files(origin_path)
 
 
@@ -128,12 +165,12 @@ results = combine_files(origin_path)
 json_list = build_histogram_map(results)
 result_json = get_overal_stat(json_list)
 
-with open('distribution_v3.1.json', 'w') as f:
+with open('pipeline_distribution_v1.0.json', 'w') as f:
 	json.dump(result_json, f)
 
 # similarity-user distribution
-result_json = get_similarity_histogram(results)
-with open('sim_distribution_v3.1.json', 'w') as f:
+result_json = get_similarity_bubble(results)
+with open('pipeline_sim_v1.0.json', 'w') as f:
 	json.dump(result_json, f)
 
 

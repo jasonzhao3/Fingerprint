@@ -6,7 +6,7 @@
 <title> Yume Fingerprint </title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
-
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
 <script type="text/javascript">
 //python -m SimpleHTTPServer
 
@@ -19,6 +19,7 @@ $(document).ready(function() {
     var options = {
         chart: {
             renderTo: 'container',
+            type: 'bubble',
             zoomType: 'xy'
         },
         title: {
@@ -26,42 +27,10 @@ $(document).ready(function() {
                 x: -20 //center
         },
 
-        xAxis: {
-        },
-        yAxis: [{ // Primary yAxis
-                labels: {
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                },
-                title: {
-                    text: 'Total user number',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                }
-            }, { // Secondary yAxis
-                title: {
-                    text: 'Error rate',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                labels: {
-                    // format: '{value} mm',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                opposite: true
-            }],
-
-        tooltip: {
-                shared: true
+        legend: {
+                layout: 'vertical',
+                align: 'left'
             },
-        // legend: {
-        //         layout: 'vertical',
-        //         align: 'left',
         //         x: 120,
         //         verticalAlign: 'top',
         //         y: 100,
@@ -72,31 +41,31 @@ $(document).ready(function() {
         series: []
     };
 
-    $.getJSON('sim_distribution_v3.0.json', function(data) {
-        categories = ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
-              '14m', '15m', '16m', '17m', '18m', '19m', '20m']
+    $.getJSON('pipeline_sim_v1.0.json', function(data) {
+        // console.log(data)
+        // categories = ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
+        //       '14m', '15m', '16m', '17m', '18m', '19m', '20m']
 
-        // correct data point
-        for (var i = 0; i < 16; i++) {
+        categories = ['12m']
+        
+        for (var i = 0; i < categories.length; i++) {
+            // correct data point
             var obj = {};
-            obj.name = 'correct_' + categories[i],
-            obj.type = 'scatter',
-            obj.yAxis =  0,
-            obj.data = data[0][categories[i]],
+            obj.name = 'correct_' + categories[i];
+            obj.data = data[0][categories[i]];
             obj.visible = false,
             options.series.push(obj);
-        }
-        // error data point
-        for (var i = 0; i < 16; i++) {
-            var obj = {};
-            obj.name = 'error_' + categories[i],
-            obj.type = 'scatter',
-            obj.yAxis =  0,
-            obj.data = data[1][categories[i]],
-            obj.visible = false,
-            options.series.push(obj);
-        }
 
+            // error data point
+            var obj2 = {};
+            obj2.name = 'error_' + categories[i],
+            obj2.type = 'bubble',
+            obj2.yAxis =  0,
+            obj2.data = data[1][categories[i]],
+            obj2.visible = false,
+            options.series.push(obj2);
+        }
+        
         var chart = new Highcharts.Chart(options);
     });
 
