@@ -41,23 +41,22 @@ $(document).ready(function() {
         // console.log(data)
         // categories = ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m',
         //       '14m', '15m', '16m', '17m', '18m', '19m', '20m']
-
-        categories = ['12m']
         
-        for (var i = 0; i < categories.length; i++) {
+        for (var i = 1; i <= 8; i++) {
             // correct data point
             var obj = {};
-            obj.name = 'correct_' + categories[i];
-            obj.data = data[0][categories[i]];
+            obj.type = 'bubble';
+            obj.name = 'error' + i.toString();
+            obj.data = data['error'][i.toString()];
             obj.visible = false,
             options.series.push(obj);
 
             // error data point
             var obj2 = {};
-            obj2.name = 'error_' + categories[i],
-            obj2.type = 'bubble',
-            obj2.yAxis =  0,
-            obj2.data = data[1][categories[i]],
+            obj2.name = 'correct_' + i.toString();
+            obj2.type = 'bubble';
+            obj2.yAxis =  0;
+            obj2.data = data['correct'][i.toString()];
             obj2.visible = false,
             options.series.push(obj2);
         }

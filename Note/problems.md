@@ -62,6 +62,7 @@ java.lang.RuntimeException: PipeMapRed.waitOutputThreads(): subprocess failed wi
   ===============
   1. for a single device, multiple city spread out over different places
   2. print numDevice as a key => will be bueried in the ocean of keys 
+  3. print similarity distribution of correct and wrong => should separate buckets, otherwise 1 consumes too much!!
 
 
   Meet-up Questions:

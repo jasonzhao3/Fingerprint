@@ -5,6 +5,40 @@ from os.path import isfile, join
 import json
 from collections import Counter
 
+'''
+
+This script is for a single bucket_group visualization,
+e.g. 12m buckets => ouput distribution and similarity 
+
+
+# output distribution json format: altogether 9 bins -- 8 types of users and one overal
+# [{'user_number':[829103, 28392, 18202, 150322, 3820, ...]}, 
+#  {'error_ratio': [0.0, 0.02, 0.023, 0.012]}]
+
+
+
+# output similarity json format:
+# [{'correct': 
+					 [sim, type, ptg]
+				{1: [[0.01, 1, 0.000], [0.02, 1, 0.000], [...]]},
+				 2: [[0.01, 2, 0.000], [0.02, 2, 0.001], [...]]},
+				 3: ...
+				...
+				 8: ...}
+				
+	},
+	{'error': 
+			    {1: [[0.01, 0.5, 0.000], [0.02, 0.5, 0.000], [...]]},
+				 2: [[0.01, 1.5, 0.000], [0.02, 1.5, 0.001], [...]]},
+				 3: ...}
+				...
+				 8: ...}
+			  
+	}
+  ]
+
+
+'''
 
 def combine_files(path):
 	# if isfile(join(path,f)) 
@@ -21,156 +55,95 @@ def combine_files(path):
 					ls.append(line)
 	return ls
 
-# key: num_device  val: total_num
-# key: num_device  val: error_ratio
-def build_histogram_map (result_list):
-	num_map = {}
-	error_ratio_map = {}
+def get_distribution_json (result_list):
+	user_number_list = []
+	error_ratio_list = []
+	
+	total_user_number = 0
+	overal_error_number = 0
+
 	for result in result_list:
 		key, val = result.split('\t')
-		num_device, group = key.split('_')
-		if (num_device == 'correct' or num_device == 'wrong'):
-			continue
-		else:
-			num_device = int(num_device)
-			tot_num, error_ratio = val.split('_')
-			if (num_device in num_map):
-				num_map[num_device].append((group, tot_num))
-				error_ratio_map[num_device].append((group, error_ratio))
-			else:
-				num_map[num_device] = [(group, tot_num)]
-				error_ratio_map[num_device] = [(group, error_ratio)]
+		user_type, group = key.split('_')
+		val_list = val.split('_')
+		user_number = int(val_list[0])
+		error_ratio = float(val_list[1])
 
-	for key in num_map.keys():
-		num_list = num_map[key]
-		num_list.sort(key = lambda x:int(x[0][:-1]))
-		num_map[key] = [int(item[1]) for item in num_list]
+		total_user_number += user_number
+		overal_error_number += user_number * error_ratio
 
-		ratio_list = error_ratio_map[key]
-		ratio_list.sort(key = lambda x:int(x[0][:-1]))
-		error_ratio_map[key] = [float(item[1]) for item in ratio_list]
+		user_number_list.append((user_type, user_number))
+		error_ratio_list.append((user_type, error_ratio))
 
-	return [num_map, error_ratio_map]
+	user_number_list.sort(key=lambda t:t[0])
+	error_ratio_list.sort(key=lambda t:t[0])
+	user_number_list = [item[1] for item in user_number_list]
+	error_ratio_list = [item[1] for item in error_ratio_list]
+
+	user_number_list.append(total_user_number)
+	error_ratio_list.append(overal_error_number / total_user_number)
+
+	json_obj = {}
+	json_obj['user_number'] = user_number_list
+	json_obj['error_ratio'] = error_ratio_list
+
+	return json_obj
 
 # use 100 bins
 def cal_bin(value):
 	return int(value / 0.01) * 0.01
 
-def scatter_histogram(stat_map):
-	for key, val_list in stat_map.iteritems():
-		sim_counter = Counter()
-		for val in val_list:
-			sim_counter[cal_bin(val)] += 1
-		
-		sims = sim_counter.keys()
-		counts = sim_counter.values()
-		points = [[sims[i], counts[i]] for i in xrange(len(sims))]
-		stat_map[key] = points
+def make_bubble(sim_str_list, y_axis):
+	if (sim_str_list[0] == ''):
+		return []
+	sim_counter = Counter()
+	for sim in sim_str_list:
+		sim_counter[cal_bin(float(sim))] += 1
+
+	sims = sim_counter.keys()
+	counts = sim_counter.values()
+	sum_count = sum(counts)
+	areas = [count / sum_count * 100 for count in counts]
+	bubbles = [[sims[i], y_axis, areas[i]] for i in xrange(len(sims))]
+	return bubbles
 
 
-def get_similarity_scatter_point (result_list):
-	correct_map = {}
-	error_map = {}
+def get_similarity_json (result_list):
+	json_obj = {}
+	json_obj['correct'] = {}
+	json_obj['error'] = {}
+
 	for result in result_list:
 		key, val = result.split('\t')
-		flag, group = key.split('_')
-		if (flag != 'correct' and flag != 'wrong'):
-			continue
-		else:
-			if (flag == 'correct'):
-				val_list = val.split(',')
-				correct_map[group] = [float(item) for item in val_list]
-			else:
-				val_list = val.split(',')
-				error_map[group] = [float(item) for item in val_list]
-	
-	scatter_histogram (correct_map)
-	scatter_histogram (error_map)
-	
-	return [correct_map, error_map]
+	 	user_type, group = key.split('_')
+		val_list = val.split('_')
+		correct_sim_list = val_list[2].split(',')
+		error_sim_list = val_list[3].split(',')
 
-def make_bubble (stat_map, y_axis):
-	for key, val_list in stat_map.iteritems():
-		sim_counter = Counter()
-		for val in val_list:
-			sim_counter[cal_bin(val)] += 1
-		
-		sims = sim_counter.keys()
-		counts = sim_counter.values()
-		sum_count = sum(counts)
-		areas = [count/sum_count * 100 for count in counts]
-		bubbles = [[sims[i], y_axis, areas[i]] for i in xrange(len(sims))]
-		stat_map[key] = bubbles
+		correct_bubble_list = make_bubble(correct_sim_list, int(user_type))
+		error_bubble_list = make_bubble(error_sim_list, int(user_type) + 0.5)
 
+		json_obj['correct'][int(user_type)] = correct_bubble_list
+		json_obj['error'][int(user_type)] = error_bubble_list
 
-
-def get_similarity_bubble (result_list):
-	correct_map = {}
-	error_map = {}
-	for result in result_list:
-		key, val = result.split('\t')
-		flag, group = key.split('_')
-		if (flag != 'correct' and flag != 'wrong'):
-			continue
-		else:
-			if (flag == 'correct'):
-				val_list = val.split(',')
-				correct_map[group] = [float(item) for item in val_list]
-			else:
-				val_list = val.split(',')
-				error_map[group] = [float(item) for item in val_list]
-	
-	# make correct bubble at top, while error bubble at bottom
-	make_bubble (correct_map, 1)
-	make_bubble (error_map, 0)
-	
-	return [correct_map, error_map]
-
-
-def get_overal_stat (json_list):
-	num_user_list = []
-	error_user_list = []
-	# i corresponds to each num_bucket_group
-	for i in xrange(len(json_list[0][1])):
-		num_user = 0
-		error_user = 0
-		# j corresponds to each num_device_histogram_bin
-		for j in xrange(1, 9):
-			num_user += json_list[0][j][i]
-			error_user += int(json_list[0][j][i] * json_list[1][j][i])
-		
-		num_user_list.append(num_user)
-		error_user_list.append(error_user)
-
-	error_ratio = [error_user_list[i] / num_user_list[i] for i in xrange(len(num_user_list))]
-	overal_stat = {}
-	overal_stat['total_user_num'] = num_user_list
-	overal_stat['total_error_ratio'] = error_ratio
-	json_list.append (overal_stat)
-	return json_list
+	return json_obj
 
 
 
 '''
 	Combine result
 '''
-origin_path = '../../../../local_data/majority_pipeline/'
+origin_path = '../../../../local_data/majority_pipeline/version1.1/'
 
 # results is a list of lsh evaluation result:
 # e.g. 7_12m	28595_0.222731246721_0.8,0.9,0.93_0.3,0.4,0.3
 results = combine_files(origin_path)
 
-
-# device-user distribution
-json_list = build_histogram_map(results)
-result_json = get_overal_stat(json_list)
+distribution_json = get_distribution_json(results)
+sim_json = get_similarity_json(results)
 
 with open('pipeline_distribution_v1.0.json', 'w') as f:
-	json.dump(result_json, f)
+	json.dump(distribution_json, f)
 
-# similarity-user distribution
-result_json = get_similarity_bubble(results)
 with open('pipeline_sim_v1.0.json', 'w') as f:
-	json.dump(result_json, f)
-
-
+	json.dump(sim_json, f)

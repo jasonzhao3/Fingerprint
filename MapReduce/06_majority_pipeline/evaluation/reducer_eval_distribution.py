@@ -14,8 +14,7 @@ from operator import itemgetter
   bucket_idx_group \t device
 
   output:
-  num_device_group \t correct or wrong
-  correct_group \t similarity
+  user_type__group \t correct or wrong_similarity
   
   => Note: here we group num_of_device into following range:
   [1, 2, 3, 4, 5, 6, 7, 8+]
@@ -23,14 +22,14 @@ from operator import itemgetter
   Reducer:
   ========
   input:
-  num_device_group \t correct or wrong bucket  
-  correct/wrong_group \t sim
+  user_type__group \t correct or wrong_similarity
+  
 
   output:
-  num_device_group \t total_num and error_ratio
-  correct/wrong_group \t sim_list
+  user_type__group \t user_num_____error_ratio_______correct_similarity____error_similarity
   
 '''
+
 
 
 
@@ -44,28 +43,33 @@ def main(separator='\t'):
   # input comes from STDIN (standard input)
     data = read_mapper_output(sys.stdin, separator=separator)
    
-    # one group corresponds to one num_device group
-    for key, group in groupby(data, itemgetter(0)):      
+    # user_type: has one/two/three devices
+    # users: the group of users that belong to this user_type
+    for user_type, users in groupby(data, itemgetter(0)):      
       
       try:
-        
-        if (key.split('_')[0] == 'correct' or 
-            key.split('_')[0] == 'wrong'):
-          sim_list = []
-          for key, val in group:
-            sim_list.append(val)
-          print ("%s%s%s" % (key, '\t', ','.join(sim_list)))
 
-        else:
-          numBucket = 0
-          numError = 0
-          for key, val in group:
-              numBucket += 1
-              if (val == 'wrong'):
-                numError += 1
-          error_ratio = numError / numBucket
-          val = str(numBucket) + '_' + str(error_ratio)
-          print ("%s%s%s" % (key, separator, val))
+        num_user = 0
+        num_error = 0
+        correct_sim_list = []
+        error_sim_list = []
+
+        for key, user_info in users:
+            num_user += 1
+            flag, sim = user_info.split('_')
+            if (flag == 'wrong'):
+              num_error += 1
+              error_sim_list.append(sim)
+            else:
+              correct_sim_list.append(sim)
+
+        error_ratio = num_error / num_user
+        user_stat = str(num_user) + '_' + str(error_ratio) + '_'
+        correct_sim_str = ','.join(correct_sim_list)
+        correct_sim_str += '_'
+        error_sim_str = ','.join(error_sim_list)
+
+        print ("%s%s%s%s%s" % (user_type, separator, user_stat, correct_sim_str, error_sim_str))
 
       except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
@@ -75,4 +79,3 @@ def main(separator='\t'):
 
 if __name__ == "__main__":
     main()
-

@@ -17,8 +17,7 @@ sys.path.append("./")
   bucket_idx_group \t device
 
   output:
-  num_device_group \t correct or wrong
-  correct_group \t similarity
+  user_type__group \t correct or wrong_similarity
   
   => Note: here we group num_of_device into following range:
   [1, 2, 3, 4, 5, 6, 7, 8+]
@@ -26,12 +25,11 @@ sys.path.append("./")
   Reducer:
   ========
   input:
-  num_device_group \t correct or wrong bucket  
-  correct/wrong_group \t sim
+  user_type__group \t correct or wrong_similarity
+  
 
   output:
-  num_device_group \t total_num and error_ratio
-  correct/wrong_group \t sim_list
+  user_type__group \t user_num_____error_ratio_______correct_similarity____error_similarity
   
 '''
 
@@ -185,14 +183,17 @@ def fail_location(dev1, dev2):
           pass
   return False
 
-# as long as they share one timestamp, fail
+# as long as they share 30% of their timestamp, fail
 def fail_timestamp(dev1, dev2):
   ts1 = dev1[TS_IDX].split('|')
   ts2 = dev2[TS_IDX].split('|')
   ts1_set = cut_to_set(ts1)
   ts2_set = cut_to_set(ts2)
+  
   inter_set = ts1_set & ts2_set
-  if (len(inter_set) != 0):
+  num = len(inter_set)
+  den = len(ts1_set) + len(ts2_set)
+  if (num / den > 0.2):
     return True
   else:
     return False
@@ -217,7 +218,7 @@ def eval_cluster(cluster):
       #     fail_timestamp(dev1, dev2) or
       #     fail_hid(dev1, dev2)):
       #   return False
-      if (fail_hid(dev1, dev2)):
+      if (fail_timestamp(dev1, dev2)):
         return False
   return True
 
@@ -296,11 +297,9 @@ def main(separator='\t'):
         key = str(num_device_within_bucket) + '_' + group
  
         if (is_correct):
-          print ("%s%s%s" % (key, '\t', 'correct'))
-          print ("%s%s%.6f" % ('correct_' + group, '\t', avg_sim))
+          print ("%s%s%s%.6f" % (key, '\t', 'correct_', avg_sim))
         else:
-          print ("%s%s%s" % (key, '\t', 'wrong'))    
-          print ("%s%s%.6f" % ('wrong_' + group, '\t', avg_sim))
+          print ("%s%s%s%.6f" % (key, '\t', 'wrong_', avg_sim))    
 
       except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
