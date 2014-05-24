@@ -52,9 +52,15 @@ Results Log
    -> but timestamp failure condition is relaxed to 20% overlap
    -> also reformat the output format, now have similarity distribution within each user_type
 
+3. evaluation pipeline version 1.2
+  -> same as version1.1, but further relax the timestamp to 50%
+  -> in order to solve big cluster timeout problem, now random select 30 devices from a cluster
 
+4. evaluation pipeline version 1.3
+  -> only evaluate hid, tolerance factor 0.2
 
-
+5. evaluation pipeline version 1.4
+  -> only location, tolearance factor 0.25 ~ 25-30 miles
 
 
 

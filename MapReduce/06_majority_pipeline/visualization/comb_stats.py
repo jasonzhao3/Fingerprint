@@ -133,7 +133,7 @@ def get_similarity_json (result_list):
 '''
 	Combine result
 '''
-origin_path = '../../../../local_data/majority_pipeline/version1.1/'
+origin_path = '../../../../local_data/majority_pipeline/version1.4/'
 
 # results is a list of lsh evaluation result:
 # e.g. 7_12m	28595_0.222731246721_0.8,0.9,0.93_0.3,0.4,0.3
@@ -142,8 +142,8 @@ results = combine_files(origin_path)
 distribution_json = get_distribution_json(results)
 sim_json = get_similarity_json(results)
 
-with open('pipeline_distribution_v1.0.json', 'w') as f:
+with open('pipeline_distribution_v1.4.json', 'w') as f:
 	json.dump(distribution_json, f)
 
-with open('pipeline_sim_v1.0.json', 'w') as f:
+with open('pipeline_sim_v1.4.json', 'w') as f:
 	json.dump(sim_json, f)

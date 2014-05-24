@@ -50,7 +50,7 @@ THRESHOLD = 0.893
 TS_IDX = 3
 CITY_IDX = 5
 HID_IDX = 17
-geo_threshold = 0.025
+geo_threshold = 0.03
 
 '''
   Helper functions
@@ -183,7 +183,7 @@ def fail_location(dev1, dev2):
           pass
   return False
 
-# as long as they share 30% of their timestamp, fail
+# as long as they share 50% of their timestamp, fail
 def fail_timestamp(dev1, dev2):
   ts1 = dev1[TS_IDX].split('|')
   ts2 = dev2[TS_IDX].split('|')
@@ -193,16 +193,20 @@ def fail_timestamp(dev1, dev2):
   inter_set = ts1_set & ts2_set
   num = len(inter_set)
   den = len(ts1_set) + len(ts2_set)
-  if (num / den > 0.2):
+  if (num / den > 0.5):
     return True
   else:
     return False
 
+# as long as they have too few hid in common, fail
 def fail_hid(dev1, dev2):
   hid1 = set(dev1[HID_IDX].split('|'))
   hid2 = set(dev2[HID_IDX].split('|'))
+  
   inter_set = hid1 & hid2
-  if (len(inter_set) == 0):
+  num = len(inter_set)
+  den = len(hid1) + len(hid2)
+  if (num / den < 0.2):
     return True
   else:
     return False
@@ -211,6 +215,7 @@ def fail_hid(dev1, dev2):
 
 # success return True, otherwise return False
 def eval_cluster(cluster):
+  cluster = random_select_cluster(cluster)
   for idx1, dev1 in enumerate(cluster):
     for idx2 in xrange(idx1+1, len(cluster)):
       dev2 = cluster[idx2]
@@ -218,7 +223,7 @@ def eval_cluster(cluster):
       #     fail_timestamp(dev1, dev2) or
       #     fail_hid(dev1, dev2)):
       #   return False
-      if (fail_timestamp(dev1, dev2)):
+      if (fail_location(dev1, dev2)):
         return False
   return True
 
@@ -238,14 +243,20 @@ def random_sample_30 (cluster):
   return cluster[:30]
     
 
-def get_average_similarity(cluster):
-  sim = 0.0
+def random_select_cluster(cluster):
   total_cnt = len(cluster) * (len(cluster)-1) / 2
-  
   # avoid big cluster
   if (total_cnt > 1000):
     cluster = random_sample_30(cluster)
-    total_cnt = len(cluster) * (len(cluster)-1) / 2
+  
+  return cluster
+
+
+
+def get_average_similarity(cluster):
+  sim = 0.0
+  cluster = random_select_cluster(cluster)
+  total_cnt = len(cluster) * (len(cluster)-1) / 2
 
   for idx1, dev1 in enumerate(cluster):
     for idx2 in xrange(idx1+1, len(cluster)):
@@ -299,7 +310,7 @@ def main(separator='\t'):
         if (is_correct):
           print ("%s%s%s%.6f" % (key, '\t', 'correct_', avg_sim))
         else:
-          print ("%s%s%s%.6f" % (key, '\t', 'wrong_', avg_sim))    
+          print ("%s%s%s%.6f" % (key, '\t', 'error_', avg_sim))    
 
       except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
@@ -309,4 +320,3 @@ def main(separator='\t'):
 
 if __name__ == "__main__":
     main()
-        

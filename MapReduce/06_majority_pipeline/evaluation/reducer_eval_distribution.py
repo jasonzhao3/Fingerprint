@@ -57,7 +57,7 @@ def main(separator='\t'):
         for key, user_info in users:
             num_user += 1
             flag, sim = user_info.split('_')
-            if (flag == 'wrong'):
+            if (flag == 'error'):
               num_error += 1
               error_sim_list.append(sim)
             else:
