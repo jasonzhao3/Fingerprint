@@ -332,4 +332,3 @@ for line in sys.stdin:
     for bucket in bucket_list:
       print '%s%s%s' % (bucket, "\t", ','.join(attr_list))
     
-

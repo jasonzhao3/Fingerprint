@@ -170,6 +170,11 @@ def fail_location(dev1, dev2):
   city_list2 = dev2[CITY_IDX].split('|')
 
   total_cnt = len(city_list1) * len(city_list2)
+  if (total_cnt > 1000):
+     city_list1 = random_sample_30 (city_list1)
+     city_list2 = random_sample_30 (city_list2)
+  total_cnt = len(city_list1) * len(city_list2)
+  
   fail_cnt = 0
   for city1 in city_list1:
     for city2 in city_list2:

@@ -29,7 +29,9 @@ Problems
 
 
 Results Log
-============
+==================
+Version 1.x
+===========
 0. evaluation_distribution local version3.0:
    input: LSH version 3.0
    output: evaluation_distribution version 3.0
@@ -60,9 +62,29 @@ Results Log
   -> only evaluate hid, tolerance factor 0.2
 
 5. evaluation pipeline version 1.4
-  -> only location, tolearance factor 0.25 ~ 25-30 miles
+  -> only location, tolearance factor 0.025 ~ 25-30 miles
+
+6. evaluation pipeline version 1.5
+  -> only location, tolerance factor 0.03
 
 
+
+
+Version 2.x
+==============
+1. version 2.0: 
+   -> tuned lsh parameters
+   -> evaluation with only version1.5's evaluation method (only location with tolerance factor 0.03)
+   -> note: for city comparison, also leverage the random 30 technique to avoid big city_list
+
+2. 
+
+
+
+Version 3.x
+==========
+1. temporarily for mixed set
+2. 
 
 
 Visualization:  should have a rough image of these plots
