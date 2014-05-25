@@ -2,16 +2,20 @@
 from itertools import groupby
 from operator import itemgetter
 import sys, csv, math, os
+import random
  # sys.path.append(os.path.dirname(__file__))
 sys.path.append("./")
 
 
 HASH_STRING_CONST_MOD = 20000000
-NUM_BUCKET = 8000000
+#NUM_BUCKET = [item * 1000000 for item in xrange(5,21)]
+#bucket_suffix =  ['5m', '6m', '7m', '8m', '9m', '10m', '11m', '12m', '13m','14m', '15m', '16m', '17m', '18m', '19m', '20m']
+NUM_BUCKET = [12000000]
+bucket_suffix = ['12m']
+
 BEC_ONLY = 27
 REQ_ONLY = 31
 RB_UNION = 38
-
 
 '''
   device_profile: a list of attributes
@@ -49,7 +53,7 @@ full_int_idx = [
                15, 
                16,
                18, # is_on_premise
-               19, 
+               #19, 
                20,
                21, # network_id - set
                22, # slot_type_id - majority (low weight because too many 1)
@@ -104,7 +108,7 @@ request_int_idx = [
                15, 
                16,
                18, # is_on_premise
-               19, 
+               #19, 
                20,
                21, # network_id - set
                22, # slot_type_id - majority (low weight because too many 1)
@@ -140,7 +144,7 @@ beacon_int_idx = [
                15,
                16,
                18, # is_on_premise
-               19, 
+               #19, 
                20, # slate_id
 ]
 
@@ -162,7 +166,7 @@ REQ_SET_IDX = [
                15, # ovp_version  
                16, # ovp_type
                #17, # hid
-               19, # audience_segment (skip NULL)
+               #19, # audience_segment (skip NULL)
                20, # referrer_site (skip NULL)
                22, # slot_type_id - majority (low weight because too many 1)
                25, # publisher_channel_id - (skip 0)
@@ -180,7 +184,7 @@ BEC_SET_IDX = [
                15, # ovp_version  
                16, # ovp_type
                #17, # hid
-               19, # audience_segment (skip NULL)
+               #19, # audience_segment (skip NULL)
                20  # slate id
 ]
 
@@ -193,7 +197,7 @@ FULL_SET_IDX = [
                15, # ovp_version  
                16, # ovp_type
                #17, # hid
-               19, # audience_segment (skip NULL)
+               #19, # audience_segment (skip NULL)
                20, # referrer_site (skip NULL)
                22, # slot_type_id - majority (low weight because too many 1)
                25, # publisher_channel_id - (skip 0)
@@ -222,12 +226,12 @@ def hash_string (input_str):
     return djb2_code % HASH_STRING_CONST_MOD
 
 def sum_int (device_profile, index_list):
-  int_list = [int(device_profile[idx]) for idx in index_list if device_profile[idx].isdigit()]
+  int_list = [(idx+1) * int(device_profile[idx]) for idx in index_list if device_profile[idx].isdigit()]
   return sum(int_list)
 
 def sum_float (device_profile, index_list):
-  float_list = [float(device_profile[idx]) for idx in index_list]
-  return 100 * sum(float_list)
+  float_list = [(idx+1) * float(device_profile[idx]) for idx in index_list]
+  return 1000 * sum(float_list)
 
 def sum_boolean (device_profile, index_list):
   boolean_list = [device_profile[idx] for idx in index_list]
@@ -242,6 +246,17 @@ def hash_key_val (key_val_str):
     return int(key) + int(val)
   except (RuntimeError, TypeError, NameError, ValueError):
     return 0
+
+def hash_audience_segment (audience_segment_str):
+  if (audience_segment_str.isdigit()):
+    return int(audience_segment_str)
+  else:
+    try:
+      int_list = audience_segment_str.split(';')
+      int_list = [int(item) for item in int_list]
+      return sum(int_list)
+    except (RuntimeError, TypeError, NameError, ValueError):
+      return 0
 
 '''
   example device profile:
@@ -258,14 +273,18 @@ def hash_key_val (key_val_str):
 def hash_full_profile (device_profile):
   hash_val = sum_int (device_profile, full_int_idx)
   hash_val += sum_float (device_profile, full_float_idx)
+  #hash_val += sum_string (device_profile, full_string_idx)
   hash_val += sum_boolean (device_profile, full_boolean_idx)
 
   hash_val += hash_key_val (device_profile[10])
   #hash_val += hash_ovp (device_profile[15])
   #hash_val += hash_ovp (device_profile[16])
-  #hash_val += hash_audience_segment (device_profile[19])
+  
+  hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
 
 
 
@@ -280,14 +299,17 @@ def hash_full_profile (device_profile):
 '''
 def hash_request_profile (device_profile):
   hash_val = sum_int (device_profile, request_int_idx)
+  #hash_val += sum_string (device_profile, request_string_idx)
   hash_val += sum_boolean (device_profile, request_boolean_idx)
 
   hash_val += hash_key_val (device_profile[10])
   #hash_val += hash_ovp (device_profile[15])
   #hash_val += hash_ovp (device_profile[16])
-  #hash_val += hash_audience_segment (device_profile[19])
+  hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
 
 
 '''
@@ -300,9 +322,12 @@ def hash_beacon_profile (device_profile):
   hash_val += hash_key_val (device_profile[10])
   #hash_val += hash_ovp (device_profile[15])
   #hash_val += hash_ovp (device_profile[16])
-  #hash_val += hash_audience_segment (device_profile[19])
+  hash_val += hash_audience_segment (device_profile[19])
 
-  return hash_val % NUM_BUCKET
+  bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
+  bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  return bucket_list
+
 
 '''
   build map
@@ -338,22 +363,31 @@ perm_map = buildPermMap('permutation_output')
 '''
 def getSignature (feature_set, value_map, perm_map, index):
     full_set = value_map[index]
-    perm = perm_map[index]
     signature = 0
+    if len(feature_set) == 1:        
+        if feature_set[0] == "0":
+            return str(signature)
+    if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
+        return str(signature)
+    perm = perm_map[index]
+    if len(perm) > 1000:
+        signature = random.randint(0, len(perm))
+        return str(signature*1000)
+    
     while signature < len(perm):
         val = full_set[perm.index(signature)]
         if val in feature_set:
-            return str(signature)
+            return str(signature*1000)
         else:
             signature += 1
-    return str(signature)
+    return str(signature*1000)
+    
 
-
-# input comes from STDIN (standard input)
 for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
     attr_list = l[1].split(',')
+    val_list = attr_list
     if len(attr_list) == BEC_ONLY:
         for i in BEC_SET_IDX:
             ind = i
@@ -370,7 +404,7 @@ for line in sys.stdin:
             feature_set = attr_list[i]
             attr_list[i] = getSignature(feature_set, value_map, perm_map, i)
     
-    bucket = hash_majority (attr_list)
-    attr_list.append(l[0])
-    print '%s%s%s' % (str(bucket), "\t", ','.join(attr_list))
-
+    bucket_list = hash_majority (attr_list)
+    val_list.append(l[0])
+    for bucket in bucket_list:
+      print '%s%s%s' % (bucket, "\t", ','.join(val_list))
