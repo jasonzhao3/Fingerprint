@@ -31,7 +31,7 @@ def main(separator='\t'):
                       if (len(list1) < len(list2)):
                         list1 = running_total[1].split(',')
                         list2 = running_total[0].split(',')
-                      idx = [1, 2, 3, 5, 7, 15, 16, 17, 18, 19]
+                      idx = [1, 2, 3, 5, 7, 15, 16, 17, 19]
                       for i in idx:
                         setR = set(list1[i].split('|')) 
                         setB = set(list2[i].split('|')) 
@@ -54,7 +54,7 @@ def main(separator='\t'):
           if (len(list1) < len(list2)):
             list1 = running_total[1].split(',')
             list2 = running_total[0].split(',')
-          idx = [1, 2, 3, 5, 7, 15, 16, 17, 18, 19]
+          idx = [1, 2, 3, 5, 7, 15, 16, 17, 19]
           for i in idx:
             setR = set(list1[i].split('|')) 
             setB = set(list2[i].split('|')) 

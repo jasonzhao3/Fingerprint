@@ -63,17 +63,17 @@ majority_idx = [
                4, # census_DMA - majority
                6,  # publisher_id - majority
                8, # delivery_point_id
-               9, # service_provider_id - jaccard set
+               9, # service_provider_id - majority
                10, # key_value
                11, # player_location_id 
                12, # player_size_id - jaccard set
                13, # page_fold_id - majority
                14, # ad_visibility
-               21, # network_id - set
-               22, # slot_type_id - majority (low weight because too many 1)
+               18, # is_on_premise
                23, # ad_request_count
                24, # is_not_yume_white_list  - ratio of true
-               29, # service_provider_name  - majority
+               28, # is_pre_fetch_request
+               #29, # service_provider_name  - majority
               ]
 
 set_idx = [
@@ -85,13 +85,12 @@ set_idx = [
                15, # ovp_version  
                16, # ovp_type
                17, # hid
-               18, # is_on_premise
                19, # audience_segment (skip NULL)
                20, # referrer_site (skip NULL)
+               22, # slot_type_id - majority (low weight because too many 1)
                25, # publisher_channel_id - (skip 0)
                26, # content_video_identifier (skip null)
                27, # content_profile_id (skip null)
-               28, # is_pre_fetch_request
                #30,  # ip_addr - jaccard set
                31 # behavior_cookie (skip NULL)
           ]
