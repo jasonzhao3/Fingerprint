@@ -165,8 +165,8 @@ REQUEST_FILTER_IDX = [
 BEACON_FILTER_IDX = [
     0, # session_id
     1, # domain_id
-    2, # placement_id
-    3, # advertisement_id
+    2, # placement_id   #
+    3, # advertisement_id   #
     4, # conversionPixelld
     5, # zero_tracker
     6, # twentry_five

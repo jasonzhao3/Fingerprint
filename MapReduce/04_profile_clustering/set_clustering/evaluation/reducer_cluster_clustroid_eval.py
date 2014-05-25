@@ -2,6 +2,7 @@
 from itertools import groupby
 from operator import itemgetter
 import sys, csv, math, os
+import random
  # sys.path.append(os.path.dirname(__file__))
 sys.path.append("./")
 
