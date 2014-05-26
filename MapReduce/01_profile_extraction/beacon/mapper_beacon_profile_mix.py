@@ -58,7 +58,8 @@ majority_idx = [
                11, # player_location_id 
                12, # player_size_id - jaccard set
                13, # page_fold_id - majority
-               14 # ad_visibility
+               14, # ad_visibility
+               18 # is_on_premise
               ]
 
 set_idx = [
@@ -70,7 +71,6 @@ set_idx = [
                15, # ovp_version  
                16, # ovp_type
                17, # hid
-               18, # is_on_premise
                19, # audience_segment (skip NULL)
                20  # slate id
           ]

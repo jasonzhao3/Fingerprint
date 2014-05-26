@@ -6,6 +6,10 @@ import random
  # sys.path.append(os.path.dirname(__file__))
 sys.path.append("./")
 
+'''
+    version 3.2: use 1000x signature to increase number of buckets, result = 8,000,000 buckets hashed
+    version 3.3: for N/A or '0', generate a random number for signature
+'''
 
 HASH_STRING_CONST_MOD = 20000000
 #NUM_BUCKET = [item * 1000000 for item in xrange(5,21)]
@@ -363,16 +367,18 @@ perm_map = buildPermMap('permutation_output')
 '''
 def getSignature (feature_set, value_map, perm_map, index):
     full_set = value_map[index]
+    perm = perm_map[index]
     signature = 0
     if len(feature_set) == 1:        
         if feature_set[0] == "0":
-            return str(signature)
+            signature = random.randint(0, len(perm))
+            return str(signature*1000)
     if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
-        return str(signature)
-    perm = perm_map[index]
-    if len(perm) > 1000:
-        signature = random.randint(0, len(perm))
-        return str(signature*1000)
+            signature = random.randint(0, len(perm))
+            return str(signature*1000)    
+#    if len(perm) > 1000:
+#        signature = random.randint(0, len(perm))
+#        return str(signature*1000)
     
     while signature < len(perm):
         val = full_set[perm.index(signature)]
