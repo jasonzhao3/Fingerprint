@@ -77,7 +77,8 @@ Version 2.x
    -> evaluation with only version1.5's evaluation method (only location with tolerance factor 0.03)
    -> note: for city comparison, also leverage the random 30 technique to avoid big city_list
 
-2. 
+2. version 2.1:
+   -> evaluation with only location intersection 
 
 
 

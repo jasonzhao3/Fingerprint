@@ -9,7 +9,7 @@ sys.path.append("./")
 
 
 '''
-  This script is used to see the distribution of devices in each bucket
+  This script is used to find identifers of high similarity device but are evluated as wrong pair
 
   Mapper: 
   ========
@@ -17,19 +17,12 @@ sys.path.append("./")
   bucket_idx_group \t device
 
   output:
-  user_type__group \t correct or wrong_similarity
+  bucket_idx_group \t avg similarity of cluster_ identifier list
   
-  => Note: here we group num_of_device into following range:
-  [1, 2, 3, 4, 5, 6, 7, 8+]
 
   Reducer:
   ========
-  input:
-  user_type__group \t correct or wrong_similarity
-  
-
-  output:
-  user_type__group \t user_num_____error_ratio_______correct_similarity____error_similarity
+  identical reducer
   
 '''
 
@@ -164,42 +157,29 @@ def cal_similarity(dev1, dev2):
      
 
 
-# # if half of the pairs are more than 25 miles away, fail
-# def fail_location(dev1, dev2):
-#   city_list1 = dev1[CITY_IDX].split('|')
-#   city_list2 = dev2[CITY_IDX].split('|')
-
-#   total_cnt = len(city_list1) * len(city_list2)
-#   if (total_cnt > 1000):
-#      city_list1 = random_sample_30 (city_list1)
-#      city_list2 = random_sample_30 (city_list2)
-#   total_cnt = len(city_list1) * len(city_list2)
-  
-#   fail_cnt = 0
-#   for city1 in city_list1:
-#     for city2 in city_list2:
-#       try:
-#         dist = cal_geo_dist_sqr(city1, city2, geo_map)
-#         if (dist > geo_threshold):
-#           fail_cnt += 1
-#         if (fail_cnt / total_cnt > 0.5):
-#           return True
-#       except (RuntimeError, TypeError, NameError, KeyError, IOError):
-#           pass
-#   return False
-
-#if half of the pairs are more than 25 miles away, fail
+# if half of the pairs are more than 25 miles away, fail
 def fail_location(dev1, dev2):
   city_list1 = dev1[CITY_IDX].split('|')
   city_list2 = dev2[CITY_IDX].split('|')
 
-  city1_set = set(city_list1)
-  city2_set = set(city_list2)
-
-  if (len(city1_set & city2_set) == 0):
-    return True
-  else:
-    return False
+  total_cnt = len(city_list1) * len(city_list2)
+  if (total_cnt > 1000):
+     city_list1 = random_sample_30 (city_list1)
+     city_list2 = random_sample_30 (city_list2)
+  total_cnt = len(city_list1) * len(city_list2)
+  
+  fail_cnt = 0
+  for city1 in city_list1:
+    for city2 in city_list2:
+      try:
+        dist = cal_geo_dist_sqr(city1, city2, geo_map)
+        if (dist > geo_threshold):
+          fail_cnt += 1
+        if (fail_cnt / total_cnt > 0.5):
+          return True
+      except (RuntimeError, TypeError, NameError, KeyError, IOError):
+          pass
+  return False
 
 # as long as they share 50% of their timestamp, fail
 def fail_timestamp(dev1, dev2):
@@ -308,7 +288,7 @@ def main(separator='\t'):
    
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
-      try:
+      # try:
         num_device_within_bucket = 0
         cluster = []
         for key, device in group:
@@ -321,19 +301,16 @@ def main(separator='\t'):
 
         is_correct = eval_cluster(cluster)
         avg_sim = get_average_similarity(cluster)
-        group = key.split('_')[1]
-        
-        key = str(num_device_within_bucket) + '_' + group
- 
-        if (is_correct):
-          print ("%s%s%s%.6f" % (key, '\t', 'correct_', avg_sim))
-        else:
-          print ("%s%s%s%.6f" % (key, '\t', 'error_', avg_sim))    
 
-      except (RuntimeError, TypeError, NameError, ValueError, IOError):
+        identifiers = [device[-1] for device in cluster]
+
+        if (not is_correct and avg_sim > 0.99):
+          print "%s%s%.6f%s%s" % (key, '\t', avg_sim, '_', ','.join(identifiers))
+
+      # except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
-        print "ERROR!!"
-        pass
+        # print "ERROR!!"
+        # pass
  
 
 if __name__ == "__main__":
