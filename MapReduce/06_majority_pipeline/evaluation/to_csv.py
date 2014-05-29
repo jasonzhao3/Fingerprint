@@ -12,18 +12,30 @@ def write_csv (csv_file, list_of_list):
         writer.writerows(list_of_list)
 
 
-data_file = 'wrong_device'
-output_file = 'wrong_device.csv'
+data_file = 'delivery_point.txt'
+output_file = 'delivery_point.csv'
 output_data = []
+
 with open (data_file) as f:
     for line in f:
         line = line.strip ()
         if (not line):
             continue
-        record_list = line.split('|')
-        for record in record_list:
-            attr_list = record.split (',')
-            output_data.append (attr_list)
+        attr_list = line.split (',')
+        output_data.append (attr_list)
  
 write_csv (output_file, output_data)
 print len (output_data)
+
+# with open (data_file) as f:
+#     for line in f:
+#         line = line.strip ()
+#         if (not line):
+#             continue
+#         record_list = line.split('|')
+#         for record in record_list:
+#             attr_list = record.split (',')
+#             output_data.append (attr_list)
+ 
+# write_csv (output_file, output_data)
+# print len (output_data)

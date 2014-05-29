@@ -1,5 +1,6 @@
 #include everything except:
 local_test/
+elastic-mapreduce-cli/
 *.pyc
 *.un~
 *.DS_Store

@@ -56,6 +56,11 @@ java.lang.RuntimeException: PipeMapRed.waitOutputThreads(): subprocess failed wi
   9) CLI default region is us-east-1
   10) 
 
+2. AWS multiple input path
+./elastic-mapreduce --create --stream --args -input,"s3n://cs341-yume-dp/input/input2/" --enable-debugging --num-instances 2 --master-instance-type m1.xlarge --slave-instance-type m1.xlarge --name "Test command line" --mapper "s3n://cs341-yume-dp/mapper_identical.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/logs/" --output "s3n://cs341-yume-dp/output" --input "s3n://cs341-yume-dp/input/input1/" 
+
+Reference: 
+http://www.henrycipolla.com/blog/2011/09/how-to-create-an-emr-job-with-multiple-inputs-using-the-ruby-client/
 
 
   Some waste of time:
