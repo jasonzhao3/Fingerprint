@@ -376,9 +376,9 @@ def getSignature (feature_set, value_map, perm_map, index):
     if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
             signature = random.randint(0, len(perm))
             return str(signature*1000)    
-#    if len(perm) > 1000:
-#        signature = random.randint(0, len(perm))
-#        return str(signature*1000)
+    if len(perm) > 1000:
+        signature = random.randint(0, len(perm))
+        return str(signature*1000)
     
     while signature < len(perm):
         val = full_set[perm.index(signature)]
