@@ -14,5 +14,30 @@ Documentation for CS341 Project
 
 
 
+Understanding Large graphs: similarity & summarization
+
+Danai Koutra (CMU)
+
+1. graph similarity: two graphs with correspond nodes, but different edges 
+   1) simple features: 
+      - edge overlap (EO)
+   	  - vertex/edge overlap
+   	  - vertex ranking (pagerank)
+   	  - maximum common subgraph
+
+   2) Complex features:
+   	  - signature similarity (fingerprint -- by Garcia-Molina '10'
+   	    (what's the intuition?)
+   	  - Axioms
+
+
+
+Kamanlau daily city: http://www.chineseinsfbay.com/f/page_viewtopic/t_20793.html  1300
+
+   
+
+
+
+
 
 
