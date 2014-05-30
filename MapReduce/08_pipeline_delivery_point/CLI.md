@@ -22,7 +22,7 @@ MapReduce Command Line:
 
 02_lsh:
 ==========
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 10 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v3.2" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v3.0.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version3.2/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 6 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v4.2" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v4.2.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version4.2/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
 
 
 03_evaluation  (distributed cache not working)

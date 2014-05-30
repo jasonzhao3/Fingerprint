@@ -44,10 +44,9 @@ IS_PREFETCH = 27
 THRESHOLD = 0.893
 
 
-
 TS_IDX = 3
 CITY_IDX = 5
-HID_IDX = 17
+HID_IDX = 16
 geo_threshold = 0.03
 
 '''
@@ -283,7 +282,7 @@ def read_mapper_output(file, separator='\t'):
   build geo map
 '''
 geo_map = build_geo_map ('US-City-Location.csv')
-# geo_map = build_geo_map ('../US-City-Location.csv')
+# geo_map = build_geo_map ('../../US-City-Location.csv')
 
         
 # concat version
@@ -307,10 +306,9 @@ def main(separator='\t'):
         is_correct = eval_cluster(cluster)
         avg_sim = get_average_similarity(cluster)
 
-        identifiers = [device[-1] for device in cluster]
-
-        if (not is_correct and avg_sim > 0.99):
-          print "%s%s%.6f%s%s" % (key, '\t', avg_sim, '_', ','.join(identifiers))
+        if (avg_sim <= 0.2):
+          for device in cluster:
+            print "%s%.6f%s%s" % (key +  '_', avg_sim, '\t', ','.join(device))
 
       # except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
