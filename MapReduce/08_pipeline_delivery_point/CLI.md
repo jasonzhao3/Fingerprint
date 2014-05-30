@@ -22,19 +22,20 @@ MapReduce Command Line:
 
 02_lsh:
 ==========
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 10 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v1.0" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v1.0.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version1.0/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 10 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v3.2" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v3.0.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version3.2/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
 
 
 03_evaluation  (distributed cache not working)
 ============
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 10 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "evaluation_v1.0" --mapper "s3n://cs341-yume-dp/CA_evaluation/mapper_eval_v1.0.py" --reducer "s3n://cs341-yume-dp/reducer_eval_v1.0.py" --log-uri "s3n://cs341-yume-dp/CA_evaluation/logs/" --output "s3n://cs341-yume-dp/CA_evaluation/version1.0/" --input "s3n://cs341-yume-dp/CA_lsh/version1.0/" --cache s3n://cs341-yume-dp/US-City-Location.csv#US-City-Location.csv --jobconf mapred.task.timeout=1000000
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 2 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "evaluation_v1.0" --mapper "s3n://cs341-yume-dp/CA_evaluation/mapper_eval_v1.0.py" --reducer "s3n://cs341-yume-dp/reducer_eval_v1.0.py" --log-uri "s3n://cs341-yume-dp/CA_evaluation/logs/" --output "s3n://cs341-yume-dp/CA_evaluation/version1.0/" --input "s3n://cs341-yume-dp/CA_lsh/version1.0/" --cache s3n://cs341-yume-dp/US-City-Location.csv#US-City-Location.csv --jobconf mapred.task.timeout=1000000
 
 
 
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 10 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "evaluation_v1.0" \
+
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 2 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "evaluation_v1.0" \
    --arg "-files" --arg "s3n://cs341-yume-dp/CA_evaluation/mapper_eval_v1.0.py,s3n://cs341-yume-dp/reducer_eval_v1.0.py" \
    --input s3n://cs341-yume-dp/CA_lsh/version1.0/ \
    --output s3n://cs341-yume-dp/CA_evaluation/version1.0/ \
    --mapper mapper_eval_v1.0.py \
    --reducer reducer_eval_v1.0.py \
-   --cache s3n://cs341-yume-dp/US-City-Location.csv#US-City-Location.csv --jobconf mapred.task.timeout=1000000
+   --cache s3n://cs341-yume-dp/US-City-Location.csv#US-City-Location.csv

@@ -86,7 +86,7 @@ $(document).ready(function() {
 
     $("#fileSelect").change(function(){
         
-        var prefix = 'pipeline_distribution_';
+        var prefix = 'distribution_';
         var suffix = '.json';
         var filename = prefix + $('#fileSelect option:selected').val() + suffix;
 
@@ -116,7 +116,11 @@ $(document).ready(function() {
 
 <select id='fileSelect' class="form-control">
   <option value="v1.0">version 1.0</option>
+  <option value="v1.1">version 1.1</option>
   <option value="v2.0">version 2.0</option>
+  <option value="v3.0">version 3.0</option>
+  <option value="v3.1">version 3.1</option>
+  <option value="v3.2">version 3.2</option>
 </select>
 
 
