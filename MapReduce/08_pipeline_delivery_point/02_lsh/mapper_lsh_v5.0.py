@@ -32,7 +32,7 @@ KEY_VAL_IND = 9 #9, # key_value - jaccard set
 OVP_VERSION_IND = 14 #14, # ovp_version  
 OVP_TYPE_IND = 15 #15, # ovp_type
 AUD_SEG_IND = 18 #18, # audience_segment => need special
-
+MSB = 7
 
 '''
   full profile index 
@@ -185,6 +185,18 @@ beacon_float_idx = [
 # 5, # city
 # 16, # hid
 
+'''
+    get 7 MSB of hashed value
+'''
+
+def getMSB(integer):
+    if integer < (10 ** MSB):
+        return integer
+
+    while integer > (10 ** MSB):
+        integer = integer / 10
+    return int(integer)
+    
 
 def fnv32a( str ):
     hval = 0x811c9dc5
@@ -194,6 +206,13 @@ def fnv32a( str ):
         hval = hval ^ ord(s)
         hval = (hval * fnv_32_prime) % uint32_max
     return hval 
+
+def getHash(string):
+    str_list = string.split(',')
+    sum = 0
+    for s in str_list:
+        sum += fnv32a(s)
+    return getMSB(int(sum/len(str_list)))
 
 def sum_float (device_profile, index_list):
   float_list = [(idx+1) * float(device_profile[idx]) for idx in index_list]
@@ -215,7 +234,7 @@ def sum_float (device_profile, index_list):
 def hash_full_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in full_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = fnv32a(categorical_str)
+  hash_val = getHash(categorical_str)
   hash_val += sum_float (device_profile, full_float_idx)
   
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
@@ -234,11 +253,12 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in request_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = fnv32a(categorical_str)
+  hash_val = getMSB(categorical_str)
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
   return bucket_list
+
 
 
 '''
@@ -247,7 +267,7 @@ def hash_request_profile (device_profile):
 def hash_beacon_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in beacon_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = fnv32a(categorical_str)
+  hash_val = getMSB(categorical_str)
 
   hash_val += sum_float (device_profile, beacon_float_idx)
 

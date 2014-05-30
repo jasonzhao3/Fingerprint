@@ -261,6 +261,8 @@ def hash_full_profile (device_profile):
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  #print int(hash_val)
+  #print bucket_list[0]
   return bucket_list
 
 
@@ -286,6 +288,8 @@ def hash_request_profile (device_profile):
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
+  #print int(hash_val)
+  #print bucket_list[0]
   return bucket_list
 
 
