@@ -253,7 +253,7 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in request_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = getMSB(categorical_str)
+  hash_val = getHash(categorical_str)
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
@@ -267,7 +267,7 @@ def hash_request_profile (device_profile):
 def hash_beacon_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in beacon_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = getMSB(categorical_str)
+  hash_val = getHash(categorical_str)
 
   hash_val += sum_float (device_profile, beacon_float_idx)
 
