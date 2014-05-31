@@ -22,7 +22,7 @@ MapReduce Command Line:
 
 02_lsh:
 ==========
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 6 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v4.2" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v4.2.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version4.2/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 6 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "LSH_v5.0" --mapper "s3n://cs341-yume-dp/CA_lsh/mapper_lsh_v5.0.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh/logs/" --output "s3n://cs341-yume-dp/CA_lsh/version5.0/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
 
 
 03_evaluation  (distributed cache not working)
@@ -39,3 +39,18 @@ MapReduce Command Line:
    --mapper mapper_eval_v1.0.py \
    --reducer reducer_eval_v1.0.py \
    --cache s3n://cs341-yume-dp/US-City-Location.csv#US-City-Location.csv
+
+
+
+
+
+02_lsh_merge_band:
+=========================
+Get Node
+--------
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 2 --master-instance-type m1.xlarge --slave-instance-type m1.xlarge --name "get_node" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_node.py" --reducer "s3n://cs341-yume-dp/CA_lsh_merge_band/reducer_node.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/node/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+
+
+Lsh_hash_band_step1
+--------------------
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 8 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "lsh_hash_band_step1" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_lsh_band.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step1/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
