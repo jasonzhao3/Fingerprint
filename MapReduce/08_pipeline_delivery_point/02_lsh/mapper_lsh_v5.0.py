@@ -207,16 +207,19 @@ def fnv32a( str ):
         hval = (hval * fnv_32_prime) % uint32_max
     return hval 
 
-def getHash(string):
+def getHashInt(string):
     str_list = string.split(',')
     sum = 0
     for s in str_list:
-        sum += fnv32a(s)
+        if not s.isdigit():
+            sum += (fnv32a(s) / 1000)
+        else:
+            sum += (fnv32a(s) / 100)
     return getMSB(int(sum/len(str_list)))
 
 def sum_float (device_profile, index_list):
-  float_list = [(idx+1) * float(device_profile[idx]) for idx in index_list]
-  return 1000 * sum(float_list)
+  float_list = [(len(index_list)) * float(device_profile[idx]) for idx in index_list]
+  return 1000000 * sum(float_list)
 
 
 '''
@@ -234,8 +237,8 @@ def sum_float (device_profile, index_list):
 def hash_full_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in full_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = getHash(categorical_str)
-  hash_val += sum_float (device_profile, full_float_idx)
+  hash_val = getHashInt(categorical_str)
+  hash_val += sum_float(device_profile, full_float_idx)
   
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
@@ -253,7 +256,7 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in request_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = getHash(categorical_str)
+  hash_val = getHashInt(categorical_str)
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
@@ -267,9 +270,8 @@ def hash_request_profile (device_profile):
 def hash_beacon_profile (device_profile):
   categorical_attrs = [device_profile[i] for i in beacon_int_idx]
   categorical_str = ','.join(categorical_attrs)
-  hash_val = getHash(categorical_str)
-
-  hash_val += sum_float (device_profile, beacon_float_idx)
+  hash_val = getHashInt(categorical_str)
+  hash_val += sum_float(device_profile, beacon_float_idx)
 
   bucket_list = [int(hash_val) % den for den in NUM_BUCKET]
   bucket_list = [str(bucket_list[i])+'_'+ bucket_suffix[i] for i in xrange(len(bucket_list))]
