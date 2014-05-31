@@ -63,6 +63,9 @@ def get_distribution_json (result_list):
 	overal_error_number = 0
 
 	for result in result_list:
+		# print result
+		if (result == "ERROR!!"):
+			continue
 		key, val = result.split('\t')
 		user_type, group = key.split('_')
 		val_list = val.split('_')
@@ -114,6 +117,8 @@ def get_similarity_json (result_list):
 	json_obj['error'] = {}
 
 	for result in result_list:
+		if (result == "ERROR!!"):
+			continue
 		key, val = result.split('\t')
 	 	user_type, group = key.split('_')
 		val_list = val.split('_')
@@ -133,7 +138,7 @@ def get_similarity_json (result_list):
 '''
 	Combine result
 '''
-origin_path = '../../../../local_data/pipeline_dp/version3.2/'
+origin_path = '../../../../local_data/pipeline_dp/version4.1.2/'
 
 # results is a list of lsh evaluation result:
 # e.g. 7_12m	28595_0.222731246721_0.8,0.9,0.93_0.3,0.4,0.3
@@ -142,8 +147,8 @@ results = combine_files(origin_path)
 distribution_json = get_distribution_json(results)
 sim_json = get_similarity_json(results)
 
-with open('distribution_v3.2.json', 'w') as f:
+with open('distribution_v4.1.2.json', 'w') as f:
 	json.dump(distribution_json, f)
 
-with open('similarity_v3.2.json', 'w') as f:
+with open('similarity_v4.1.2.json', 'w') as f:
 	json.dump(sim_json, f)

@@ -15,6 +15,6 @@ version3.x
 > version 3.1
 	fnv32a function with 30m bucket
 > version 3.2
-	fnv32a function without bucket limit
+	fnv32a function without bucket limit => but final hash_value still has bucket limit
 
 
