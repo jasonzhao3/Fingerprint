@@ -30,7 +30,7 @@ OVP_TYPE_IND = 15 #15, # ovp_type
 AUD_SEG_IND = 18 #18, # audience_segment => need special
 
 
-# altogether 5 bands, and the last band should be hashed numerically
+# altogether 4 bands, and the last band should be hashed numerically
 full_band_idx = \
 { 'common1':
     [
@@ -42,11 +42,17 @@ full_band_idx = \
        6,  # publisher_id - set
        9, # key_value - jaccard set
        14, # ovp_version  
- 
+       18, # audience_segment => need specially handled
+       2, # advertisement_id
+       8, # service_provider_id - jaccard set
+       10, # player_location_id 
      ],
   'common2':
      [ 
-      18, # audience_segment => need specially handled
+       4, # census_DMA - majority
+       7, # content_video_id (skip 0)]
+       12, # page_fold_id - majority
+       18, # audience_segment => need specially handled
        2, # advertisement_id
        8, # service_provider_id - jaccard set
        10, # player_location_id 
@@ -66,13 +72,18 @@ full_band_idx = \
        20, # network_id - set
        25, # content_video_identifier (skip null)
        26, # content_profile_id (skip null)
-       ############## 
-       ########original full boolean idx ######### 
        27, # is_pre_fetch_request
        28, # service_provider_name  - majority
      ],
      'beacon1':
      [
+       0, # domain_id - majority
+       10, # player_location_id 
+       11, # player_size_id - jaccard set
+       13, # ad_visibility
+       15, # ovp_type
+       17, # is_on_premise
+
        30, #zero_tracker
        31, # twentry_five
        32, # fifty
@@ -83,13 +94,12 @@ full_band_idx = \
 }
 
 
-# altogether 4 bands
+# altogether 3 bands
 '''
   request band index
 '''
 request_band_idx = \
-{ 
-    'common1':
+{ 'common1':
     [
        0, # domain_id - majority
        1, # placement_id    
@@ -99,11 +109,17 @@ request_band_idx = \
        6,  # publisher_id - set
        9, # key_value - jaccard set
        14, # ovp_version  
- 
+       18, # audience_segment => need specially handled
+       2, # advertisement_id
+       8, # service_provider_id - jaccard set
+       10, # player_location_id 
      ],
   'common2':
      [ 
-      18, # audience_segment => need specially handled
+       4, # census_DMA - majority
+       7, # content_video_id (skip 0)]
+       12, # page_fold_id - majority
+       18, # audience_segment => need specially handled
        2, # advertisement_id
        8, # service_provider_id - jaccard set
        10, # player_location_id 
@@ -123,8 +139,6 @@ request_band_idx = \
        20, # network_id - set
        25, # content_video_identifier (skip null)
        26, # content_profile_id (skip null)
-       ############## 
-       ########original full boolean idx ######### 
        27, # is_pre_fetch_request
        28, # service_provider_name  - majority
      ],
@@ -144,11 +158,17 @@ beacon_band_idx = \
        6,  # publisher_id - set
        9, # key_value - jaccard set
        14, # ovp_version  
- 
+       18, # audience_segment => need specially handled
+       2, # advertisement_id
+       8, # service_provider_id - jaccard set
+       10, # player_location_id 
      ],
   'common2':
      [ 
-      18, # audience_segment => need specially handled
+       4, # census_DMA - majority
+       7, # content_video_id (skip 0)]
+       12, # page_fold_id - majority
+       18, # audience_segment => need specially handled
        2, # advertisement_id
        8, # service_provider_id - jaccard set
        10, # player_location_id 
@@ -160,6 +180,13 @@ beacon_band_idx = \
 
      'beacon1':
      [
+       0, # domain_id - majority
+       10, # player_location_id 
+       11, # player_size_id - jaccard set
+       13, # ad_visibility
+       15, # ovp_type
+       17, # is_on_premise
+
        20, #zero_tracker
        21, # twentry_five
        22, # fifty
@@ -186,11 +213,8 @@ def fnv32a( str ):
         hval = (hval * fnv_32_prime) % uint32_max
     return hval 
 
-
-def sum_float (device_profile, index_list):
-  float_list = [(idx+1) * float(device_profile[idx]) for idx in index_list]
-  return 1000 * sum(float_list)
-
+def sha256(str):
+  return hashlib.sha256(str).hexdigest()
 
 '''
   example device profile:
@@ -209,11 +233,8 @@ def hash_full_profile (device_profile):
   for key in full_band_idx.keys():
     band_idx_list = full_band_idx[key]
     band_attrs = [device_profile[i] for i in band_idx_list]
-    if (key != "beacon1"):
-      band_attrs_str = ','.join(band_attrs)
-      hash_val = fnv32a(band_attrs_str)
-    else:
-      hash_val = int(sum_float(device_profile, band_idx_list))
+    band_attrs_str = ','.join(band_attrs)
+    hash_val = fnv32a(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
   return bucket_list 
 
@@ -243,11 +264,8 @@ def hash_beacon_profile (device_profile):
   for key in beacon_band_idx.keys():
     band_idx_list = beacon_band_idx[key]
     band_attrs = [device_profile[i] for i in band_idx_list]
-    if (key != "beacon1"):
-      band_attrs_str = ','.join(band_attrs)
-      hash_val = fnv32a(band_attrs_str)
-    else:
-      hash_val = int(sum_float(device_profile, band_idx_list))
+    band_attrs_str = ','.join(band_attrs)
+    hash_val = fnv32a(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
   return bucket_list 
 

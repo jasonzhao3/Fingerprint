@@ -61,29 +61,21 @@ def make_key(str1, str2):
 # only allow one bucket mistake
 def pass_support_check(device1, device2, support_cnt):
   if (len(device1) == FULL_LENGTH and len(device2) == FULL_LENGTH):
-    if support_cnt >= 4:
+    if support_cnt >= 3:
       return True
   else:
-    # two request 
-    if (len(device1) == len(device2) and len(device1) == REQUEST_LENGTH):
-      if (support_cnt >= 3):
-        return True
-    # two beacon
-    elif (len(device1) == len(device2) and len(device1) == BEACON_LENGTH):
+    # one full length one request/beacon
+    if (len(device1) == FULL_LENGTH or len(device2) == FULL_LENGTH):
       if (support_cnt >= 2):
+        return True 
+    # one request one beacon
+    elif (len(device1) != len(device2)):
+      if (support_cnt >= 1):
         return True
-    # one full, the other beacon 
-    elif (len(device1) == FULL_LENGTH or len(device2) == FULL_LENGTH):
-      if (len(device1) == BEACON_LENGTH or len(device2) == BEACON_LENGTH):
-        if (support_cnt >= 2):
-          return True
-      else:
-        if (support_cnt >=3):
-          return True
-    # one beacon one request
     else:
       if (support_cnt >= 2):
         return True
+
   return False
 
 
