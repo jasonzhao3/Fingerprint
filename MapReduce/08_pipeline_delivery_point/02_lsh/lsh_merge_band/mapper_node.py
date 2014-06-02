@@ -18,4 +18,3 @@ for line in sys.stdin:
     identifier = l[0]
     print '%d%s%s' % (seed, "\t", identifier)
     
-

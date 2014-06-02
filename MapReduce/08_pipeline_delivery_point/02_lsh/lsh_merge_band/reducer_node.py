@@ -20,5 +20,3 @@ for line in sys.stdin:
     node_list.append(node)
     cnt += 1
 print ("%d%s%s" %(cnt, '\t', ','.join(node_list)))
-    
-
