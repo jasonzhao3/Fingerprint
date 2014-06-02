@@ -60,24 +60,7 @@ def make_key(str1, str2):
 
 # only allow one bucket mistake
 def pass_support_check(device1, device2, support_cnt):
-  if (len(device1) == FULL_LENGTH and len(device2) == FULL_LENGTH):
-    if support_cnt >= 3:
-      return True
-  else:
-    # one full length one request/beacon
-    if (len(device1) == FULL_LENGTH or len(device2) == FULL_LENGTH):
-      if (support_cnt >= 2):
-        return True 
-    # one request one beacon
-    elif (len(device1) != len(device2)):
-      if (support_cnt >= 1):
-        return True
-    else:
-      if (support_cnt >= 2):
-        return True
-
-  return False
-
+  return support_cnt >= 1
 
 def cal_jaccard (record1, record2):
     num = 0

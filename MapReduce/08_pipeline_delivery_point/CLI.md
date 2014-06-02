@@ -53,9 +53,16 @@ Get Node
 
 Lsh_hash_band_step1
 --------------------
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 8 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "lsh_hash_band_step1_v2.0" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_lsh_band_v2.0.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step1_v2.0/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 7 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "lsh_hash_band_step1_v3.3" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_lsh_band_v3.3.py" --reducer "s3n://cs341-yume-dp/reducer_identical.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step1_v3.3/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
 
 
 Lsh_hash_band_step2
 --------------------
-./elastic-mapreduce --create --stream --enable-debugging --num-instances 12 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "lsh_hash_band_step2_v2.0" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_band_support_v2.0.py" --reducer "s3n://cs341-yume-dp/CA_lsh_merge_band/reducer_band_support_v2.0.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step2_v2.0/" --input "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step1_v2.0/"
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 12 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "lsh_hash_band_step2_v3.3" --mapper "s3n://cs341-yume-dp/CA_lsh_merge_band/mapper_band_support_v3.3.py" --reducer "s3n://cs341-yume-dp/CA_lsh_merge_band/reducer_band_support_v3.3.py" --log-uri "s3n://cs341-yume-dp/CA_lsh_merge_band/logs/" --output "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step2_v3.3/" --input "s3n://cs341-yume-dp/CA_lsh_merge_band/lsh_band_step1_v3.3/"
+
+
+05_debug
+==============
+Track hid
+---------
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 8 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "hid_track" --mapper "s3n://cs341-yume-dp/CA_device_poll/mapper_track_hid.py" --reducer "s3n://cs341-yume-dp/CA_device_poll/reducer_track_hid.py" --log-uri "s3n://cs341-yume-dp/CA_device_poll/logs/" --output "s3n://cs341-yume-dp/CA_device_poll/hid_track/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
