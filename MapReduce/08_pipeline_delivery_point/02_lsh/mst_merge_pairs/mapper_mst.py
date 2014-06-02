@@ -13,5 +13,6 @@ Parallel step:
 for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
+    key = l[0].strip('('')')
     if float(l[1]) >= 0.6:
-        print '%d%s%s' % (1, "\t", l[0])
+        print '%d%s%s' % (1, "\t", key)
