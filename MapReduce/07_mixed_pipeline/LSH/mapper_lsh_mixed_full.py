@@ -48,7 +48,7 @@ full_int_idx = [
                4, # census_DMA - majority
                6,  # publisher_id - set
                7, # content_video_id (skip 0)
-               8, # delivery_point_id
+              
                9, # service_provider_id - jaccard set
                11, # player_location_id 
                12, # player_size_id - jaccard set
@@ -66,18 +66,18 @@ full_int_idx = [
                25, # publisher_channel_id - (skip 0)
                #26, # content_video_identifier (skip null)
                27, # content_profile_id (skip null)
-               #30,  # behavior cookie
+            
                ##############
-               31 # slate_id
+               30 # slate_id
 ]
 
 full_float_idx = [
-           32, #zero_tracker
-           33, # twentry_five
-           34, # fifty
-           35, # seventry_five
-           36, # one_hundred
-           37 # volume percent
+           31, #zero_tracker
+           32, # twentry_five
+           33, # fifty
+           34, # seventry_five
+           35, # one_hundred
+           36 # volume percent
 ]
 
 
