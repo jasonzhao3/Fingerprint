@@ -66,3 +66,8 @@ Lsh_hash_band_step2
 Track hid
 ---------
 ./elastic-mapreduce --create --stream --enable-debugging --num-instances 8 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "hid_track" --mapper "s3n://cs341-yume-dp/CA_device_poll/mapper_track_hid.py" --reducer "s3n://cs341-yume-dp/CA_device_poll/reducer_track_hid.py" --log-uri "s3n://cs341-yume-dp/CA_device_poll/logs/" --output "s3n://cs341-yume-dp/CA_device_poll/hid_track/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
+
+
+see delivery_point poll
+-----------
+./elastic-mapreduce --create --stream --enable-debugging --num-instances 5 --master-instance-type m1.xlarge --slave-instance-type c1.xlarge --name "delivery_point poll" --mapper "s3n://cs341-yume-dp/CA_device_poll/mapper_analyze_dp.py" --reducer "s3n://cs341-yume-dp/CA_device_poll/reducer_analyze_dp.py" --log-uri "s3n://cs341-yume-dp/CA_device_poll/logs/" --output "s3n://cs341-yume-dp/CA_device_poll/dp_track/" --input "s3n://cs341-yume-dp/CA_profile/join_profile/" 
