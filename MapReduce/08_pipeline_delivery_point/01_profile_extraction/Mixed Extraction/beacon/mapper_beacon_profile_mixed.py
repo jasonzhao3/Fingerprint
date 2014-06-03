@@ -49,7 +49,7 @@ PROFILE_IDX = [
 
 set_idx = [
                1, # placement_id
-               2, # advertisement_id
+               #2, # advertisement_id
                3, # requested_date - frequency within 4 hours
                5, # city_name - jaccard set  
                7, # content_video_id (skip 0)
@@ -57,7 +57,7 @@ set_idx = [
                15, # ovp_type
                16, # hid
                18, # audience_segment (skip NULL)
-               19  # slate id
+               19  # slate_id
           ]
 
 def get_majority(lst):
