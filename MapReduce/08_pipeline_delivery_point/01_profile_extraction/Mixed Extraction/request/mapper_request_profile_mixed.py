@@ -50,9 +50,6 @@ PROFILE_IDX = [
                27, # content_profile_id (skip null)
                28, # is_pre_fetch_request
                29 # service_provider_name  - majority
-               
-               #30,  # ip_addr - jaccard set
-               # 31 # behavior_cookie (skip NULL)
              ];
 
 set_idx = [
