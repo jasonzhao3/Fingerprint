@@ -3,6 +3,7 @@
 import sys
 import hashlib
 from random import randint
+import random
 
 '''
 
@@ -59,9 +60,9 @@ Another parallel step:
        # 33, # seventry_five
        # 34, # one_hundred
        # 35 # volume percent
-
-       majority_idx = [
+majority_idx = [
                0, # domain_id - majority
+               2, # advertisement_id
                4, # census_DMA - majority
                6,  # publisher_id - majority
                8, # service_provider_id - majority
@@ -75,12 +76,11 @@ Another parallel step:
                23, # is_not_yume_white_list  - ratio of true
                27, # is_pre_fetch_request
                28, # service_provider_name  - majority
-               29, # slate_id
-              ]
+]
 
-      set_idx = [
+set_idx = [
                1, # placement_id
-               2, # advertisement_id
+               #2, # advertisement_id
                3, # requested_date - frequency within 4 hours
                5, # city_name - jaccard set  
                7, # content_video_id (skip 0)
@@ -93,7 +93,8 @@ Another parallel step:
                24, # publisher_channel_id - (skip 0)
                25, # content_video_identifier (skip null)
                26, # content_profile_id (skip null)
-          ]
+               29, # slate_id
+]
 
 
 KEY_VAL_IND = 9 #9, # key_value - jaccard set
@@ -441,6 +442,62 @@ beacon_band_idx = \
 # 16, # hid
 
 
+
+'''
+  build map
+'''
+def buildValueMap(data_file):
+  # build possible values map
+  value_map = {}
+  ins = open(data_file, "r")
+  for line in ins:
+      line = line.rstrip()
+      key, value = line.split('\t')
+      value_list = value.split(',')
+      value_map[int(key)] = value_list
+  return value_map
+
+def buildPermMap(data_file):
+  perm_map = {}
+  ins = open(data_file, "r")
+  for line in ins:
+      line = line.rstrip()
+      key, value = line.split('\t')
+      str_list = value.split(',')
+      perm_list = [int(str_list[i]) for i in range(len(str_list))]
+      perm_map[int(key)] = perm_list
+  return perm_map
+    
+value_map = buildValueMap ('attr_count_output')
+perm_map = buildPermMap('permutation_output')
+
+
+'''
+  hash set - min hash
+'''
+def getSignature (feature_set, value_map, perm_map, index):
+    full_set = value_map[index]
+    perm = perm_map[index]
+    signature = 0
+    if len(feature_set) == 1:        
+        if feature_set[0] == "0":
+            signature = random.randint(0, len(perm))
+            return str(signature*1000)
+    if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
+            signature = random.randint(0, len(perm))
+            return str(signature*1000)    
+    if len(perm) > 1000:
+        signature = random.randint(0, len(perm))
+        return str(signature*1000)
+    
+    while signature < len(perm):
+        val = full_set[perm.index(signature)]
+        if val in feature_set:
+            return str(signature*1000)
+        else:
+            signature += 1
+    return str(signature*1000)
+
 def fnv32a( str ):
     hval = 0x811c9dc5
     fnv_32_prime = 0x01000193
@@ -465,20 +522,38 @@ def sha256(str):
           NULL,0,0.2,0.2,0.2,0.2,0.2,0.0
 '''
 
+def getInterval(tracker):
+  if float(tracker) < 0.25:
+    return "1"
+  elif float(tracker) < 0.5:
+    return "2"
+  elif float(tracker) < 0.75:
+    return "3"
+  else: 
+    return "4"
+
 def hash_full_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in full_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
-    if (16 in band_idx_list):
-      if (device_profile[16] != '0'):
-        band_attrs.append(device_profile[16])
+    band_attrs = []
+    for i in band_idx_list:
+      if i in majority_idx:
+        band_attrs.append(device_profile[i])
+      elif i < 30:
+        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
-        band_attrs.append(str(randint(0,1000)))
-    # video_content_id
-    if (device_profile[7] != '0'):
-      band_attrs.append(device_profile[7])
-    else:
-      band_attrs.append(str(randint(0,1000)))
+        band_attrs.append(getInterval(device_profile[i]))
+    # band_attrs = [device_profile[i] if i in majority_idx else if getSignature(device_profile[i].split('|'), value_map, perm_map, i) else getInterval(device_profile[i]) for i in ]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -496,17 +571,25 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in request_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
-    if (16 in band_idx_list):
-      if (device_profile[16] != '0'):
-        band_attrs.append(device_profile[16])
+    # band_attrs = [device_profile[i] for i in band_idx_list]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
+    band_attrs = []
+    for i in band_idx_list:
+      if i in majority_idx:
+        band_attrs.append(device_profile[i])
+      elif i < 24:
+        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
-        band_attrs.append(str(randint(0,1000)))
-    # video_content_id
-    if (device_profile[7] != '0'):
-      band_attrs.append(device_profile[7])
-    else:
-      band_attrs.append(str(randint(0,1000)))
+        band_attrs.append(getInterval(device_profile[i]))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -518,17 +601,28 @@ def hash_request_profile (device_profile):
 def hash_beacon_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in beacon_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
-    if (16 in band_idx_list):
-      if (device_profile[16] != '0'):
-        band_attrs.append(device_profile[16])
+    band_attrs = []
+    for i in band_idx_list:
+      if i in majority_idx:
+        band_attrs.append(device_profile[i])
+      elif i < 21:
+        if i == 19:
+          band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i+10))
+        else:
+          band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
-        band_attrs.append(str(randint(0,1000)))
-    # video_content_id
-    if (device_profile[7] != '0'):
-      band_attrs.append(device_profile[7])
-    else:
-      band_attrs.append(str(randint(0,1000)))
+        band_attrs.append(getInterval(device_profile[i]))
+    # band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -561,7 +655,7 @@ for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
     attr_list = l[1].split(',')
-    bucket_list = hash_majority (attr_list)
+    bucket_list = hash_set(attr_list)
     attr_list.append(l[0])
     for bucket in bucket_list:
       print '%s%s%s' % (bucket, "\t", ','.join(attr_list))
