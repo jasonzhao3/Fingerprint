@@ -482,21 +482,21 @@ def getSignature (feature_set, value_map, perm_map, index):
     if len(feature_set) == 1:        
         if feature_set[0] == "0":
             signature = random.randint(0, len(perm))
-            return str(signature*1000)
+            return str(signature)
     if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
             signature = random.randint(0, len(perm))
-            return str(signature*1000)    
+            return str(signature)    
     if len(perm) > 1000:
         signature = random.randint(0, len(perm))
-        return str(signature*1000)
+        return str(signature)
     
     while signature < len(perm):
         val = full_set[perm.index(signature)]
         if val in feature_set:
-            return str(signature*1000)
+            return str(signature)
         else:
             signature += 1
-    return str(signature*1000)
+    return str(signature)
 
 def fnv32a( str ):
     hval = 0x811c9dc5
