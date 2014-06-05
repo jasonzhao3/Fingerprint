@@ -468,8 +468,8 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap ('attr_count_output')
-perm_map = buildPermMap('permutation_output')
+value_map = buildValueMap ('/Users/zhulk/Documents/attr_count_output')
+perm_map = buildPermMap('/Users/zhulk/Documents/permutation_output')
 
 
 '''
