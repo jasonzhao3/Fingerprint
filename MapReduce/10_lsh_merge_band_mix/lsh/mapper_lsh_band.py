@@ -480,10 +480,7 @@ def getSignature (feature_set, value_map, perm_map, index):
     perm = perm_map[index]
     signature = 0
     if len(feature_set) == 1:        
-        if feature_set[0] == "0":
-            signature = random.randint(0, len(perm))
-            return str(signature*1000)
-    if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
+        if feature_set[0] == "0" or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
             signature = random.randint(0, len(perm))
             return str(signature*1000)    
     if len(perm) > 1000:
@@ -586,10 +583,8 @@ def hash_request_profile (device_profile):
     for i in band_idx_list:
       if i in majority_idx:
         band_attrs.append(device_profile[i])
-      elif i < 24:
-        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
-        band_attrs.append(getInterval(device_profile[i]))
+        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -605,7 +600,7 @@ def hash_beacon_profile (device_profile):
     for i in band_idx_list:
       if i in majority_idx:
         band_attrs.append(device_profile[i])
-      elif i < 21:
+      elif i < 20:
         if i == 19:
           band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i+10))
         else:
