@@ -106,181 +106,80 @@ AUD_SEG_IND = 18 #18, # audience_segment => need special
 # altogether 6 bands, and the last band should be hashed numerically
 full_band_idx = \
 { 
-'full_leave_3id':
+'full_majority':
     [
-       # 0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       # 6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # referrer_site (skip NULL)
-       20, # network_id - set
-       21, # slot_type_id - majority (low weight because too many 1)
-       22, # ad_request_id
-       23, # is_not_yume_white_list  - ratio of true
-       #########################################
-       24, # publisher_channel_id - (skip 0)
-       25, # content_video_identifier (skip null)
-       # 26, # content_profile_id (skip null)
-       27, # is_pre_fetch_request
-       28, # service_provider_name  - majority
-       29, # slate_id
-   
-       30, #zero_tracker
-       31, # twentry_five
-       32, # fifty
-       33, # seventry_five
-       34, # one_hundred
-       35 # volume percent
+               0, # domain_id - majority
+               #2, # advertisement_id
+               4, # census_DMA - majority
+               6,  # publisher_id - majority
+               8, # service_provider_id - majority
+               9, # key_value
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
+               13, # ad_visibility
+               17, # is_on_premise
+               22, # ad_request_count
+               23, # is_not_yume_white_list  - ratio of true
+               27, # is_pre_fetch_request
+               28, # service_provider_name  - majority
+               30, #zero_tracker
+               31, # twentry_five
+               32, # fifty
+               33, # seventry_five
+               34, # one_hundred
+               35 # volume percent
       ],
 
-  'full_leave_boolean':
+  'common_majority':
     [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       # 17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # referrer_site (skip NULL)
-       20, # network_id - set
-       21, # slot_type_id - majority (low weight because too many 1)
-       22, # ad_request_id
-       # 23, # is_not_yume_white_list  - ratio of true
-       #########################################
-       24, # publisher_channel_id - (skip 0)
-       25, # content_video_identifier (skip null)
-       26, # content_profile_id (skip null)
-       # 27, # is_pre_fetch_request
-       28, # service_provider_name  - majority
-       29, # slate_id
-   
-       30, #zero_tracker
-       31, # twentry_five
-       32, # fifty
-       33, # seventry_five
-       34, # one_hundred
-       35 # volume percent
+               0, # domain_id - majority
+               #2, # advertisement_id
+               4, # census_DMA - majority
+               6,  # publisher_id - majority
+               8, # service_provider_id - majority
+               9, # key_value
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
+               13, # ad_visibility
+               17, # is_on_premise
       ],
 
-    'full_leave_numerical':
+    'full_set':
     [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # referrer_site (skip NULL)
-       20, # network_id - set
-       21, # slot_type_id - majority (low weight because too many 1)
-       22, # ad_request_id
-       23, # is_not_yume_white_list  - ratio of true
-       #########################################
-       24, # publisher_channel_id - (skip 0)
-       25, # content_video_identifier (skip null)
-       26, # content_profile_id (skip null)
-       27, # is_pre_fetch_request
-       28, # service_provider_name  - majority
-       29, # slate_id
-   
-       # 30, #zero_tracker
-       31, # twentry_five
-       32, # fifty
-       # 33, # seventry_five
-       34, # one_hundred
-       # 35 # volume percent
+               1, # placement_id 
+               4, # census_DMA - majority, count again, important
+               7, # content_video_id (skip 0)
+               14, # ovp_version  
+               15, # ovp_type
+               16, # hid
+               18, # audience_segment (skip NULL)
+               19, # referrer_site (skip NULL)
+               21, # slot_type_id - majority (low weight because too many 1)
+               24, # publisher_channel_id - (skip 0)
+               25, # content_video_identifier (skip null)
+               26, # content_profile_id (skip null)
+               29 # slate_id
       ],
 
-      'full_leave_beacon':
+      'common_set':
     [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # referrer_site (skip NULL)
-       20, # network_id - set
-       21, # slot_type_id - majority (low weight because too many 1)
-       22, # ad_request_id
-       23, # is_not_yume_white_list  - ratio of true
-       #########################################
-       24, # publisher_channel_id - (skip 0)
-       25, # content_video_identifier (skip null)
-       26, # content_profile_id (skip null)
-       27, # is_pre_fetch_request
-       28, # service_provider_name  - majority
+               1, # placement_id 
+               4, # census_DMA - majority, count again, important
+               7, # content_video_id (skip 0)
+               14, # ovp_version  
+               15, # ovp_type
+               16, # hid
+               18 # audience_segment (skip NULL)
       ],
 
-      'full_leave_request':
+      'beacon_specific':
       [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       29, # slate_id
-   
+               4, # census_DMA - majority
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
        30, #zero_tracker
        31, # twentry_five
        32, # fifty
@@ -290,25 +189,18 @@ full_band_idx = \
       ],
 
 
-      'common':
+      'request_specific':
       [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
+               18, # audience_segment (skip NULL)
+               19, # referrer_site (skip NULL)
+               21, # slot_type_id - majority (low weight because too many 1)
+               22, # ad_request_count
+               23, # is_not_yume_white_list  - ratio of true
+               24, # publisher_channel_id - (skip 0)
+               25, # content_video_identifier (skip null)
+               26, # content_profile_id (skip null)
+               27, # is_pre_fetch_request
+               28, # service_provider_name  - majority
       ]
 
 
@@ -321,59 +213,46 @@ full_band_idx = \
 '''
 request_band_idx = \
 { 
-      'common':
-      [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-      ],
-
-       'full_leave_beacon':
+        'common_majority':
     [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # referrer_site (skip NULL)
-       20, # network_id - set
-       21, # slot_type_id - majority (low weight because too many 1)
-       22, # ad_request_id
-       23, # is_not_yume_white_list  - ratio of true
-       #########################################
-       24, # publisher_channel_id - (skip 0)
-       25, # content_video_identifier (skip null)
-       26, # content_profile_id (skip null)
-       27, # is_pre_fetch_request
-       28, # service_provider_name  - majority
+               0, # domain_id - majority
+               #2, # advertisement_id
+               4, # census_DMA - majority
+               6,  # publisher_id - majority
+               8, # service_provider_id - majority
+               9, # key_value
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
+               13, # ad_visibility
+               17, # is_on_premise
+      ],
+      
+      'common_set':
+    [
+               1, # placement_id 
+               4, # census_DMA - majority, count again, important
+               7, # content_video_id (skip 0)
+               14, # ovp_version  
+               15, # ovp_type
+               16, # hid
+               18 # audience_segment (skip NULL)
+      ],
+      
+      'request_specific':
+      [
+               18, # audience_segment (skip NULL)
+               19, # referrer_site (skip NULL)
+               21, # slot_type_id - majority (low weight because too many 1)
+               22, # ad_request_count
+               23, # is_not_yume_white_list  - ratio of true
+               24, # publisher_channel_id - (skip 0)
+               25, # content_video_identifier (skip null)
+               26, # content_profile_id (skip null)
+               27, # is_pre_fetch_request
+               28, # service_provider_name  - majority
       ]
+
 
 
 }
@@ -382,56 +261,45 @@ request_band_idx = \
 # altogether 2 bands, last band is numerical
 beacon_band_idx = \
 {
-    'common':
-      [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
+    'common_majority':
+    [
+               0, # domain_id - majority
+               #2, # advertisement_id
+               4, # census_DMA - majority
+               6,  # publisher_id - majority
+               8, # service_provider_id - majority
+               9, # key_value
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
+               13, # ad_visibility
+               17, # is_on_premise
       ],
-
-      'full_leave_request':
-       [
-       0, # domain_id - majority
-       1, # placement_id    
-       # 2, # advertisement_id
-       4, # census_DMA - majority
-       6,  # publisher_id - set
-       7, # content_video_id (skip 0)]
-       8, # service_provider_id - jaccard set
-       9, # key_value - jaccard set
-       10, # player_location_id 
-       11, # player_size_id - jaccard set
-       12, # page_fold_id - majority
-       13, # ad_visibility
-       14, # ovp_version  
-       15, # ovp_type
-       16, # hid
-       17, # is_on_premise
-       18, # audience_segment => need specially handled
-
-       19, # slate_id
-   
+      
+      'common_set':
+    [
+               1, # placement_id 
+               4, # census_DMA - majority, count again, important
+               7, # content_video_id (skip 0)
+               14, # ovp_version  
+               15, # ovp_type
+               16, # hid
+               18 # audience_segment (skip NULL)
+      ],
+      
+       'beacon_specific':
+      [
+               4, # census_DMA - majority
+               10, # player_location_id 
+               11, # player_size_id - jaccard set
+               12, # page_fold_id - majority
        20, #zero_tracker
        21, # twentry_five
        22, # fifty
        23, # seventry_five
        24, # one_hundred
        25 # volume percent
-      ],
+      ]
 }
 
 
@@ -480,14 +348,11 @@ def getSignature (feature_set, value_map, perm_map, index):
     perm = perm_map[index]
     signature = 0
     if len(feature_set) == 1:        
-        if feature_set[0] == "0":
+        if feature_set[0] == "0" or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
             signature = random.randint(0, len(perm))
-            return str(signature)
-    if feature_set.lower() == "null" or feature_set.lower() == "na" or feature_set.lower() == "n/a":
-            signature = random.randint(0, len(perm))
-            return str(signature)    
+            return str(signature)   
     if len(perm) > 1000:
-        print index
+        #print index
         signature = random.randint(0, len(perm))
         return str(signature)
     
@@ -544,17 +409,6 @@ def hash_full_profile (device_profile):
         band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
-    # band_attrs = [device_profile[i] if i in majority_idx else if getSignature(device_profile[i].split('|'), value_map, perm_map, i) else getInterval(device_profile[i]) for i in ]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -572,25 +426,12 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in request_band_idx.iteritems():
-    # band_attrs = [device_profile[i] for i in band_idx_list]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs = []
     for i in band_idx_list:
       if i in majority_idx:
         band_attrs.append(device_profile[i])
-      elif i < 24:
-        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
-        band_attrs.append(getInterval(device_profile[i]))
+        band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -606,24 +447,13 @@ def hash_beacon_profile (device_profile):
     for i in band_idx_list:
       if i in majority_idx:
         band_attrs.append(device_profile[i])
-      elif i < 21:
+      elif i < 20:
         if i == 19:
           band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i+10))
         else:
           band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
-    # band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -660,5 +490,4 @@ for line in sys.stdin:
     attr_list.append(l[0])
     for bucket in bucket_list:
       print '%s%s%s' % (bucket, "\t", ','.join(attr_list))
-    
 
