@@ -169,7 +169,6 @@ full_band_idx = \
     [
                1, # placement_id 
                4, # census_DMA - majority, count again, important
-               #7, # content_video_id (skip 0)
                14, # ovp_version  
                15, # ovp_type
                16, # hid
@@ -197,13 +196,10 @@ full_band_idx = \
       [        
                4, # census_DMA - majority
                16, # hid
-               #18, # audience_segment (skip NULL)
-               #19, # referrer_site (skip NULL)
                21, # slot_type_id - majority (low weight because too many 1)
                22, # ad_request_count
                23, # is_not_yume_white_list  - ratio of true
                24, # publisher_channel_id - (skip 0)
-               #25, # content_video_identifier (skip null)
                26, # content_profile_id (skip null)
                27, # is_pre_fetch_request
                28, # service_provider_name  - majority
@@ -315,14 +311,6 @@ beacon_band_idx = \
 }
 
 
-
-# evaluation
-# 3, # requested_date
-# 5, # city
-# 16, # hid
-
-
-
 '''
   build map
 '''
@@ -348,8 +336,8 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap ('/Users/zhulk/Documents/attr_count_output')
-perm_map = buildPermMap('/Users/zhulk/Documents/permutation_output')
+value_map = buildValueMap ('attr_count_output')
+perm_map = buildPermMap('permutation_output')
 
 hid_map = {}
 for i in range(len(value_map[16])):
@@ -371,7 +359,7 @@ def getSignature (feature_set, value_map, perm_map, index):
     
     signature = 0
     if len(feature_set) == 1:        
-        if feature_set[0] == "0" or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
+        if (feature_set[0] == "0" and (index == 6 or index == 7 or index == 24 or index == 29)) or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
             signature = random.randint(0, len(perm))
             return str(signature)    
 
@@ -383,7 +371,6 @@ def getSignature (feature_set, value_map, perm_map, index):
         else:
             signature += 1
     return str(signature)
-
 
 def fnv32a( str ):
     hval = 0x811c9dc5
@@ -430,6 +417,17 @@ def hash_full_profile (device_profile):
         band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
+    # band_attrs = [device_profile[i] if i in majority_idx else if getSignature(device_profile[i].split('|'), value_map, perm_map, i) else getInterval(device_profile[i]) for i in ]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -447,6 +445,17 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in request_band_idx.iteritems():
+    # band_attrs = [device_profile[i] for i in band_idx_list]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
     band_attrs = []
     for i in band_idx_list:
       if i in majority_idx:
@@ -475,6 +484,17 @@ def hash_beacon_profile (device_profile):
           band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
+    # band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
+    # if (16 in band_idx_list):
+    #   if (device_profile[16] != '0'):
+    #     band_attrs.append(device_profile[16])
+    #   else:
+    #     band_attrs.append(str(randint(0,1000)))
+    # # video_content_id
+    # if (device_profile[7] != '0'):
+    #   band_attrs.append(device_profile[7])
+    # else:
+    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -511,4 +531,5 @@ for line in sys.stdin:
     attr_list.append(l[0])
     for bucket in bucket_list:
       print '%s%s%s' % (bucket, "\t", ','.join(attr_list))
+    
 

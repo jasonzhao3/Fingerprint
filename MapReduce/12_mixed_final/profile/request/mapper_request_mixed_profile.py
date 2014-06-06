@@ -142,7 +142,6 @@ def tuple_list_to_str(tuple_list):
     str_list = [item[0][:-7] + '|' + item[1] for item in tuple_list]
     return "??".join(str_list)
 
-
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:
@@ -151,19 +150,21 @@ for line in sys.stdin:
     l = line.split('\t')
     # split the line into multiple records 
     record_list = l[1].split('|')
+    
     if (len(record_list) > NUM_RECORD_LIMIT):
       continue
+    
     list_of_list = get_empty_list_of_list(attr_num)
     for record in record_list:
       attr_l = record.split(',')
       attr_list = [attr_l[i] for i in PROFILE_IDX]
       for i in xrange(0, len(attr_list)):
         list_of_list[i].append(attr_list[i])
-    
+
     comb_time_location(list_of_list)
-    
+    # print result
     attr_res = []
-    for idx in xrange(attr_num):
+    for idx in xrange(len(list_of_list)):
       # time; city; hid => as evaluation (index starts from 0)
       if (idx == TIME_IND or idx == CITY_IND or idx == CONTENT_VIDEO_IND):
         continue
@@ -175,4 +176,3 @@ for line in sys.stdin:
         attr_res.append (get_majority(list_of_list[idx], skip_list[idx]))
 
     print '%s%s%s' % (l[0], "\t", ','.join(attr_res))
-
