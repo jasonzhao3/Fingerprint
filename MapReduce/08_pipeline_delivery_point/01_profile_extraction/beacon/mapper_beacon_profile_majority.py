@@ -47,6 +47,19 @@ PROFILE_IDX = [
     26 # volume percent
 ]
 
+set_idx = [
+               1, # placement_id
+               2, # advertisement_id
+               3, # requested_date - frequency within 4 hours
+               5, # city_name - jaccard set  
+               7, # content_video_id (skip 0)
+               14, # ovp_version  
+               15, # ovp_type
+               16, # hid
+               18, # audience_segment (skip NULL)
+               19  # slate id
+          ]
+
 def get_majority(lst):
     return max(set(lst), key=lst.count)
                
@@ -79,7 +92,7 @@ for line in sys.stdin:
 
     for idx in xrange(attr_num):
       # set
-      if (idx == TIME_IND or idx == CITY_IND or idx == HID_IND):
+      if (idx in set_idx):
         attr_res.append (set_to_string(set(list_of_list[idx])))
       # majority
       elif (idx < NUM_IND):
