@@ -26,7 +26,7 @@ def combine_files(path):
 '''
 	Combine result
 '''
-origin_path = '../../../../local_data/device_poll/dp_attribute_v2.0/'
+origin_path = '../../../../local_data/final_majority/dp_distribution/'
 
 # results is a list of edges
 # 
@@ -48,20 +48,18 @@ print true_counter
 print len(true_counter)
 
 
-ratio_counter = Counter()
+ratio_counter = {}
 for key in tot_counter.keys():
 	ratio_counter[key] = true_counter[key] / tot_counter[key]
 
 print ratio_counter
 
 keys = ratio_counter.keys()
-vals = ratio_counter.vals()
+vals = ratio_counter.values()
 comb_list = zip(keys, vals)
 comb_list.sort(key=lambda t:t[1], reverse=True)
 
 print comb_list
-
-
 
 # with open('distribution_v5.1.json', 'w') as f:
 # 	json.dump(distribution_json, f)
