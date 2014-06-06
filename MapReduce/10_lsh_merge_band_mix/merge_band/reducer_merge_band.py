@@ -167,7 +167,7 @@ def main(separator='\t'):
         key2 = device2[-1]
         if (pass_support_check(device1[:-1], device2[:-1], support_cnt)):
           sim = cal_similarity(device1, device2)
-          if (sim > 0.2):
+          if (sim > 0.6):
             key = make_key(key1, key2)
             print ("%s%s%.6f" %(key, '\t', sim))
       except (RuntimeError, TypeError, NameError, ValueError, IOError):

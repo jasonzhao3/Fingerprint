@@ -34,7 +34,7 @@ def main(separator='\t'):
     for current_word, group in groupby(data, itemgetter(0)):
         try:
             total_count = sum(int(count) for current_word, count in group)
-            if total_count >= 500:
+            if total_count > 500:
                 print "%s%s%d" % (current_word, separator, total_count)
         except ValueError:
             # count was not a number, so silently discard this item
