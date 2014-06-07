@@ -135,7 +135,7 @@ skip_expectation_dict = \
   }
 
 
-WEIGHT_TWO = [7, 9, 21]
+WEIGHT_TWO = [4, 6, 18] # 4: publisher_id, 6: service_provider_id, 18: network_id
 def cal_jaccard (record1, record2):
     num = 0
     denom = 0   
@@ -144,9 +144,9 @@ def cal_jaccard (record1, record2):
         
     for i in xrange(len(record1)):
         #assign weight        
-        if i == 14:
+        if i == 14: #hid
             weight = 5
-        elif i == 5:
+        elif i == 3: #census DMA
             weight = 3
         elif i in WEIGHT_TWO:
             weight = 2
