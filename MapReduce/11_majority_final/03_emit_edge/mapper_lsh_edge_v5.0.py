@@ -23,7 +23,7 @@ import math
 
 
 CLUSTER_LIMIT_HINT = 10
-THRESHOLD = 0.55
+THRESHOLD = 0.1
 HARD_LIMIT = 10000
 GEO_DIFF_THRESHOLD = 0.03
 
@@ -228,10 +228,13 @@ def build_geo_map(location_file):
   return geo_map
 
 def cal_geo_dist_sqr (city1, city2, geo_map):
-  loc1 = geo_map[city1]
-  loc2 = geo_map[city2]
-  dist_sqr = math.pow((loc1[0] - loc2[0]), 2) + math.pow((loc2[1] - loc2[1]), 2)
-  return dist_sqr
+  try:
+    loc1 = geo_map[city1]
+    loc2 = geo_map[city2]
+    dist_sqr = math.pow((loc1[0] - loc2[0]), 2) + math.pow((loc2[1] - loc2[1]), 2)
+    return dist_sqr
+  except (RuntimeError, KeyError, NameError, ValueError, IOError):
+    return 0
 
 
 def fail_time_loc(time_loc1, time_loc2):
@@ -256,7 +259,7 @@ def fail_time_loc(time_loc1, time_loc2):
     # print "TIME FORMAT ERROR!!"
     return False
 
-
+# if fail, return false; correct, return true
 def eval_time_location(tuple_list1, tuple_list2):
   for time_loc1 in tuple_list1:
     for time_loc2 in tuple_list2:
@@ -298,7 +301,7 @@ def emit_cluster(cluster):
   
   for i in xrange(num_device):
     key1 = cluster[i].split(',')[-1]
-    error_flag = False
+    skip_tuple_eval_flag = False
 
     for j in xrange(i+1, num_device):
       key2 = cluster[j].split(',')[-1]
@@ -307,15 +310,16 @@ def emit_cluster(cluster):
       sim = cal_similarity(cluster[i], cluster[j])
 
       if (sim > THRESHOLD):
-        if (not error_flag):
+        if (not skip_tuple_eval_flag):
           time_loc_str1 = cluster[i].split(',')[-2]
           time_loc_tuple_list1 = time_loc_str1.split('??')
           time_loc_str2 = cluster[j].split(',')[-2]
           time_loc_tuple_list2 = time_loc_str2.split('??')
           correct_flag = eval_time_location(time_loc_tuple_list1, time_loc_tuple_list2)
           
+          # correct_flag false will skip tuple_eval from then on
           if (not correct_flag):
-            error_flag = True
+            skip_tuple_eval_flag = True
           
           eval_flag = '_' + str(correct_flag)
         else:
