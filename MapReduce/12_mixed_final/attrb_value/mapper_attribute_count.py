@@ -61,23 +61,22 @@ for line in sys.stdin:
       # split the line into words
       attr_list = profile.split(',')
 
-      if len(attr_list) == 26:
-        for i in range(0,20):
-          if i != 3 and i != 5:
+      if len(attr_list) == 25:
+        for i in range(0,18):
             for value in attr_list[i].split('|'):
-              if i < 19:
+              if i < 17:
                 if len(value) == 0 or value.lower() == "null" or value.lower() == "na" or \
-                ((i == 6 or i == 7) and value == "0") or (i == 9 and value == "0_0"):
+                ((i == 4 or i == 5) and value == "0") or (i == 7 and value == "0_0"):
                   continue
                 print '%s%s%s' % (i, "\t", value)
               else:
                 print '%s%s%s' % (i+9, "\t", value)
-      if len(attr_list) == 29 or len(attr_list) == 36:
+      if len(attr_list) == 27 or len(attr_list) == 34:
         for i in range(0,len(attr_list)):
-          if i < 30 and i != 3 and i != 5:
+          if i < 27 and i != len(attr_list) - 1:
             for value in attr_list[i].split('|'):
               if len(value) == 0 or value.lower() == "null" or value.lower() == "na" or \
-                ((i == 6 or i == 7 or i == 24 or i == 29) and value == "0") or (i == 9 and value == "0_0"):
+                ((i == 4 or i == 5 or i == 22 or i == 26) and value == "0") or (i == 7 and value == "0_0"):
                   continue
               print '%s%s%s' % (i, "\t", value)
       
