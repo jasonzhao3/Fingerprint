@@ -14,5 +14,7 @@ for line in sys.stdin:
     line = line.strip()
     l = line.split('\t')
     key = l[0].strip('('')')
-    if float(l[1]) >= 0.6:
-        print '%d%s%s' % (1, "\t", key)
+    sim, flag = l[1].split('_')
+    emitted = key+ '_' + str(flag)
+    if float(sim) >= 0.6:
+        print '%d%s%s' % (1, "\t", emitted)
