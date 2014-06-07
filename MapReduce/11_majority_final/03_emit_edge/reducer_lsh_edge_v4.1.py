@@ -134,21 +134,37 @@ skip_expectation_dict = \
   }
 
 
-
+WEIGHT_TWO = [7, 9, 21]
 def cal_jaccard (record1, record2):
     num = 0
-    denom = len(record1)    
-    comp_list1 = [record1[i] for i in xrange(denom) if i not in skip_list]
-    comp_list2 = [record2[i] for i in xrange(denom) if i not in skip_list]
-    num = sum([1 for i in xrange(len(comp_list1)) if comp_list1[i] == comp_list2[i]])
-
-    # deal with skip list
-    for i in skip_list:
-      if (i < denom):
-        if (record1[i] == skip_value_dict[i] or record2[i] == skip_value_dict[i]):
-          num += skip_expectation_dict[i]
-        elif (record1[i] == record2[i]):
-          num += 1
+    denom = 0   
+    #comp_list1 = [record1[i] for i in xrange(denom) if i not in skip_list]
+    #comp_list2 = [record2[i] for i in xrange(denom) if i not in skip_list]
+        
+    for i in xrange(len(record1)):
+        #assign weight        
+        if i == 14:
+            weight = 5
+        elif i == 5:
+            weight = 3
+        elif i in WEIGHT_TWO:
+            weight = 2
+        else:
+            weight = 1
+        
+        if i in skip_list:
+            if (i < len(record1)):
+                if (record1[i] == skip_value_dict[i] or record2[i] == skip_value_dict[i]):
+                    num += weight * skip_expectation_dict[i]
+                    denom += weight
+                elif (record1[i] == record2[i]):
+                    num += weight
+                    denom += weight
+        else:
+            denom += weight
+            if (record1[i] == record2[i]):
+                num += weight
+            
     
     return float(num) / denom
  
@@ -179,6 +195,7 @@ RB_UNION = 33
 BEC_CAT = 18
 RB_UNION_CAT = 27
 RB_COMMON = 17
+
 
 
 # is that ok to use expecation value to calculate similarity for all other undefined value ???
