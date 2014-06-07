@@ -9,7 +9,7 @@ import sys
 Step1:
 ------
    Mapper output format:
-        attribute_value \t delivery_point
+        attribute idx_value \t delivery_point
 
    Reducer output format:
   		attribute  \t value_true/false
