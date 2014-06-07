@@ -417,17 +417,6 @@ def hash_full_profile (device_profile):
         band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
-    # band_attrs = [device_profile[i] if i in majority_idx else if getSignature(device_profile[i].split('|'), value_map, perm_map, i) else getInterval(device_profile[i]) for i in ]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
@@ -445,17 +434,6 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in request_band_idx.iteritems():
-    # band_attrs = [device_profile[i] for i in band_idx_list]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs = []
     for i in band_idx_list:
       if i in majority_idx:
@@ -484,17 +462,6 @@ def hash_beacon_profile (device_profile):
           band_attrs.append(getSignature(device_profile[i].split('|'), value_map, perm_map, i))
       else:
         band_attrs.append(getInterval(device_profile[i]))
-    # band_attrs = [device_profile[i] for i in band_idx_list if i != 16 and i != 7]
-    # if (16 in band_idx_list):
-    #   if (device_profile[16] != '0'):
-    #     band_attrs.append(device_profile[16])
-    #   else:
-    #     band_attrs.append(str(randint(0,1000)))
-    # # video_content_id
-    # if (device_profile[7] != '0'):
-    #   band_attrs.append(device_profile[7])
-    # else:
-    #   band_attrs.append(str(randint(0,1000)))
     band_attrs_str = ','.join(band_attrs)
     hash_val = sha256(band_attrs_str)
     bucket_list.append(str(hash_val) + '_' + key)
