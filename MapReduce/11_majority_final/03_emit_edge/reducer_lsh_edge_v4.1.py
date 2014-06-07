@@ -7,7 +7,8 @@ import math
 from datetime import datetime
 import csv
 '''
-
+   This map-reduce job assigns different weights for attributes
+   
    This map-reduce job is used to emit edges from LSH bucket
 
    Mapper output format:
