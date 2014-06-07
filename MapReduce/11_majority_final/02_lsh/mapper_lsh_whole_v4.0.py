@@ -28,6 +28,8 @@ PUBLISHER_IDX = 22
 NUMERICAL_START = 27
 OVP_IDX = 12
 OVP_TYPE_IDX = 13
+AD_IDX = 2
+PLACEMENT_IDX = 1
 # include time_location evaluation
 FULL_PROFILE_LEN = 34
 BEACON_PROFILE_LEN = 25
@@ -43,9 +45,9 @@ full_band_idx = \
     [
        0, # domain_id - majority
        1, # placement_id
-       2, # advertisement_id
+       2, # advertisement_id (skip 0)
        3, # census_DMA - majority
-       4,  # publisher_id - set
+       4,  # publisher_id - set (skip 0)
        # 5, # content_video_id (skip 0)
        6, # service_provider_id - jaccard set
        # 7, # key_value - jaccard set
@@ -299,18 +301,31 @@ def hash_full_profile (device_profile):
   device_profile = reform_profile(device_profile)
   bucket_list = []
   for key, band_idx_list in full_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX]
+    band_attrs = [device_profile[i] for i in band_idx_list if i != PLACEMENT_IDX and i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX and i != AD_IDX]
+
+    if (PLACEMENT_IDX in band_idx_list):
+      if (device_profile[PLACEMENT_IDX] != '0'):
+        band_attrs.append(device_profile[PLACEMENT_IDX])
+      else:
+        band_attrs.append(str(randint(0,3670)))
+
+    if (AD_IDX in band_idx_list):
+      if (device_profile[AD_IDX] != '0'):
+        band_attrs.append(device_profile[AD_IDX])
+      else:
+        band_attrs.append(str(randint(0,1533)))
+
     if (HID_IDX in band_idx_list):
       if (device_profile[HID_IDX] != '0'):
         band_attrs.append(device_profile[HID_IDX])
       else:
-        band_attrs.append(str(randint(0,1452216)))
+        band_attrs.append(str(randint(0,1750000)))
 
     if (PUBLISHER_IDX in band_idx_list):
       if (device_profile[PUBLISHER_IDX] != '0'):
         band_attrs.append(device_profile[PUBLISHER_IDX])
       else:
-        band_attrs.append(str(randint(0,344)))
+        band_attrs.append(str(randint(0,1000)))
 
     if (OVP_IDX in band_idx_list):
       if (device_profile[OVP_IDX].lower() != 'na'):
@@ -341,18 +356,30 @@ def hash_full_profile (device_profile):
 def hash_request_profile (device_profile):
   bucket_list = []
   for key, band_idx_list in request_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX]
+    band_attrs = [device_profile[i] for i in band_idx_list if i != PLACEMENT_IDX and i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX and i != AD_IDX]
+    
+    if (PLACEMENT_IDX in band_idx_list):
+      if (device_profile[PLACEMENT_IDX] != '0'):
+        band_attrs.append(device_profile[PLACEMENT_IDX])
+      else:
+        band_attrs.append(str(randint(0,3670)))
+    if (AD_IDX in band_idx_list):
+      if (device_profile[AD_IDX] != '0'):
+        band_attrs.append(device_profile[AD_IDX])
+      else:
+        band_attrs.append(str(randint(0,1533)))
+
     if (HID_IDX in band_idx_list):
       if (device_profile[HID_IDX] != '0'):
         band_attrs.append(device_profile[HID_IDX])
       else:
-        band_attrs.append(str(randint(0,1452216)))
+        band_attrs.append(str(randint(0,1750000)))
 
     if (PUBLISHER_IDX in band_idx_list):
       if (device_profile[PUBLISHER_IDX] != '0'):
         band_attrs.append(device_profile[PUBLISHER_IDX])
       else:
-        band_attrs.append(str(randint(0,344)))
+        band_attrs.append(str(randint(0,1000)))
 
     if (OVP_IDX in band_idx_list):
       if (device_profile[OVP_IDX].lower() != 'na'):
@@ -379,18 +406,31 @@ def hash_beacon_profile (device_profile):
   device_profile = reform_profile(device_profile)
   bucket_list = []
   for key, band_idx_list in beacon_band_idx.iteritems():
-    band_attrs = [device_profile[i] for i in band_idx_list if i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX]
+    band_attrs = [device_profile[i] for i in band_idx_list if i != PLACEMENT_IDX and i != HID_IDX and i != PUBLISHER_IDX and i != OVP_IDX and i != OVP_TYPE_IDX and i != AD_IDX]
+    
+    if (PLACEMENT_IDX in band_idx_list):
+      if (device_profile[PLACEMENT_IDX] != '0'):
+        band_attrs.append(device_profile[PLACEMENT_IDX])
+      else:
+        band_attrs.append(str(randint(0,3670)))
+
+    if (AD_IDX in band_idx_list):
+      if (device_profile[AD_IDX] != '0'):
+        band_attrs.append(device_profile[AD_IDX])
+      else:
+        band_attrs.append(str(randint(0,1533)))
+
     if (HID_IDX in band_idx_list):
       if (device_profile[HID_IDX] != '0'):
         band_attrs.append(device_profile[HID_IDX])
       else:
-        band_attrs.append(str(randint(0,1452216)))
+        band_attrs.append(str(randint(0,1750000)))
 
     if (PUBLISHER_IDX in band_idx_list):
       if (device_profile[PUBLISHER_IDX] != '0'):
         band_attrs.append(device_profile[PUBLISHER_IDX])
       else:
-        band_attrs.append(str(randint(0,344)))
+        band_attrs.append(str(randint(0,1000)))
 
     if (OVP_IDX in band_idx_list):
       if (device_profile[OVP_IDX].lower() != 'na'):
