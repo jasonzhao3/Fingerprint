@@ -382,27 +382,33 @@ value_map = buildValueMap ('attr_count_output')
 perm_map = buildPermMap('permutation_output')
 
 
+hid_map = {}
+for i in range(len(value_map[16])):
+  hid_map[value_map[16][i]] = perm_map[16][i]
+
+
 '''
   hash set - min hash
 '''
-def getSignature (feature_set, value_map, perm_map, index):
+def getSignature (feature_set, value_map, perm_map, index): 
+    #print index    
     full_set = value_map[index]
     perm = perm_map[index]
-    perm_map = {}
+    comb_map = {}
+    if (index) == 16:
+        return str(min(hid_map[feature] for feature in feature_set))
     for i in range(len(perm)):
-        perm_map[perm[i]] = i 
+        comb_map[perm[i]] = i 
     
     signature = 0
     if len(feature_set) == 1:        
-        if feature_set[0] == "0" or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
+        if (feature_set[0] == "0" and (index == 6 or index == 7 or index == 24 or index == 29)) or feature_set[0].lower() == "null" or feature_set[0].lower() == "na" or feature_set[0].lower() == "n/a":
             signature = random.randint(0, len(perm))
             return str(signature)    
-    #if len(perm) > 1000:
-        #signature = random.randint(0, len(perm))
-        #return str(signature)
-    
+
+
     while signature < len(perm):
-        val = full_set[perm_map[signature]]
+        val = full_set[comb_map[signature]]
         if val in feature_set:
             return str(signature)
         else:
