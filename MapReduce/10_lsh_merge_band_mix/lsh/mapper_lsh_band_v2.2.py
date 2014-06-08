@@ -86,7 +86,7 @@ set_idx = [
                #2, # advertisement_id
                3, # requested_date - frequency within 4 hours
                5, # city_name - jaccard set  
-               #7, # content_video_id (skip 0)
+               7, # content_video_id (skip 0)
                14, # ovp_version  
                15, # ovp_type
                16, # hid
@@ -136,13 +136,14 @@ full_band_idx = \
                35 # volume percent
       ],
 
-  'common_majority':
+  'common':
     [
                0, # domain_id - majority
                1, # placement_id 
                2, # advertisement_id
                4, # census_DMA - majority
                6,  # publisher_id - majority
+               7, # content_video_id (skip 0)
                8, # service_provider_id - majority
                #9, # key_value
                10, # player_location_id 
@@ -160,7 +161,7 @@ full_band_idx = \
                1, # placement_id 
                4, # census_DMA - majority, count again, important
                6,  # publisher_id - majority
-               #7, # content_video_id (skip 0)
+               7, # content_video_id (skip 0)
                14, # ovp_version  
                15, # ovp_type
                16, # hid
@@ -172,20 +173,6 @@ full_band_idx = \
                #25, # content_video_identifier (skip null)
                26, # content_profile_id (skip null)
                #29 # slate_id
-      ],
-
-      'common_set':
-    [
-               1, # placement_id 
-               4, # census_DMA - majority, count again, important
-               #7, # content_video_id (skip 0)
-               8, # service_provider_id - majority
-               10, # player_location_id 
-               11, # player_size_id - jaccard set
-               14, # ovp_version  
-               15, # ovp_type
-               16, # hid
-               #18 # audience_segment (skip NULL)
       ],
 
       'beacon_specific':
@@ -238,13 +225,14 @@ full_band_idx = \
 '''
 request_band_idx = \
 { 
-        'common_majority':
+        'common':
     [
                0, # domain_id - majority
                1, # placement_id 
                2, # advertisement_id
                4, # census_DMA - majority
                6,  # publisher_id - majority
+               7, # content_video_id (skip 0)
                8, # service_provider_id - majority
                #9, # key_value
                10, # player_location_id 
@@ -255,20 +243,6 @@ request_band_idx = \
                15, # ovp_type
                16, 
                17, # is_on_premise
-      ],
-      
-      'common_set':
-    [
-               1, # placement_id 
-               4, # census_DMA - majority, count again, important
-               #7, # content_video_id (skip 0)
-               8, # service_provider_id - majority
-               10, # player_location_id 
-               11, # player_size_id - jaccard set
-               14, # ovp_version  
-               15, # ovp_type
-               16, # hid
-               #18 # audience_segment (skip NULL)
       ],
       
       'request_specific':
@@ -300,13 +274,14 @@ request_band_idx = \
 # altogether 2 bands, last band is numerical
 beacon_band_idx = \
 {
-    'common_majority':
+    'common':
     [
                0, # domain_id - majority
                1, # placement_id 
                2, # advertisement_id
                4, # census_DMA - majority
                6,  # publisher_id - majority
+               7, # content_video_id (skip 0)
                8, # service_provider_id - majority
                #9, # key_value
                10, # player_location_id 
@@ -317,20 +292,6 @@ beacon_band_idx = \
                15, # ovp_type
                16, 
                17, # is_on_premise
-      ],
-      
-      'common_set':
-    [
-               1, # placement_id 
-               4, # census_DMA - majority, count again, important
-               #7, # content_video_id (skip 0)
-               8, # service_provider_id - majority
-               10, # player_location_id 
-               11, # player_size_id - jaccard set
-               14, # ovp_version  
-               15, # ovp_type
-               16, # hid
-               #18 # audience_segment (skip NULL)
       ],
       
        'beacon_specific':
