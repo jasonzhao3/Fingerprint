@@ -23,7 +23,7 @@ import math
 
 
 CLUSTER_LIMIT_HINT = 10
-THRESHOLD = 0.5
+THRESHOLD = 0.6
 HARD_LIMIT = 10000
 GEO_DIFF_THRESHOLD = 0.03
 
@@ -99,8 +99,7 @@ skip_expectation_dict = \
     23: 1.0/23, # content_profile_id (skipp null1/231/962 
   }
 
-WEIGHT_TWO = [7, 9, 21]
-HID_IDX = 14
+WEIGHT_TWO = [4, 6, 18] # 4: publisher_id, 6: service_provider_id, 18: network_id
 def cal_jaccard (record1, record2):
     num = 0
     denom = 0   
@@ -109,9 +108,9 @@ def cal_jaccard (record1, record2):
         
     for i in xrange(len(record1)):
         #assign weight        
-        if i == HID_IDX:
+        if i == 14: #hid
             weight = 5
-        elif i == 5:
+        elif i == 3: #census DMA
             weight = 3
         elif i in WEIGHT_TWO:
             weight = 2
@@ -346,8 +345,8 @@ def main(separator='\t'):
             cluster.append (device)
         
         # skip too large cluster
-        if (len(cluster) > HARD_LIMIT):
-            continue
+        # if (len(cluster) > HARD_LIMIT):
+        #     continue
 
         if (len(cluster) > CLUSTER_LIMIT_HINT):
             clusters = further_cluster(cluster)
