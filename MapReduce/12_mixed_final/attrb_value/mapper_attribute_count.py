@@ -53,6 +53,17 @@ import sys
 #     # volume percent
 # ]
 
+FULL_PROFILE_LEN = 34
+BEACON_PROFILE_LEN = 25
+REQUEST_PROFILE_LEN = 27
+
+
+BEC_CAT = 18
+RB_UNION_CAT = 27
+RB_COMMON = 17
+
+
+
 # input comes from STDIN (standard input)
 for line in sys.stdin:
       line = line.strip()
@@ -61,10 +72,10 @@ for line in sys.stdin:
       # split the line into words
       attr_list = profile.split(',')
 
-      if len(attr_list) == 25:
-        for i in range(0,18):
+      if len(attr_list) == BEACON_PROFILE_LEN:
+        for i in range(0,BEC_CAT):
             for value in attr_list[i].split('|'):
-              if i < 17:
+              if i < RB_COMMON:
                 if len(value) == 0 or value.lower() == "null" or value.lower() == "na" or \
                 ((i == 4 or i == 5) and value == "0") or (i == 7 and value == "0_0"):
                   continue
