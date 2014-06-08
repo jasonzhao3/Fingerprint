@@ -31,38 +31,82 @@ def strip_to_get_nodes (str):
 	end = edge[1].strip().strip('\'')
 	return start, end
 
+def mergeCluster(start, end, flag):
+    startInd = -1
+    #print startInd
+    if (start in indMap):
+        startInd = indMap[start]
+   
+    finishInd = -1
+    if (end in indMap):
+        finishInd = indMap[end]
+    
+    if finishInd == startInd and startInd == -1:
+        # no index found   
+        newSet = set()
+        newSet.add(start)
+        newSet.add(end)
+        clusters.append(newSet)
+        clusters_valid.append(flag)
+        indMap[start] = len(clusters) - 1
+        indMap[end] = len(clusters) - 1
+        # now start and end will be in len(clusters) - 1
+        
+    elif finishInd != startInd:
+        if finishInd == -1:
+            clusters[startInd].add(end)
+            indMap[end] = startInd
+            clusters_valid[startInd] = clusters_valid[startInd] and flag
+        elif startInd == -1:
+            clusters[finishInd].add(start)
+            indMap[start] = finishInd
+            clusters_valid[finishInd] = clusters_valid[finishInd] and flag
+        else:
+            # merging
+            for elem in clusters[finishInd]:
+                clusters[startInd].add(elem)
+                indMap[elem] = startInd
+                clusters_valid[startInd] = clusters_valid[startInd] and clusters_valid[finishInd]
+            clusters[finishInd] = None
+            clusters_valid[finishInd] = False # desserted
 
-'''
-	Combine result
-'''
-path = '../../../../local_data/graph_data/edge/'
-# path = 's3n://cs341-yume-dp/CA_lsh_merged_band/lsh_band_step2_v3.3/'
 
+# '''
+# 	Combine result
+# '''
+# path = '../../../../local_data/graph_data/edge/'
+
+
+path = './local_data/edge/version5.0/'
 file_names = [ f for f in listdir(path) if isfile(join(path,f))]
+print ("start process")
 
-node_map = {}
-id_map = {}
-G = snap.TUNGraph.New()
-node_idx = 0
+clusters = []
+clusters_valid = []
+# indMap: the index of cluster that current node belongs to 
+indMap = {}
+
+
 for file_name in file_names:
 	file_name = join(path, file_name)
 	with open (file_name) as f:
 		for line in f:
 			line = line.strip()
 			start, end = strip_to_get_nodes(line)
-			if start not in id_map:
-				id_map[start] = node_idx
-				node_map[node_idx] = start
-				G.AddNode(node_idx)
-				node_idx += 1
-			if end not in id_map:
-				id_map[end] = node_idx
-				node_map[node_idx] = end
-				G.AddNode(node_idx)
-				node_idx += 1
+			flag = (line.split('\t')[1].split('_')[1] == "True")
+			mergeCluster(start, end, flag)
+	print "finish one more file!!!"
 
-			G.AddEdge(id_map[start], id_map[end])
-	break
+with open('wcc', 'w') as f:
+	for i in xrange(len(clusters)):
+		if clusters[i]:
+			temp_val = ','.join(clusters[i])
+			value = temp_val + "|" + str(clusters_valid[i])
+			print ("%d%s%s" %(i, '\t', value))
+			f.write(str(i) + '\t' + value)
+			f.write('\n')
+
+
 
 # # print G.GetNodes()
 # Wccs = snap.TCnComV()
@@ -79,21 +123,21 @@ for file_name in file_names:
 # 	f.write(str(Wccs.Len()))
 
 
-cnt = 0
-CmtyV = snap.TCnComV()
-modularity = snap.CommunityCNM(G, CmtyV)
-with open('community', 'w') as f:
-	f.write('Total number of nodes is ' + str(G.GetNodes()) + '\n')
-	for Cmty in CmtyV:
-	    print "Community: ", cnt
-	    node_list = [node_map[node] for node in Cmty]
-	    f.write(str(cnt) + '\t')
-	    f.write(','.join(node_list))
-	    f.write('\n')
-	    cnt += 1
-	f.write("total commmunity number is" + str(CmtyV.Len()))
-	f.write("The modularity of the network is" + str(modularity))
-print CmtyV.Len()
+# cnt = 0
+# CmtyV = snap.TCnComV()
+# modularity = snap.CommunityCNM(G, CmtyV)
+# with open('community', 'w') as f:
+# 	f.write('Total number of nodes is ' + str(G.GetNodes()) + '\n')
+# 	for Cmty in CmtyV:
+# 	    print "Community: ", cnt
+# 	    node_list = [node_map[node] for node in Cmty]
+# 	    f.write(str(cnt) + '\t')
+# 	    f.write(','.join(node_list))
+# 	    f.write('\n')
+# 	    cnt += 1
+# 	f.write("total commmunity number is" + str(CmtyV.Len()))
+# 	f.write("The modularity of the network is" + str(modularity))
+# print CmtyV.Len()
 
 
 # with open('distribution_v5.1.json', 'w') as f:
