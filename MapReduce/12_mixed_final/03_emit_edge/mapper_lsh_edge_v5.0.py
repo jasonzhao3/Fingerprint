@@ -4,26 +4,28 @@ import sys
 from itertools import groupby
 from operator import itemgetter
 from datetime import datetime
+import csv
+import math
 
 '''
 
    This map-reduce job is used to emit edges from LSH bucket
 
    Mapper output format:
-        (start_node, end_node) \t profile1 || profile2
+        (start_node, end_node) \t similarity_location_eval (possible dp eval)
+                                  ("%s%s%.6f%s" %(key, '\t', sim, eval_flag))
+   Reducer: combine same edge from different bucket
 
-   Reducer output format:
-        (sart_node, end_node) \t similarity_location_eval (possible dp eval)
-
+   There is trade-off here: if we evaluate the edge here, then multiple mapper may evaluate the same edge again and again;
+   but if we evaluate the edge in the reducer, for each cluster, we may evaluate unnnecessary edges 
 
 '''
 
 
 CLUSTER_LIMIT_HINT = 10
-THRESHOLD = 0.83
+THRESHOLD = 0.5
 HARD_LIMIT = 10000
-
-
+GEO_DIFF_THRESHOLD = 0.03
 
 
 
@@ -49,8 +51,6 @@ def add_device_to_cluster (device, max_idx, clusters, clustroids, cluster_sims):
   # finally update clustroids
   clustroid_idx, sim_val = get_max_idx_value (cluster_sim)
   clustroids[max_idx] = cluster[clustroid_idx]
-
-
 
 
 # request_skip_set and beacon_skip_set are the subset of this
@@ -99,8 +99,8 @@ skip_expectation_dict = \
     23: 1.0/23, # content_profile_id (skipp null1/231/962 
   }
 
-
 WEIGHT_TWO = [7, 9, 21]
+HID_IDX = 14
 def cal_jaccard (record1, record2):
     num = 0
     denom = 0   
@@ -109,7 +109,7 @@ def cal_jaccard (record1, record2):
         
     for i in xrange(len(record1)):
         #assign weight        
-        if i == 14:
+        if i == HID_IDX:
             weight = 5
         elif i == 5:
             weight = 3
@@ -209,6 +209,64 @@ def cal_similarity(profile1, profile2):
      return score
 
 
+
+def read_csv (csv_file):
+  data = []
+  with open(csv_file, "rb") as f:
+    reader = csv.reader(f)
+    for row in reader:
+      data.append (row)
+  return data
+
+def build_geo_map(location_file):
+  # build geo location map
+  data = read_csv (location_file)
+  geo_map = {}
+  for record in data[1:]:
+    geo_map[record[3]] = (float(record[5]), float(record[6]))
+  # print len(geo_map)
+  return geo_map
+
+def cal_geo_dist_sqr (city1, city2, geo_map):
+  try:
+    loc1 = geo_map[city1]
+    loc2 = geo_map[city2]
+    dist_sqr = math.pow((loc1[0] - loc2[0]), 2) + math.pow((loc2[1] - loc2[1]), 2)
+    return dist_sqr
+  except (RuntimeError, KeyError, NameError, ValueError, IOError):
+    return 0
+
+
+def fail_time_loc(time_loc1, time_loc2):
+  t1, loc1 = time_loc1.split('|')
+  t2, loc2 = time_loc2.split('|')
+  try:
+    time_diff = datetime.strptime(t1, '%Y-%m-%d %H:%M') - datetime.strptime(t2, '%Y-%m-%d %H:%M')
+    time_diff = time_diff.seconds / 3600
+    # if time is identical, only if they're exact same location, return False
+    if (time_diff == 0):
+      if (loc1 == loc2):
+        return False
+      else:
+        return True
+
+    loc_diff = cal_geo_dist_sqr(loc1, loc2, GEO_MAP)
+    if (loc_diff / time_diff > GEO_DIFF_THRESHOLD):
+      return True
+    else:
+      return False
+  except (RuntimeError, TypeError, NameError, ValueError, IOError):
+    # print "TIME FORMAT ERROR!!"
+    return False
+
+# if fail, return false; correct, return true
+def eval_time_location(tuple_list1, tuple_list2):
+  for time_loc1 in tuple_list1:
+    for time_loc2 in tuple_list2:
+      if (fail_time_loc(time_loc1, time_loc2)):
+        return False
+  return True
+
 def further_cluster(device_list):
   clusters = []; clustroids = []; cluster_sims = []
   for device in device_list:
@@ -240,19 +298,41 @@ def make_key(str1, str2):
 
 def emit_cluster(cluster):
   num_device = len(cluster)
+  
   for i in xrange(num_device):
     key1 = cluster[i].split(',')[-1]
+    skip_tuple_eval_flag = False
+
     for j in xrange(i+1, num_device):
       key2 = cluster[j].split(',')[-1]
       key = make_key (key1, key2)
-      print ("%s%s%s" %(key, '\t', cluster[i] + '||' + cluster[j]))
+
+      sim = cal_similarity(cluster[i], cluster[j])
+
+      if (sim > THRESHOLD):
+        if (not skip_tuple_eval_flag):
+          time_loc_str1 = cluster[i].split(',')[-2]
+          time_loc_tuple_list1 = time_loc_str1.split('??')
+          time_loc_str2 = cluster[j].split(',')[-2]
+          time_loc_tuple_list2 = time_loc_str2.split('??')
+          correct_flag = eval_time_location(time_loc_tuple_list1, time_loc_tuple_list2)
+          
+          # correct_flag false will skip tuple_eval from then on
+          if (not correct_flag):
+            skip_tuple_eval_flag = True
+          
+          eval_flag = '_' + str(correct_flag)
+        else:
+          eval_flag = '_False'
+        
+        print ("%s%s%.6f%s" %(key, '\t', sim, eval_flag))
 
 def emit_clusters(clusters):
   for cluster in clusters:
     emit_cluster(cluster)
 
 
-
+GEO_MAP = build_geo_map ('US-City-Location.csv')
 # concat version
 def main(separator='\t'):
   # input comes from STDIN (standard input)
@@ -265,8 +345,9 @@ def main(separator='\t'):
         for key, device in group:
             cluster.append (device)
         
+        # skip too large cluster
         if (len(cluster) > HARD_LIMIT):
-          continue
+            continue
 
         if (len(cluster) > CLUSTER_LIMIT_HINT):
             clusters = further_cluster(cluster)

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-from __future__ import division
+
 import sys
 from itertools import groupby
 from operator import itemgetter
+import math
 from datetime import datetime
-
+import csv
 '''
 
    This map-reduce job is used to emit edges from LSH bucket
@@ -18,46 +19,77 @@ from datetime import datetime
 
 '''
 
+GEO_DIFF_THRESHOLD = 0.03
+def read_csv (csv_file):
+  data = []
+  with open(csv_file, "rb") as f:
+    reader = csv.reader(f)
+    for row in reader:
+      data.append (row)
+  return data
 
-CLUSTER_LIMIT_HINT = 10
-THRESHOLD = 0.83
-HARD_LIMIT = 10000
+def build_geo_map(location_file):
+  # build geo location map
+  data = read_csv (location_file)
+  geo_map = {}
+  for record in data[1:]:
+    geo_map[record[3]] = (float(record[5]), float(record[6]))
+  # print len(geo_map)
+  return geo_map
 
-
-
-
-
-def get_max_idx_value (my_list):
-    index, value = max(enumerate(my_list), key=itemgetter(1))
-    return index, value
-
-def update_cluster_sim (device, cluster, cluster_sim):
-  new_sim = 0
-  for idx, ex_device in enumerate (cluster):
-    tmp_sim = cal_similarity (device, ex_device)
-    cluster_sim[idx] += tmp_sim
-    new_sim += tmp_sim
-  cluster_sim.append (new_sim)
-
-def add_device_to_cluster (device, max_idx, clusters, clustroids, cluster_sims):
-  cluster = clusters[max_idx]
-  cluster_sim = cluster_sims[max_idx]
-  # first update cluster_sim
-  update_cluster_sim (device, cluster, cluster_sim)
-  # then update clusters
-  cluster.append (device)
-  # finally update clustroids
-  clustroid_idx, sim_val = get_max_idx_value (cluster_sim)
-  clustroids[max_idx] = cluster[clustroid_idx]
+def cal_geo_dist_sqr (city1, city2, geo_map):
+  loc1 = geo_map[city1]
+  loc2 = geo_map[city2]
+  dist_sqr = math.pow((loc1[0] - loc2[0]), 2) + math.pow((loc2[1] - loc2[1]), 2)
+  return dist_sqr
 
 
+def fail_time_loc(time_loc1, time_loc2):
+  t1, loc1 = time_loc1.split('|')
+  t2, loc2 = time_loc2.split('|')
+  time_diff = datetime.strptime(t1, '%Y-%m-%d %H:%M') - datetime.strptime(t2, '%Y-%m-%d %H:%M')
+  time_diff = time_diff.seconds / 3600
+  # if time difference is too small => error
+  if (time_diff < 5):
+    return True
+
+  loc_diff = cal_geo_dist_sqr(loc1, loc2, GEO_MAP)
+  if (loc_diff / time_diff > GEO_DIFF_THRESHOLD):
+    return True
+  else:
+    return False
+
+
+def eval_time_location(tuple_list1, tuple_list2):
+  for time_loc1 in tuple_list1:
+    for time_loc2 in tuple_list2:
+      if (fail_time_loc(time_loc1, time_loc2)):
+        return False
+  return True
+
+
+def get_time_loc_tuple_list(time_loc_str):
+  time_loc_tuple_list = time_loc_str.split('??')
+
+
+def read_mapper_output(file, separator='\t'):
+    for line in file:
+        yield line.rstrip().split(separator, 1)
+
+def make_key(str1, str2):
+  if (str1 < str2):
+    return (str1, str2)
+  else:
+    return (str2, str1)
+
+# only allow one bucket mistake
+def pass_support_check(support_cnt):
+  return support_cnt >= 1
 
 
 # request_skip_set and beacon_skip_set are the subset of this
 skip_list = \
   [   
-    1, # placement_id (skip 0)
-    2, # advertisement_id (skip 0)
     5, # content_video_id  (skip 0)
     7, # key_value (skip 0_0)
     12, #ovp_version (skip NA)
@@ -71,8 +103,6 @@ skip_list = \
 
 skip_value_dict = \
 { 
-  1: '0',
-  2: '0',
   5: '0',
   7: '0_0',
   12: 'na',
@@ -86,8 +116,6 @@ skip_value_dict = \
 
 skip_expectation_dict = \
   {
-    1: 1.0/3670, # placement_id
-    2: 1.0/1533, #advertsiment_id
     5: 1.0/23, # content_video_id  (skip 0)
     7: 1.0/962, # key_value (skip 0_0)
     12: 1.0/11, #ovp_version (skip NA)
@@ -100,37 +128,20 @@ skip_expectation_dict = \
   }
 
 
-WEIGHT_TWO = [7, 9, 21]
 def cal_jaccard (record1, record2):
     num = 0
-    denom = 0   
-    #comp_list1 = [record1[i] for i in xrange(denom) if i not in skip_list]
-    #comp_list2 = [record2[i] for i in xrange(denom) if i not in skip_list]
-        
-    for i in xrange(len(record1)):
-        #assign weight        
-        if i == 14:
-            weight = 5
-        elif i == 5:
-            weight = 3
-        elif i in WEIGHT_TWO:
-            weight = 2
-        else:
-            weight = 1
-        
-        if i in skip_list:
-            if (i < len(record1)):
-                if (record1[i] == skip_value_dict[i] or record2[i] == skip_value_dict[i]):
-                    num += weight * skip_expectation_dict[i]
-                    denom += weight
-                elif (record1[i] == record2[i]):
-                    num += weight
-                    denom += weight
-        else:
-            denom += weight
-            if (record1[i] == record2[i]):
-                num += weight
-            
+    denom = len(record1)    
+    comp_list1 = [record1[i] for i in xrange(denom) if i not in skip_list]
+    comp_list2 = [record2[i] for i in xrange(denom) if i not in skip_list]
+    num = sum([1 for i in xrange(len(comp_list1)) if comp_list1[i] == comp_list2[i]])
+
+    # deal with skip list
+    for i in skip_list:
+      if (i < denom):
+        if (record1[i] == skip_value_dict[i] or record2[i] == skip_value_dict[i]):
+          num += skip_expectation_dict[i]
+        elif (record1[i] == record2[i]):
+          num += 1
     
     return float(num) / denom
  
@@ -209,73 +220,40 @@ def cal_similarity(profile1, profile2):
      return score
 
 
-def further_cluster(device_list):
-  clusters = []; clustroids = []; cluster_sims = []
-  for device in device_list:
-      if (len(clustroids) == 0):
-          clusters.append ([device])
-          clustroids.append (device)
-          cluster_sims.append ([0])
-      else:
-          scores = [cal_similarity(device, clustroid) for clustroid in clustroids]
-          max_idx, max_sim = get_max_idx_value (scores)
-          if (max_sim > THRESHOLD):
-              add_device_to_cluster (device, max_idx, clusters, clustroids, cluster_sims)
-          else:
-              clusters.append ([device])
-              clustroids.append (device)
-              cluster_sims.append ([0])
-  return clusters
 
-def read_mapper_output(file, separator='\t'):
-    for line in file:
-        yield line.rstrip().split(separator, 1)
-
-def make_key(str1, str2):
-  if (str1 < str2):
-    return (str1, str2)
-  else:
-    return (str2, str1)
-
-
-def emit_cluster(cluster):
-  num_device = len(cluster)
-  for i in xrange(num_device):
-    key1 = cluster[i].split(',')[-1]
-    for j in xrange(i+1, num_device):
-      key2 = cluster[j].split(',')[-1]
-      key = make_key (key1, key2)
-      print ("%s%s%s" %(key, '\t', cluster[i] + '||' + cluster[j]))
-
-def emit_clusters(clusters):
-  for cluster in clusters:
-    emit_cluster(cluster)
-
-
-
+GEO_MAP = build_geo_map ('US-City-Location.csv')
 # concat version
 def main(separator='\t'):
-  # input comes from STDIN (standard input)
+    
     data = read_mapper_output(sys.stdin, separator=separator)
    
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
       try:
-        cluster = []
-        for key, device in group:
-            cluster.append (device)
+        support_cnt = 0
+        device1 = None; device2 = None;
+        for pair, profiles in group:
+          if (support_cnt == 0):
+            device1, device2 = profiles.split('||')
+          support_cnt += 1
         
-        if (len(cluster) > HARD_LIMIT):
-          continue
+        key1 = device1.split(',')[-1]
+        key2 = device2.split(',')[-1]
+        if (pass_support_check(support_cnt)):
+          sim = cal_similarity(device1, device2)
+          if (sim > 0.6):
+            key = make_key(key1, key2)
+            time_loc_str1 = device1.split(',')[-2]
+            time_loc_tuple_list1 = time_loc_str1.split('??')
+            time_loc_str2 = device2.split(',')[-2]
+            time_loc_tuple_list2 = time_loc_str2.split('??')
 
-        if (len(cluster) > CLUSTER_LIMIT_HINT):
-            clusters = further_cluster(cluster)
-            emit_clusters(clusters)
-        else:
-            emit_cluster(cluster)
-
+            eval_flag = eval_time_location(time_loc_tuple_list1, time_loc_tuple_list2)
+            eval_flag = '_' + str(eval_flag)
+            print ("%s%s%.6f%s" %(key, '\t', sim, eval_flag))
       except (RuntimeError, TypeError, NameError, ValueError, IOError):
-        print "Mapper ERROR!!"
+            # count was not a number, so silently discard this item
+        print "ERROR!!"
         pass
  
 
