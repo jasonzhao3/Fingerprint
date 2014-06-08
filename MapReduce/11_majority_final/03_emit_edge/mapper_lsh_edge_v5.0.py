@@ -99,7 +99,7 @@ skip_expectation_dict = \
     23: 1.0/23, # content_profile_id (skipp null1/231/962 
   }
 
-WEIGHT_TWO = [7, 9, 21]
+WEIGHT_TWO = [4, 6, 18] # 4: publisher_id, 6: service_provider_id, 18: network_id
 HID_IDX = 14
 CENSUS_IDX = 3
 def cal_jaccard (record1, record2):

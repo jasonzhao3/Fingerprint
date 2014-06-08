@@ -33,7 +33,7 @@ def main(separator='\t'):
         flag = False
         for key, device in group:
             cluster.append (device)
-            dp = device.split(',')[-1].split('_')[1]
+            dp = device.split(',')[-1].split('_')[-1]
             dp_set.add(dp)
             
             if (len(dp_set) > 2):
