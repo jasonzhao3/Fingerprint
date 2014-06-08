@@ -330,10 +330,10 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap('/Users/zhulk/Documents/attr_count_output')
-perm_map_1 = buildPermMap('/Users/zhulk/Documents/permutation_output')
-perm_map_2 = buildPermMap('/Users/zhulk/Documents/permutation_output_2')
-perm_map_3 = buildPermMap('/Users/zhulk/Documents/permutation_output_3')
+value_map = buildValueMap ('attr_count_output')
+perm_map_1 = buildPermMap('permutation_output')
+perm_map_2 = buildPermMap('permutation_output_2')
+perm_map_3 = buildPermMap('permutation_output_3')
 
 hid_map_1 = {}
 hid_map_2 = {}
