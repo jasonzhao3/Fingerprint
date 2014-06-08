@@ -53,9 +53,6 @@ majority_idx = [
 
 set_idx = [
                1, # placement_id
-               #2, # advertisement_id
-               #3, # requested_date - frequency within 4 hours
-               #5, # city_name - jaccard set  
                5, # content_video_id (skip 0)
                12, # ovp_version  
                13, # ovp_type
@@ -112,7 +109,7 @@ full_band_idx = \
 
       'common':
       [
-        0, # domain_id - majority
+       0, # domain_id - majority
        1, # placement_id
        2, # advertisement_id
        3, # census_DMA - majority
@@ -204,7 +201,7 @@ request_band_idx = \
 { 
             'common':
       [
-        0, # domain_id - majority
+       0, # domain_id - majority
        1, # placement_id
        2, # advertisement_id
        3, # census_DMA - majority
@@ -350,7 +347,10 @@ def getSignature (feature_set, value_map, perm_map, index):
     perm = perm_map[index]
     comb_map = {}
     if (index) == 14: #hid
-        return str(min(hid_map[feature] for feature in feature_set))
+        if feature_set[0] == "0":
+            return str(random.randint(1, len(perm)))
+        else:
+            return str(min(hid_map[feature] for feature in feature_set))
     for i in range(len(perm)):
         comb_map[perm[i]] = i 
     
