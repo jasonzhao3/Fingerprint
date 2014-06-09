@@ -41,6 +41,7 @@ majority_idx = [
                10, # page_fold_id - majority
                11, # ad_visibility
                15, # is_on_premise
+               18, # network_id
                20, # ad_request_count
                21, # is_not_yume_white_list  - ratio of true
                24, # is_pre_fetch_request
@@ -53,8 +54,6 @@ set_idx = [
                12, # ovp_version  
                13, # ovp_type
                14, # hid
-               #18, # audience_segment (skip NULL)
-               #19, # referrer_site (skip NULL)
                19, # slot_type_id - majority (low weight because too many 1)
                22, # publisher_channel_id - (skip 0)
                #25, # content_video_identifier (skip null)
@@ -317,7 +316,7 @@ def get_signature (feature_set, search_map_list, index):
     signatures = []
     # 3 search_map => 3 signatures
     for search_map in search_map_list:
-      search_dict = search_map[index]
+      search_dict = search_map[str(index)]
       index_list = []
       # for each feature value, find its index => finally find the min_idx
       for feature in feature_set:
@@ -444,8 +443,6 @@ def hash_mixed (device_profile):
   else:
     print "error", len(device_profile)
     pass
-
-
 
 
 
