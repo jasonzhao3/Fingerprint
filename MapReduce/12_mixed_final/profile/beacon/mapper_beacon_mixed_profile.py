@@ -15,8 +15,8 @@ import sys
 CITY_IND = 5
 TIME_IND = 3
 HID_IND = 16
-CONTENT_VIDEO_IND = 25
-NUM_RECORD_LIMIT = 500
+NUM_IND = 20  # number of majority features
+NUM_RECORD_LIMIT = 800
 
 PROFILE_IDX = [   
     1, # domain id      
@@ -126,24 +126,25 @@ def comb_time_location(list_of_list):
     city_list = list_of_list[CITY_IND]
     comb_list = zip(time_list, city_list)
     list_of_list.append(comb_list)
-    return list_of_list
   
 def tuple_list_to_str(tuple_list):
-    str_list = [item[0][:-7] + '|' + item[1] for item in tuple_list]
+    str_list = [item[0][:16] + '|' + item[1] for item in tuple_list]
     return "??".join(str_list)
 
-attr_num = len(PROFILE_IDX);
+
+
+
+attr_num = len(PROFILE_IDX)
 # input comes from STDIN (standard input)
 for line in sys.stdin:
-    # remove leading and trailing whitespace
     line = line.strip()
     l = line.split('\t')
-    # split the line into multiple records 
     record_list = l[1].split('|')
-    
+
     if (len(record_list) > NUM_RECORD_LIMIT):
       continue
-    
+
+    # list_of_list for every attribute
     list_of_list = get_empty_list_of_list(attr_num)
     for record in record_list:
       attr_l = record.split(',')
@@ -151,19 +152,26 @@ for line in sys.stdin:
       for i in xrange(0, len(attr_list)):
         list_of_list[i].append(attr_list[i])
 
-    list_of_list = comb_time_location(list_of_list)
-    print len(list_of_list)
+    comb_time_location(list_of_list)
     attr_res = []
+
     for idx in xrange(len(list_of_list)):
-      # time; city; hid => as evaluation (index starts from 0)
-      if (idx == TIME_IND or idx == CITY_IND or idx == CONTENT_VIDEO_IND):
+      # separate time and city are skipped
+      if (idx == TIME_IND or idx == CITY_IND):
         continue
+      # majority
+      elif (idx < NUM_IND):
+        attr_res.append (get_majority(list_of_list[idx], skip_list[idx]))
       elif (idx in set_idx):
         attr_res.append (set_to_string(set(list_of_list[idx])))
       elif (idx == len(list_of_list) - 1):
-        print "hello"
         attr_res.append (tuple_list_to_str(list_of_list[idx]))
       else:
-        attr_res.append (get_majority(list_of_list[idx], skip_list[idx]))
+        attrs = list_of_list[idx]
+        denom = len(attrs)
+        num = 0
+        for attr in attrs:
+            num += int(attr)
+        attr_res.append(str(float(num)/denom))
 
     print '%s%s%s' % (l[0], "\t", ','.join(attr_res))
