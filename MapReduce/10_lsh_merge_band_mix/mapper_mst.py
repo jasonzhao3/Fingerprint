@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+THRESHOLD = 0.8
 '''
 
 Parallel step:
@@ -15,6 +16,6 @@ for line in sys.stdin:
     l = line.split('\t')
     key = l[0].strip('('')')
     sim, flag = l[1].split('_')
-    emitted = key+ '_' + str(flag)
-    if float(sim) >= 0.6:
+    emitted = key+ '|' + str(flag)
+    if float(sim) >= THRESHOLD:
         print '%d%s%s' % (1, "\t", emitted)

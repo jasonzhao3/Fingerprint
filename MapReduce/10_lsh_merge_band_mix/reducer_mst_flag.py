@@ -62,7 +62,7 @@ def main(separator='\t'):
    
     # one group corresponds to one bucket
     for key, group in groupby(data, itemgetter(0)):   
-      try:
+      #try:
         # get each device and merge
         for key, edgeStr in group:
             edgeRaw, str_flag = edgeStr.split('|')
@@ -72,10 +72,10 @@ def main(separator='\t'):
             flag = (str_flag == "True")
             mergeCluster(start, end, flag)
     
-      except (RuntimeError, TypeError, NameError, ValueError, IOError):
+      #except (RuntimeError, TypeError, NameError, ValueError, IOError):
             # count was not a number, so silently discard this item
-        print "ERROR!!"
-        pass
+        #print "ERROR!!"
+        #pass
     
     for i in range(len(clusters)):
         #print ",".join(clusters[i])
