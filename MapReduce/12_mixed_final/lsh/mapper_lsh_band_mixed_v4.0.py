@@ -22,6 +22,48 @@ Another parallel step:
   output all identifiers (nodes)
 
 '''
+
+       # 0, #domain_id - majority
+       # 1, # placement_id    
+       # 2, # advertisement_id
+       # 3, # census_DMA - majority
+       # 4,  # publisher_id - set
+       # 5, # content_video_id (skip 0)]
+       # 6, # service_provider_id - jaccard set
+       # 7, # key_value - jaccard set
+       # 8, # player_location_id 
+       # 9, # player_size_id - jaccard set
+       # 10, # page_fold_id - majority
+       # 11, # ad_visibility
+       # 12, # ovp_version  
+       # 13, # ovp_type
+       # 14, # hid
+       # 15, # is_on_premise
+       # 16, # audience_segment => need specially handled
+
+
+       # 17, # referrer_site (skip NULL)
+       # 18, # network_id - set
+       # 19, # slot_type_id - majority (low weight because too many 1)
+       # 20, # ad_request_id
+       # 21, # is_not_yume_white_list  - ratio of true
+       # #########################################
+       # 22, # publisher_channel_id - (skip 0)
+       # 23, # content_profile_id (skip null)
+       # 24, # is_pre_fetch_request
+       # 25, # service_provider_name  - majority
+
+
+       # 26, # slate_id
+   
+       # 27, #zero_tracker
+       # 28, # twentry_five
+       # 29, # fifty
+       # 30, # seventry_five
+       # 31, # one_hundred
+       # 32 # volume percent
+       # 33 # tuple
+
 HID_IDX = 14
 CONTENT_VIDEO_IDX = 5
 PUBLISHER_IDX = 22
@@ -45,6 +87,8 @@ majority_idx = [
                10, # page_fold_id - majority
                11, # ad_visibility
                15, # is_on_premise
+               18, #network_id
+               #16, audience_segment
                20, # ad_request_count
                21, # is_not_yume_white_list  - ratio of true
                24, # is_pre_fetch_request
@@ -58,7 +102,7 @@ set_idx = [
                13, # ovp_type
                14, # hid
                #18, # audience_segment (skip NULL)
-               #19, # referrer_site (skip NULL)
+               #17, # referrer_site (skip NULL)
                19, # slot_type_id - majority (low weight because too many 1)
                22, # publisher_channel_id - (skip 0)
                #25, # content_video_identifier (skip null)
@@ -330,10 +374,10 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap('/Users/zhulk/Documents/attr_count_output')
-perm_map_1 = buildPermMap('/Users/zhulk/Documents/permutation_output')
-perm_map_2 = buildPermMap('/Users/zhulk/Documents/permutation_output_2')
-perm_map_3 = buildPermMap('/Users/zhulk/Documents/permutation_output_3')
+value_map = buildValueMap ('attr_count_output')
+perm_map_1 = buildPermMap('permutation_output')
+perm_map_2 = buildPermMap('permutation_output_2')
+perm_map_3 = buildPermMap('permutation_output_3')
 
 hid_map_1 = {}
 hid_map_2 = {}

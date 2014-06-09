@@ -345,8 +345,8 @@ def main(separator='\t'):
             cluster.append (device)
         
         # skip too large cluster
-        # if (len(cluster) > HARD_LIMIT):
-        #     continue
+        if (len(cluster) > HARD_LIMIT):
+             continue
 
         if (len(cluster) > CLUSTER_LIMIT_HINT):
             clusters = further_cluster(cluster)
