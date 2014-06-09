@@ -76,7 +76,7 @@ def mergeCluster(start, end, flag):
 # '''
 # path = '../../../../local_data/graph_data/edge/'
 
-
+SIM_THRESHOLD = 0.7
 path = './local_data/edge/version5.0/'
 file_names = [ f for f in listdir(path) if isfile(join(path,f))]
 print ("start process")
@@ -94,7 +94,10 @@ for file_name in file_names:
 			line = line.strip()
 			start, end = strip_to_get_nodes(line)
 			flag = (line.split('\t')[1].split('_')[1] == "True")
-			mergeCluster(start, end, flag)
+			# further filter out low similarity edges
+			sim = float(line.split('\t')[1].split('_')[0])
+			if (sim > SIM_THRESHOLD):
+				mergeCluster(start, end, flag)
 	print "finish one more file!!!"
 
 with open('wcc', 'w') as f:
