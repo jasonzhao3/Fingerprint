@@ -142,6 +142,11 @@ def tuple_list_to_str(tuple_list):
     str_list = [item[0][:-7] + '|' + item[1] for item in tuple_list]
     return "??".join(str_list)
 
+
+
+
+
+
 attr_num = len(PROFILE_IDX);
 # input comes from STDIN (standard input)
 for line in sys.stdin:

@@ -48,6 +48,7 @@ def merge_attr_list(attr_list1, attr_list2):
   return attr_list
 
 
+
 def main(separator='\t'):
   # input comes from STDIN (standard input)
     data = read_mapper_output(sys.stdin, separator=separator)

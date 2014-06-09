@@ -22,48 +22,6 @@ Another parallel step:
   output all identifiers (nodes)
 
 '''
-
-       # 0, #domain_id - majority
-       # 1, # placement_id    
-       # 2, # advertisement_id
-       # 3, # census_DMA - majority
-       # 4,  # publisher_id - set
-       # 5, # content_video_id (skip 0)]
-       # 6, # service_provider_id - jaccard set
-       # 7, # key_value - jaccard set
-       # 8, # player_location_id 
-       # 9, # player_size_id - jaccard set
-       # 10, # page_fold_id - majority
-       # 11, # ad_visibility
-       # 12, # ovp_version  
-       # 13, # ovp_type
-       # 14, # hid
-       # 15, # is_on_premise
-       # 16, # audience_segment => need specially handled
-
-
-       # 17, # referrer_site (skip NULL)
-       # 18, # network_id - set
-       # 19, # slot_type_id - majority (low weight because too many 1)
-       # 20, # ad_request_id
-       # 21, # is_not_yume_white_list  - ratio of true
-       # #########################################
-       # 22, # publisher_channel_id - (skip 0)
-       # 23, # content_profile_id (skip null)
-       # 24, # is_pre_fetch_request
-       # 25, # service_provider_name  - majority
-
-
-       # 26, # slate_id
-   
-       # 27, #zero_tracker
-       # 28, # twentry_five
-       # 29, # fifty
-       # 30, # seventry_five
-       # 31, # one_hundred
-       # 32 # volume percent
-       # 33 # tuple
-
 HID_IDX = 14
 CONTENT_VIDEO_IDX = 5
 PUBLISHER_IDX = 22
@@ -87,8 +45,6 @@ majority_idx = [
                10, # page_fold_id - majority
                11, # ad_visibility
                15, # is_on_premise
-               18, #network_id
-               #16, audience_segment
                20, # ad_request_count
                21, # is_not_yume_white_list  - ratio of true
                24, # is_pre_fetch_request
@@ -102,7 +58,7 @@ set_idx = [
                13, # ovp_type
                14, # hid
                #18, # audience_segment (skip NULL)
-               #17, # referrer_site (skip NULL)
+               #19, # referrer_site (skip NULL)
                19, # slot_type_id - majority (low weight because too many 1)
                22, # publisher_channel_id - (skip 0)
                #25, # content_video_identifier (skip null)
@@ -114,124 +70,125 @@ set_idx = [
 # altogether 6 bands, and the last band should be hashed numerically
 full_band_idx = \
 { 
-      'full_majority':
-    [
-       0, # domain_id - majority
-       #1, # placement_id
-       2, # advertisement_id
-       3, # census_DMA - majority
-       4,  # publisher_id - set
-       # 5, # content_video_id (skip 0)
-       6, # service_provider_id - jaccard set
-       # 7, # key_value - jaccard set
-       8, # player_location_id 
-       9, # player_size_id - jaccard set
-       10, # page_fold_id - majority
-       11, # ad_visibility
-       12, # ovp_version  
-       13, # ovp_type
-       14, # hid (skip 0)
-       15, # is_on_premise
-       # 16, # audience_segment (skip NULL)
-        ############
-       # 17, # referrer_site (skip NULL)
-       18, # network_id - set
-       #19, # slot_type_id - majority (low weight because too many 1)
-       20, # ad_request_id
-       21, # is_not_yume_white_list  - ratio of true
-       #22, # publisher_channel_id - (skip 0)
-       #23, # content_profile_id (skip null)
-       24, # is_pre_fetch_request
-       25, # service_provider_name  - majority
-       27, # zero_tracker
-        28, # twentry_five
-        29, # fifty
-        30, # seventry_five
-        31, # one_hundred
-        32 # volume percent
-      ],
+    #   'full_majority':
+    # [
+    #    0, # domain_id - majority
+    #    #1, # placement_id
+    #    2, # advertisement_id
+    #    3, # census_DMA - majority
+    #    4,  # publisher_id - set
+    #    # 5, # content_video_id (skip 0)
+    #    6, # service_provider_id - jaccard set
+    #    # 7, # key_value - jaccard set
+    #    8, # player_location_id 
+    #    9, # player_size_id - jaccard set
+    #    10, # page_fold_id - majority
+    #    11, # ad_visibility
+    #    12, # ovp_version  
+    #    13, # ovp_type
+    #    14, # hid (skip 0)
+    #    15, # is_on_premise
+    #    # 16, # audience_segment (skip NULL)
+    #     ############
+    #    # 17, # referrer_site (skip NULL)
+    #    18, # network_id - set
+    #    #19, # slot_type_id - majority (low weight because too many 1)
+    #    20, # ad_request_id
+    #    21, # is_not_yume_white_list  - ratio of true
+    #    #22, # publisher_channel_id - (skip 0)
+    #    #23, # content_profile_id (skip null)
+    #    24, # is_pre_fetch_request
+    #    25, # service_provider_name  - majority
+    #    27, # zero_tracker
+    #     28, # twentry_five
+    #     29, # fifty
+    #     30, # seventry_five
+    #     31, # one_hundred
+    #     32 # volume percent
+    #   ],
 
       'common':
       [
        0, # domain_id - majority
        1, # placement_id
        2, # advertisement_id
-       3, # census_DMA - majority
-       4,  # publisher_id - set
-       5, # content_video_id (skip 0)
-       6, # service_provider_id - jaccard set
-       # 7, # key_value - jaccard set
-       8, # player_location_id 
-       9, # player_size_id - jaccard set
-       10, # page_fold_id - majority
-       11, # ad_visibility
-       12, # ovp_version  
-       13, # ovp_type
-       14, # hid
-       15 # is_on_premise
+       3, # census_DMA - majority  (weight 3)
+       # 4,  # publisher_id - set
+       # # 5, # content_video_id (skip 0)
+       # 6, # service_provider_id - jaccard set
+       # # 7, # key_value - jaccard set
+       # 8, # player_location_id 
+       # 9, # player_size_id - jaccard set
+       # 10, # page_fold_id - majority
+       # 11, # ad_visibility
+       # 12, # ovp_version  
+       # 13, # ovp_type
+       14, # hid (weight 5)
+       # 15, # is_on_premise
+       # # 16, # audience_segment (skip NULL)
       ],
 
 
-      'full_set':
-      [
-       #0, # domain_id - majority
-       1, # placement_id
-       #2, # advertisement_id
-       3, # census_DMA - majority
-       4,  # publisher_id - set
-       5, # content_video_id (skip 0)
-       12, # ovp_version  
-       13, # ovp_type
-       14, # hid
-       #15, # is_on_premise
-       # 16, # audience_segment (skip NULL)
-       18, # network_id - set
-       19, # slot_type_id - majority (low weight because too many 1)
-       #20, # ad_request_id
-       #21, # is_not_yume_white_list  - ratio of true
-       22, # publisher_channel_id - (skip 0)
-       23 # content_profile_id (skip null)
+      # 'full_set':
+      # [
+      #  #0, # domain_id - majority
+      #  1, # placement_id
+      #  #2, # advertisement_id
+      #  3, # census_DMA - majority
+      #  4,  # publisher_id - set
+      #  5, # content_video_id (skip 0)
+      #  12, # ovp_version  
+      #  13, # ovp_type
+      #  14, # hid
+      #  #15, # is_on_premise
+      #  # 16, # audience_segment (skip NULL)
+      #  18, # network_id - set
+      #  19, # slot_type_id - majority (low weight because too many 1)
+      #  #20, # ad_request_id
+      #  #21, # is_not_yume_white_list  - ratio of true
+      #  22, # publisher_channel_id - (skip 0)
+      #  23 # content_profile_id (skip null)
        
-      ],
+      # ],
 
-      'beacon_specific':
-      [
-               3, # census_DMA - majority
-               8, # player_location_id 
-               9, # player_size_id - jaccard set
-               10, # page_fold_id - majority
-               12, # ovp_version  
-               13, # ovp_type
-               14, # hid
-               #26,
-        27, # zero_tracker
-        28, # twentry_five
-        29, # fifty
-        30, # seventry_five
-        31, # one_hundred
-        32 # volume percent
-      ],
+      # 'beacon_specific':
+      # [
+      #          3, # census_DMA - majority
+      #          8, # player_location_id 
+      #          9, # player_size_id - jaccard set
+      #          10, # page_fold_id - majority
+      #          12, # ovp_version  
+      #          13, # ovp_type
+      #          14, # hid
+      #          #26,
+      #   27, # zero_tracker
+      #   28, # twentry_five
+      #   29, # fifty
+      #   30, # seventry_five
+      #   31, # one_hundred
+      #   32 # volume percent
+      # ],
 
 
-      'request_specific':
-      [        
-               3, # census_DMA - majority
-               8, # player_location_id 
-               9, # player_size_id - jaccard set
-               10, # page_fold_id - majority
-               12, # ovp_version  
-               13, # ovp_type
-               14, # hid
-               18, # network_id - set
-               19, # slot_type_id - majority (low weight because too many 1)
-               20, # ad_request_count
-               21, # is_not_yume_white_list  - ratio of true
-               22, # publisher_channel_id - (skip 0)
-               #25, # content_video_identifier (skip null)
-               23, # content_profile_id (skip null)
-               24, # is_pre_fetch_request
-               25 # service_provider_name  - majority
-      ]
+      # 'request_specific':
+      # [        
+      #          3, # census_DMA - majority
+      #          8, # player_location_id 
+      #          9, # player_size_id - jaccard set
+      #          10, # page_fold_id - majority
+      #          12, # ovp_version  
+      #          13, # ovp_type
+      #          14, # hid
+      #          18, # network_id - set
+      #          19, # slot_type_id - majority (low weight because too many 1)
+      #          20, # ad_request_count
+      #          21, # is_not_yume_white_list  - ratio of true
+      #          22, # publisher_channel_id - (skip 0)
+      #          #25, # content_video_identifier (skip null)
+      #          23, # content_profile_id (skip null)
+      #          24, # is_pre_fetch_request
+      #          25 # service_provider_name  - majority
+      # ]
 
 
 }
@@ -243,45 +200,46 @@ full_band_idx = \
 '''
 request_band_idx = \
 { 
-            'common':
+       'common':
       [
        0, # domain_id - majority
        1, # placement_id
        2, # advertisement_id
-       3, # census_DMA - majority
-       4,  # publisher_id - set
-       5, # content_video_id (skip 0)
-       6, # service_provider_id - jaccard set
-       # 7, # key_value - jaccard set
-       8, # player_location_id 
-       9, # player_size_id - jaccard set
-       10, # page_fold_id - majority
-       11, # ad_visibility
-       12, # ovp_version  
-       13, # ovp_type
-       14, # hid
-       15 # is_on_premise
+       3, # census_DMA - majority  (weight 3)
+       # 4,  # publisher_id - set
+       # # 5, # content_video_id (skip 0)
+       # 6, # service_provider_id - jaccard set
+       # # 7, # key_value - jaccard set
+       # 8, # player_location_id 
+       # 9, # player_size_id - jaccard set
+       # 10, # page_fold_id - majority
+       # 11, # ad_visibility
+       # 12, # ovp_version  
+       # 13, # ovp_type
+       14, # hid (weight 5)
+       # 15, # is_on_premise
+       # # 16, # audience_segment (skip NULL)
       ],
       
-'request_specific':
-      [        
-               3, # census_DMA - majority
-               8, # player_location_id 
-               9, # player_size_id - jaccard set
-               10, # page_fold_id - majority
-               12, # ovp_version  
-               13, # ovp_type
-               14, # hid
-               18, # network_id - set
-               19, # slot_type_id - majority (low weight because too many 1)
-               20, # ad_request_count
-               21, # is_not_yume_white_list  - ratio of true
-               22, # publisher_channel_id - (skip 0)
-               #25, # content_video_identifier (skip null)
-               23, # content_profile_id (skip null)
-               24, # is_pre_fetch_request
-               25 # service_provider_name  - majority
-      ]
+# 'request_specific':
+#       [        
+#                3, # census_DMA - majority
+#                8, # player_location_id 
+#                9, # player_size_id - jaccard set
+#                10, # page_fold_id - majority
+#                12, # ovp_version  
+#                13, # ovp_type
+#                14, # hid
+#                18, # network_id - set
+#                19, # slot_type_id - majority (low weight because too many 1)
+#                20, # ad_request_count
+#                21, # is_not_yume_white_list  - ratio of true
+#                22, # publisher_channel_id - (skip 0)
+#                #25, # content_video_identifier (skip null)
+#                23, # content_profile_id (skip null)
+#                24, # is_pre_fetch_request
+#                25 # service_provider_name  - majority
+#       ]
 
 
 }
@@ -290,44 +248,45 @@ request_band_idx = \
 # altogether 2 bands, last band is numerical
 beacon_band_idx = \
 {
-      'common':
+       'common':
       [
-        0, # domain_id - majority
+       0, # domain_id - majority
        1, # placement_id
        2, # advertisement_id
-       3, # census_DMA - majority
-       4,  # publisher_id - set
-       5, # content_video_id (skip 0)
-       6, # service_provider_id - jaccard set
-       # 7, # key_value - jaccard set
-       8, # player_location_id 
-       9, # player_size_id - jaccard set
-       10, # page_fold_id - majority
-       11, # ad_visibility
-       12, # ovp_version  
-       13, # ovp_type
-       14, # hid
-       15 # is_on_premise
+       3, # census_DMA - majority  (weight 3)
+       # 4,  # publisher_id - set
+       # # 5, # content_video_id (skip 0)
+       # 6, # service_provider_id - jaccard set
+       # # 7, # key_value - jaccard set
+       # 8, # player_location_id 
+       # 9, # player_size_id - jaccard set
+       # 10, # page_fold_id - majority
+       # 11, # ad_visibility
+       # 12, # ovp_version  
+       # 13, # ovp_type
+       14, # hid (weight 5)
+       # 15, # is_on_premise
+       # # 16, # audience_segment (skip NULL)
       ],
 
 
-      'beacon_specific':
-      [
-               3, # census_DMA - majority
-               8, # player_location_id 
-               9, # player_size_id - jaccard set
-               10, # page_fold_id - majority
-               12, # ovp_version  
-               13, # ovp_type
-               14, # hid
-               #26,
-        18, # zero_tracker
-        19, # twentry_five
-        20, # fifty
-        21, # seventry_five
-        22, # one_hundred
-        23 # volume percent
-      ]
+      # 'beacon_specific':
+      # [
+      #          3, # census_DMA - majority
+      #          8, # player_location_id 
+      #          9, # player_size_id - jaccard set
+      #          10, # page_fold_id - majority
+      #          12, # ovp_version  
+      #          13, # ovp_type
+      #          14, # hid
+      #          #26,
+      #   18, # zero_tracker
+      #   19, # twentry_five
+      #   20, # fifty
+      #   21, # seventry_five
+      #   22, # one_hundred
+      #   23 # volume percent
+      # ]
 
 }
 
@@ -374,18 +333,7 @@ def buildPermMap(data_file):
       perm_map[int(key)] = perm_list
   return perm_map
     
-value_map = buildValueMap ('attr_count_output')
-perm_map_1 = buildPermMap('permutation_output')
-perm_map_2 = buildPermMap('permutation_output_2')
-perm_map_3 = buildPermMap('permutation_output_3')
 
-hid_map_1 = {}
-hid_map_2 = {}
-hid_map_3 = {}
-for i in range(len(value_map[14])):
-  hid_map_1[value_map[14][i]] = perm_map_1[14][i]
-  hid_map_2[value_map[14][i]] = perm_map_2[14][i]
-  hid_map_3[value_map[14][i]] = perm_map_3[14][i]
 
 
 '''
@@ -400,6 +348,7 @@ def getSignature (feature_set, value_map, index):
     comb_map_1 = {}
     comb_map_2 = {}
     comb_map_3 = {}
+
     if (index) == 14: #hid
         if feature_set[0] == "0":
             return str(random.randint(1, len(full_set)))
@@ -408,6 +357,8 @@ def getSignature (feature_set, value_map, index):
             sig2 = min(hid_map_2[feature] for feature in feature_set)
             sig3 = min(hid_map_3[feature] for feature in feature_set)
             return str(sig1 + sig2 + sig3)
+
+
     for i in range(len(full_set)):
         comb_map_1[perm_1[i]] = i
         comb_map_2[perm_2[i]] = i
@@ -446,6 +397,8 @@ def getSignature (feature_set, value_map, index):
             signature3 += 1
     
     return str(signature1 + signature2 + signature3)
+    
+
     
 
 def fnv32a( str ):
@@ -542,7 +495,6 @@ def hash_beacon_profile (device_profile):
     bucket_list.append(str(hash_val) + '_' + key)
   return bucket_list 
 
-
 '''
   device_profile: a list of attributes
   - profile may be a joined profile of request and beacon (length: 36)
@@ -559,6 +511,25 @@ def hash_mixed (device_profile):
   else:
     print "error", len(device_profile)
     pass
+
+
+
+
+
+
+value_map = buildValueMap ('attr_count_output')
+perm_map_1 = buildPermMap('permutation_output')
+perm_map_2 = buildPermMap('permutation_output_2')
+perm_map_3 = buildPermMap('permutation_output_3')
+
+hid_map_1 = {}
+hid_map_2 = {}
+hid_map_3 = {}
+for i in range(len(value_map[14])):
+  hid_map_1[value_map[14][i]] = perm_map_1[14][i]
+  hid_map_2[value_map[14][i]] = perm_map_2[14][i]
+  hid_map_3[value_map[14][i]] = perm_map_3[14][i]
+
 
 
 # input comes from STDIN (standard input)

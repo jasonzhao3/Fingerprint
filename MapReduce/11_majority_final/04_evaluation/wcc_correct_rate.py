@@ -1,20 +1,39 @@
 from __future__ import division
 import os
 from os import listdir
+from collections import Counter
 
-tot_cnt = 0
+tot_user_cnt = 0
 correct_cnt = 0
 tot_device_cnt = 0
+tot_delivery_correct_cnt = 0
 user_cnt = [0]*7
 
-with open('wcc', 'r') as f:
+
+
+with open('wcc_v2.0', 'r') as f:
 	for line in f:
+		tot_user_cnt += 1
 		line = line.strip()
 		flag = line.split('|')[1]
-		devices = line.split('\t')[1].split(',')
-		
+		devices = line.split('|')[0].split('\t')[1].split(',')
 		num_device = len(devices)
 		tot_device_cnt += num_device
+		
+		delivery_counter = Counter()
+		is_wrong_delivery = False
+		for device in devices:
+			delivery_point = device.split('_')[-1]
+			delivery_counter[delivery_point] += 1;
+			
+		if (delivery_counter['1'] > 2 and delivery_counter['1'] < 5):
+			is_wrong_delivery = True
+
+		if (delivery_counter['2'] > 2 or delivery_counter['3'] > 2 or delivery_counter['4'] > 1):
+			is_wrong_delivery = True
+
+		if not is_wrong_delivery:
+			tot_delivery_correct_cnt += 1
 		
 		if (num_device > 7):
 			num_device = 7
@@ -23,9 +42,10 @@ with open('wcc', 'r') as f:
 		if (flag == 'True'):
 			correct_cnt += 1
 
-print tot_cnt, correct_cnt, correct_cnt/tot_cnt
+print tot_user_cnt, correct_cnt, correct_cnt/tot_user_cnt
 print user_cnt
 print tot_device_cnt
+print tot_delivery_correct_cnt, tot_delivery_correct_cnt/tot_user_cnt
 
 
 

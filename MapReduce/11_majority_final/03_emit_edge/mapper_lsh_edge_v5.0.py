@@ -24,7 +24,7 @@ import math
 
 CLUSTER_LIMIT_HINT = 10
 THRESHOLD = 0.7
-HARD_LIMIT = 10000
+HARD_LIMIT = 1000
 GEO_DIFF_THRESHOLD = 0.03
 
 
@@ -347,8 +347,8 @@ def main(separator='\t'):
             cluster.append (device)
         
         # skip too large cluster
-        # if (len(cluster) > HARD_LIMIT):
-        #     continue
+        if (len(cluster) > HARD_LIMIT):
+            continue
 
         if (len(cluster) > CLUSTER_LIMIT_HINT):
             clusters = further_cluster(cluster)
