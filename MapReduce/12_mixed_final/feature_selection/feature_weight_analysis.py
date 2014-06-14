@@ -76,38 +76,54 @@ def mergeCluster(start, end, flag):
 # '''
 # path = '../../../../local_data/graph_data/edge/'
 
+
+
+
+def build_user_map():
+	user_map = dict()
+	for file_name in file_names:
+		file_name = join(path, file_name)
+		with open (file_name) as f:
+			for line in f:
+				line = line.strip()
+				key, val = line.split('\t')
+				# only analyze request length here
+				if (len(val.split(',')) == REQUEST_LENGTH):
+					if key not in user_map:
+						user_map[key] = [val]
+					else:
+						user_map[key].append(val)
+	return user_map	
+
+
+
 SIM_THRESHOLD = 0.7
-path = './local_data/edge/version5.0/'
+REQUEST_LENGTH = 28
+
+
+path = '../../../../local_data/final_mix/correct_user_v3.2/'
 file_names = [ f for f in listdir(path) if isfile(join(path,f))]
 print ("start process")
 
-clusters = []
-clusters_valid = []
-# indMap: the index of cluster that current node belongs to 
-indMap = {}
+user_map = build_user_map()
 
 
-for file_name in file_names:
-	file_name = join(path, file_name)
-	with open (file_name) as f:
-		for line in f:
-			line = line.strip()
-			start, end = strip_to_get_nodes(line)
-			flag = (line.split('\t')[1].split('_')[1] == "True")
-			# further filter out low similarity edges
-			sim = float(line.split('\t')[1].split('_')[0])
-			if (sim > SIM_THRESHOLD):
-				mergeCluster(start, end, flag)
-	print "finish one more file!!!"
+for key in user_map.keys():
+	print key, user_map[key]
+	break
 
-with open('wcc', 'w') as f:
-	for i in xrange(len(clusters)):
-		if clusters[i]:
-			temp_val = ','.join(clusters[i])
-			value = temp_val + "|" + str(clusters_valid[i])
-			# print ("%d%s%s" %(i, '\t', value))
-			f.write(str(i) + '\t' + value)
-			f.write('\n')
+
+
+
+
+# with open('wcc', 'w') as f:
+# 	for i in xrange(len(clusters)):
+# 		if clusters[i]:
+# 			temp_val = ','.join(clusters[i])
+# 			value = temp_val + "|" + str(clusters_valid[i])
+# 			# print ("%d%s%s" %(i, '\t', value))
+# 			f.write(str(i) + '\t' + value)
+# 			f.write('\n')
 
 
 

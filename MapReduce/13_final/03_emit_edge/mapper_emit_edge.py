@@ -23,8 +23,8 @@ import math
 
 
 CLUSTER_LIMIT_HINT = 10
-THRESHOLD = 0.55
-HARD_LIMIT = 800
+THRESHOLD = 0.7
+HARD_LIMIT = 500
 GEO_DIFF_THRESHOLD = 0.03
 
 
@@ -99,7 +99,7 @@ skip_expectation_dict = \
     23: 1.0/23, # content_profile_id (skipp null1/231/962 
   }
 
-WEIGHT_TWO = [1, 4, 6, 18] # 4: publisher_id, 6: service_provider_id, 18: network_id
+WEIGHT_TWO = [4, 6, 18] # 4: publisher_id, 6: service_provider_id, 18: network_id
 HALF_WEIGHT = [7, 8, 9, 10, 11] # 7: key_val, 8: player_location, 9: player_size_id, 10:page_fold_id, 11: ad_visibility
 HID_IDX = 14
 CENSUS_IDX = 3

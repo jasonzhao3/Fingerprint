@@ -11,7 +11,7 @@ user_cnt = [0]*7
 
 
 
-with open('wcc_v2.0', 'r') as f:
+with open('./wcc/wcc_mix_v10.2_t0.83', 'r') as f:
 	for line in f:
 		tot_user_cnt += 1
 		line = line.strip()
@@ -26,10 +26,10 @@ with open('wcc_v2.0', 'r') as f:
 			delivery_point = device.split('_')[-1]
 			delivery_counter[delivery_point] += 1;
 			
-		if (delivery_counter['1'] > 2 and delivery_counter['1'] < 5):
-			is_wrong_delivery = True
+#		if (delivery_counter['1'] > 2 and delivery_counter['1'] < 5):
+#			is_wrong_delivery = True
 
-		if (delivery_counter['2'] > 2 or delivery_counter['3'] > 2 or delivery_counter['4'] > 1):
+		if (delivery_counter['2'] > 1 or delivery_counter['3']):
 			is_wrong_delivery = True
 
 		if not is_wrong_delivery:
@@ -49,3 +49,7 @@ print tot_delivery_correct_cnt, tot_delivery_correct_cnt/tot_user_cnt
 
 
 
+
+'''
+	Evaluate the error rate of different device type
+'''
